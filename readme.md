@@ -1,3 +1,3 @@
 ## unifas-client-app
 ## Team Members:
-## 1. Đạo Nguyễn
+## 1. Thuận Nguyễn
