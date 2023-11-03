@@ -1,4 +1,4 @@
-import './App.css';
+import './css/App.css';
 import { Counter } from './feature/counter/Counter';
 
 function App() {
