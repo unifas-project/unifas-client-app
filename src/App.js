@@ -1,10 +1,14 @@
-import './css/App.css';
-import { Counter } from './feature/counter/Counter';
+import './App.css';
+import Header from "./components/common/Header";
+import {Route, Routes} from "react-router-dom";
+// import { Counter } from './feature/counter/Counter';
 
 function App() {
   return (
     <div className="App">
-      <Counter/>
+        <Routes>
+            <Route path="/" element={<Header/>}></Route>
+        </Routes>
     </div>
   );
 }
