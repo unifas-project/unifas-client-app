@@ -63,7 +63,6 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
   },[])
 
 
-
     return(
 <header>
         <div className="header-top-area">
@@ -98,43 +97,43 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
                 <div className="mobile-nav-toggler"><i className="fas fa-bars" /></div>
                 <div className="menu-wrap">
                   <nav className="menu-nav show">
-                    <div className="logo"><Link to="/"><img src="img/logo/logo.png" alt="" /></Link></div>
+                    <div className="logo"><Link class="link-underline" to="/"><img src="img/logo/logo.png" alt="" /></Link></div>
                     <div className="navbar-wrap main-menu d-none d-lg-flex">
                       <ul className="navigation">
                         <li className="active menu-item-has-children" onClick={(e)=> handleActive(e)}>
-                          <Link to="/" >Man</Link>
+                          <Link class="link-underline"  to="/" >Man</Link>
                           <ul className="submenu">
                             <li className="active" onClick={(e)=> subActive(e)}>
-                              <Link to="/" >Home One</Link>
+                              <Link class="link-underline" to="/" >Home One</Link>
                             </li>
                             <li onClick={(e)=> subActive(e)}>
-                              <Link to="/home-two" >Home Two</Link>
+                              <Link class="link-underline" to="/home-two" >Home Two</Link>
                             </li>
                           </ul>
                         </li>
                         <li className="menu-item-has-children">
-                          <Link to="/shop" onClick={(e)=> handleActive(e)}>Woman</Link>
+                          <Link class="link-underline" to="/shop" onClick={(e)=> handleActive(e)}>Woman</Link>
                           <ul className="submenu">
-                            <li><Link to="/shop" onClick={(e)=> subActive(e)}>Cloth</Link></li>
+                            <li><Link class="link-underline" to="/shop" onClick={(e)=> subActive(e)}>Cloth</Link></li>
                             {/*<ul className="submenu">*/}
-                              <li><Link to="/shop" onClick={(e)=> subActive(e)}>Skirt</Link></li>
+                              <li><Link class="link-underline" to="/shop" onClick={(e)=> subActive(e)}>Skirt</Link></li>
                             {/*</ul>*/}
-                            <li><Link to="/shop-details" onClick={(e)=> subActive(e)}>Shop Details</Link></li>
+                            <li><Link class="link-underline" to="/shop-details" onClick={(e)=> subActive(e)}>Shop Details</Link></li>
                           </ul>
                         </li>
-                        <li><Link to="/adoption" onClick={(e)=> handleActive(e)}>Adoption</Link></li>
-                        <li><Link to="/contacts" onClick={(e)=> handleActive(e)}>contacts</Link></li>
+                        <li><Link class="link-underline" to="/adoption" onClick={(e)=> handleActive(e)}>Adoption</Link></li>
+                        <li><Link class="link-underline" to="/contacts" onClick={(e)=> handleActive(e)}>contacts</Link></li>
                       </ul>
                     </div>
                     <div className="header-action d-none d-md-block">
                       <ul>
                         <li className="header-search">
-                          <a href="/#"><i className="flaticon-search" /></a>
+                          <a href="/#" style={{textDecoration : "none"}}><i className="flaticon-search" /></a>
                         </li>
                         <li className="">
                           <a href="/#"><BiUser style={{fontSize : "30px"}}></BiUser></a>
                         </li>
-                        <li className="header-shop-cart"><a href="/#"><i className="flaticon-shopping-bag" /><span>2</span></a>
+                        <li className="header-shop-cart"><a href="/#" style={{textDecoration : "none"}}><i className="flaticon-shopping-bag" /><span>2</span></a>
                           <ul className="minicart">
                             <li className="d-flex align-items-start">
                               <div className="cart-img">
@@ -180,16 +179,16 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
                             </li>
                           </ul>
                         </li>
-                        {/*<li className="header-btn"><Link to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
+                        {/*<li className="header-btn"><Link class="link-underline" to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
                       </ul>
                     </div>
                   </nav>
                 </div>
-             
+
                 <div className="mobile-menu">
                   <nav className="menu-box">
                     <div className="close-btn"><i className="fas fa-times" /></div>
-                    <div className="nav-logo"><Link to="/"><img src="img/logo/logo.png" alt="" title='true' /></Link>
+                    <div className="nav-logo"><Link class="link-underline" to="/"><img src="img/logo/logo.png" alt="" title='true' /></Link>
                     </div>
                     <div className="menu-outer">
                   
@@ -233,8 +232,8 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
             </div>
           </div>
         </div>
-        
-      
+
+
       </header>
     )
 }
