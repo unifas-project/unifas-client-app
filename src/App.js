@@ -1,15 +1,17 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './css/App.css';
-import { Counter } from './feature/counter/Counter';
-import Register from './components/common/Register';
+
+import './App.css';
+import Header from "./components/common/Header";
+import {Route, Routes} from "react-router-dom";
+// import { Counter } from './feature/counter/Counter';
 
 function App() {
   return (
-    
-      <Routes>
-        <Route path="/" element={<Register />} />
-      </Routes>
-    
+    <div className="App">
+        <Routes>
+            <Route path="/" element={<Header/>}></Route>
+            <Route path="/register" element={<Register />} />
+        </Routes>
+    </div>
   );
 }
 
