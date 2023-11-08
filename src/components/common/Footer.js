@@ -91,20 +91,20 @@ function Footer() {
         <div className="row">
           <div className="col-md-8">
             <div className="copyright-text">
-              <p>Copyright © 2022 kutto. All Rights Reserved.</p>
+              <p>Copyright © 2022 UNIFAS. All Rights Reserved.</p>
             </div>
           </div>
           <div className="col-md-4 d-none d-md-block">
-            <div className="footer-lang">
-              <div className="dropdown">
-                <button className="dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img src="img/icon/united-states.png" alt="" /> English
-                </button>
-                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                  <Link className="dropdown-item" to="/"><img src="img/icon/russia.png" alt="" />Russia</Link>
-                  <Link className="dropdown-item" to="/"><img src="img/icon//thailand.png" alt="" />Thailand</Link>
-                  <Link className="dropdown-item" to="/"><img src="img/icon/india.png" alt="" />India</Link>
-                </div>
+            {/*<div className="footer-lang">*/}
+            {/*  <div className="dropdown">*/}
+            {/*    <button className="dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
+            {/*      <img src="img/icon/united-states.png" alt="" /> English*/}
+            {/*    </button>*/}
+                {/*<div className="dropdown-menu" aria-labelledby="dropdownMenuButton2">*/}
+                {/*  <Link className="dropdown-item" to="/"><img src="img/icon/russia.png" alt="" />Russia</Link>*/}
+                {/*  <Link className="dropdown-item" to="/"><img src="img/icon//thailand.png" alt="" />Thailand</Link>*/}
+                {/*  <Link className="dropdown-item" to="/"><img src="img/icon/india.png" alt="" />India</Link>*/}
+                {/*</div>*/}
               </div>
             </div>
           </div>
