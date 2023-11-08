@@ -9,7 +9,6 @@ function App() {
     <div className="App">
         <Routes>
             <Route path="/" element={<Header/>}></Route>
-            <Route path="/register" element={<Register />} />
         </Routes>
     </div>
   );
