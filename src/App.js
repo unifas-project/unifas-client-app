@@ -1,21 +1,26 @@
 import './App.css';
 import Header from "./components/common/Header";
-import {Route, Routes} from "react-router-dom";
-import Login from './components/login/Login';
-import LoginPage from './page/LoginPage/LoginPage';
-import SignupPage from './page/SignupPage/SignupPage';
-// import { Counter } from './feature/counter/Counter';
+import Footer from "./components/common/Footer";
+import {Route, Router, Routes, Switch} from "react-router-dom";
+import React from "react";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
-  return (
-    <div className="App">
-        <Routes>
-            <Route path="/" element={<Header/>}></Route>
-            <Route path="/login" element={<LoginPage/>}></Route>
-            <Route path="/register" element={<SignupPage/>}></Route>
-        </Routes>
-    </div>
-  );
+    return (
+        <div className="App">
+
+            <Header/>
+            <Routes>
+
+                <Route path="/login" element={<LoginPage/>}></Route>
+                <Route path="/register" element={<RegisterPage/>}></Route>
+
+            </Routes>
+            <Footer/>
+
+        </div>
+    );
 }
 
 export default App;
