@@ -130,9 +130,16 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
                         <li className="header-search">
                           <a href="/#" style={{textDecoration : "none"}}><i className="flaticon-search" /></a>
                         </li>
-                        <li className="">
-                          <a href="/#"><BiUser style={{fontSize : "30px"}}></BiUser></a>
+
+                        {/*<li className="">*/}
+                        {/*  <a href="/#"><BiUser style={{fontSize : "30px"}}></BiUser></a>*/}
+                        {/*</li>*/}
+
+                        <li>
+                          <Link to="/login" onClick={(e)=> handleActive(e)}><BiUser style={{fontSize : "30px"}}></BiUser>
+                          </Link>
                         </li>
+
                         <li className="header-shop-cart"><a href="/#" style={{textDecoration : "none"}}><i className="flaticon-shopping-bag" /><span>2</span></a>
                           <ul className="minicart">
                             <li className="d-flex align-items-start">
