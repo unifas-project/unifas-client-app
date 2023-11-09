@@ -131,7 +131,7 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
                           <a href="/#" style={{textDecoration : "none"}}><i className="flaticon-search" /></a>
                         </li>
                         <li className="">
-                          <a href="/#"><BiUser style={{fontSize : "30px"}}></BiUser></a>
+                          <a href="/register"><BiUser style={{fontSize : "30px"}}></BiUser></a>
                         </li>
                         <li className="header-shop-cart"><a href="/#" style={{textDecoration : "none"}}><i className="flaticon-shopping-bag" /><span>2</span></a>
                           <ul className="minicart">
