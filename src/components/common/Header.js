@@ -181,15 +181,17 @@ function Header() {
                   <div className="header-action d-none d-md-block">
                     <ul>
                       <li className="header-search">
-                        <Link to="/login">
+                        <Link to="/#">
                           <i className="flaticon-search" />
                         </Link>
                       </li>
+
                       <li className="">
-                        <a href="/#">
+                        <a href="/login">
                           <BiUser style={{ fontSize: "30px" }}></BiUser>
                         </a>
                       </li>
+
                       <li className="header-shop-cart">
                         <a href="/#">
                           <i className="flaticon-shopping-bag" />
