@@ -187,9 +187,9 @@ function Header() {
                       </li>
 
                       <li className="">
-                        <a href="/login">
+                        <Link to="/login">
                           <BiUser style={{ fontSize: "30px" }}></BiUser>
-                        </a>
+                        </Link>
                       </li>
 
                       <li className="header-shop-cart">
