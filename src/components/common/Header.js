@@ -1,7 +1,11 @@
-import React, {useEffect} from 'react';
+
 import {Link} from 'react-router-dom'
 import $ from 'jquery';
 import {BiUser} from "react-icons/bi";
+import React, { useEffect, useState } from 'react';
+import{ useDispatch, useSelector } from "react-redux";
+import { getCategories, selectCategories, selectSuccess, setSuccess } from '../../feature/category/categorySlice';
+import { getSubCategories, selectSubCategories, selectSuccess1, setSuccess1 } from '../../feature/category/subCategorySlice';
 
 function Header(){
   const handleActive = (e)=>{
@@ -62,7 +66,43 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
         });
   },[])
 
+  const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
+  const CategoryList = useSelector(selectCategories);
+  const success = useSelector(selectSuccess);
 
+  const getCategoryList = async () => {
+      if (!success) {
+          dispatch(getCategories());
+      }
+      else {
+        setCategories(CategoryList)
+        dispatch(setSuccess(true));
+      }
+    };
+    
+    useEffect(() => {
+      getCategoryList();
+    }, [success]);
+
+    const [subCategories, setSubCategories] = useState([]);
+    const dispatch2 = useDispatch();
+    const SubCategoryList = useSelector(selectSubCategories);
+    const success2 = useSelector(selectSuccess1);
+  
+    const getSubCategoryList = async () => {
+        if (!success2) {
+          dispatch2(getSubCategories());
+        }
+        else {
+          setSubCategories(SubCategoryList)
+          dispatch2(setSuccess1(true));
+        }
+      };
+      
+      useEffect(() => {
+        getSubCategoryList();
+      }, [success2]);
 
     return(
 <header>
@@ -101,29 +141,58 @@ if ($('.menu-area li.menu-item-has-children ul').length) {
                     <div className="logo"><Link to="/"><img src="img/logo/logo.png" alt="" /></Link></div>
                     <div className="navbar-wrap main-menu d-none d-lg-flex">
                       <ul className="navigation">
-                        <li className="active menu-item-has-children" onClick={(e)=> handleActive(e)}>
-                          <Link to="/" >Man</Link>
-                          <ul className="submenu">
-                            <li className="active" onClick={(e)=> subActive(e)}>
-                              <Link to="/" >Home One</Link>
-                            </li>
-                            <li onClick={(e)=> subActive(e)}>
-                              <Link to="/home-two" >Home Two</Link>
-                            </li>
-                          </ul>
-                        </li>
+
                         <li className="menu-item-has-children">
-                          <Link to="/shop" onClick={(e)=> handleActive(e)}>Woman</Link>
+                          <Link to="/" onClick={(e)=> handleActive(e)}>Nữ</Link>
                           <ul className="submenu">
-                            <li><Link to="/shop" onClick={(e)=> subActive(e)}>Cloth</Link></li>
-                            {/*<ul className="submenu">*/}
-                              <li><Link to="/shop" onClick={(e)=> subActive(e)}>Skirt</Link></li>
-                            {/*</ul>*/}
-                            <li><Link to="/shop-details" onClick={(e)=> subActive(e)}>Shop Details</Link></li>
+                            {categories.map((category) => 
+                              category.gender === 'NỮ' ? (
+                                <>
+                                  <li><Link to="/" onClick={(e)=> subActive(e)}>{category.name}</Link></li>
+                                  {subCategories.map((subCategory) => 
+                                    subCategory.categoryId === category.id ?
+                                    <li><Link to="/" onClick={(e)=> subActive(e)}>{subCategory.name}</Link></li>
+                                    : null
+                                  )}
+                                </>
+                              ) : null
+                            )}
                           </ul>
                         </li>
-                        <li><Link to="/adoption" onClick={(e)=> handleActive(e)}>Adoption</Link></li>
-                        <li><Link to="/contacts" onClick={(e)=> handleActive(e)}>contacts</Link></li>
+
+                          <li className="menu-item-has-children">
+                          <Link to="/" onClick={(e)=> handleActive(e)}>NAM</Link>
+                          <ul className="submenu">
+                          {categories.map((category) => 
+                              category.gender === 'NAM' ? 
+                              <li><Link to="/" onClick={(e)=> subActive(e)}>{category.name}</Link></li> 
+                              : null
+                          )}
+                          </ul>
+                          </li>
+
+                          <li className="menu-item-has-children">
+                          <Link to="/" onClick={(e)=> handleActive(e)}>TRẺ EM</Link>
+                          <ul className="submenu">
+                          {categories.map((category) => 
+                              category.gender === 'TRẺ EM' ? 
+                              <li><Link to="/" onClick={(e)=> subActive(e)}>{category.name}</Link></li> 
+                              : null
+                          )}
+                          </ul>
+                          </li>
+
+                          <li className="menu-item-has-children">
+                          <Link to="/" onClick={(e)=> handleActive(e)}>TRẺ SƠ SINH</Link>
+                          <ul className="submenu">
+                          {categories.map((category) => 
+                              category.gender === 'TRẺ SƠ SINH' ? 
+                              <li><Link to="/" onClick={(e)=> subActive(e)}>{category.name}</Link></li> 
+                              : null
+                          )}
+                          </ul>
+                          </li>
+
                       </ul>
                     </div>
                     <div className="header-action d-none d-md-block">
