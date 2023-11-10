@@ -61,7 +61,7 @@ function RegisterForm() {
                     <form className="contact-form">
                       <div className="form-grp">
                         <label htmlFor="email">
-                          Your Email <span>*</span>
+                          Your Name <span>*</span>
                         </label>
                         <Field
                           type="text"
