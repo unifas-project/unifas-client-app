@@ -105,7 +105,11 @@ function Footer() {
                 {/*  <Link className="dropdown-item" to="/"><img src="img/icon//thailand.png" alt="" />Thailand</Link>*/}
                 {/*  <Link className="dropdown-item" to="/"><img src="img/icon/india.png" alt="" />India</Link>*/}
                 {/*</div>*/}
+<<<<<<< HEAD
             {/*  </div>*/}
+=======
+              {/*</div>*/}
+>>>>>>> 9e2ae6e468be5d69ae6fd749a5c69e53f6e43cb5
             {/*</div>*/}
           </div>
         </div>
