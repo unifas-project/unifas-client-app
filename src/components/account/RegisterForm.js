@@ -5,11 +5,11 @@ import * as Yup from "yup";
 
 function RegisterForm() {
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    username: Yup.string()
       .required("Username is required")
       .matches(
-        /^[a-z0-9_-]{8,20}$/,
-        "Username can only use letters,numbers, minimum length is 8 characters"
+        /^[a-z0-9_-]{3,20}$/,
+        "Username can only use letters, numbers, minimum length is 3 characters"
       ),
     email: Yup.string()
       .email("Invalid email")
@@ -19,16 +19,16 @@ function RegisterForm() {
       .required("Password is required")
       .matches(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        "Password must contain at least 8 characters, at least one letter and one number"
+        "Password must contain at least 8 characters, one letter and one number"
       ),
     confirmPassword: Yup.string()
-      .required("Confirm New Password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
+      .required("Confirm password is required")
+      .oneOf([Yup.ref("password"), null], "Password must match"),
   });
   return (
     <Formik
       initialValues={{
-        name: "",
+        username: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -61,35 +61,34 @@ function RegisterForm() {
                     <form className="contact-form">
                       <div className="form-grp">
                         <label htmlFor="email">
-                          Your Name <span>*</span>
+                          Username <span>*</span>
                         </label>
                         <Field
                           type="text"
-                          id="name"
-                          name="name"
-                          placeholder="Your Name"
+                          id="username"
+                          name="username"
+                          placeholder="Username"
                           className={
-                            errors.name && touched.name ? "input-error" : ""
+                            errors.username && touched.username ? "input-error" : ""
                           }
                         />
                         <ErrorMessage
-                          name="name"
+                          name="username"
                           component="div"
                           className="error"
                           style={{ color: "red", fontSize: "12px" }}
                         />
-                        {errors.name && touched.name && (
+                        {errors.username && touched.username && (
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
                           >
-                            Enter a valid email address
                           </div>
                         )}
                       </div>
                       <div className="form-grp">
                         <label htmlFor="email">
-                          Your Email <span>*</span>
+                          Email <span>*</span>
                         </label>
                         <Field
                           type="text"
@@ -111,13 +110,12 @@ function RegisterForm() {
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
                           >
-                            Enter a valid email address
                           </div>
                         )}
                       </div>
                       <div className="form-grp">
                         <label htmlFor="password">
-                          Your Password <span>*</span>
+                          Password <span>*</span>
                         </label>
                         <Field
                           type="password"
@@ -141,8 +139,6 @@ function RegisterForm() {
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
                           >
-                            Password must be at least 8 characters and contain
-                            both letters and numbers
                           </div>
                         )}
                       </div>
