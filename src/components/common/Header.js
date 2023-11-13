@@ -120,7 +120,7 @@ function Header() {
                 <nav className="menu-nav show">
                   <div className="logo">
                     <Link to="/">
-                      <img src="img/logo/logo.png" alt="" />
+                      <img src="../../img/logo/UNIFAS-200px.png" alt="" style={{maxWidth : "30%"}}/>
                     </Link>
                   </div>
                   <div className="navbar-wrap main-menu d-none d-lg-flex">

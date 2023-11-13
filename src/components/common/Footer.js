@@ -11,7 +11,7 @@ function Footer() {
           <div className="col-3 mx-0 px-0">
             <div className="footer-widget">
               <div className="f-logo">
-                <Link to="/"><img src="img/logo/logo.png" alt="" /></Link>
+                <Link to="/"><img src="../../../public/img/" alt="" /></Link>
               </div>
               <div className="footer-text">
                 <p>Wear healthy, feel healthy. Our clothes are made from natural and organic materials</p>
@@ -77,7 +77,7 @@ function Footer() {
               <div className="fw-link">
                 <ul>
                   <li><span style={{fontSize : "14px", color : "#676666"}}>Sign up and be the first-in-the know about new arrivals, promotions, in-store events and more.</span></li>
-                  <li><h1><Link to="/adoption" style={{fontSize : "15px", fontWeight : "900", backgroundColor : "red", padding : "9px", borderRadius : "15px", color : "white"}}>SUBCRIBE NOW</Link></h1></li>
+                  <li><h1><Link to="/adoption" style={{fontSize : "15px", fontWeight : "900", backgroundColor : "red", padding : "9px", borderRadius : "15px", color : "white"}}>SUBSCRIBE NOW</Link></h1></li>
                 </ul>
               </div>
             </div>
@@ -105,11 +105,8 @@ function Footer() {
                 {/*  <Link className="dropdown-item" to="/"><img src="img/icon//thailand.png" alt="" />Thailand</Link>*/}
                 {/*  <Link className="dropdown-item" to="/"><img src="img/icon/india.png" alt="" />India</Link>*/}
                 {/*</div>*/}
-<<<<<<< HEAD
             {/*  </div>*/}
-=======
               {/*</div>*/}
->>>>>>> 9e2ae6e468be5d69ae6fd749a5c69e53f6e43cb5
             {/*</div>*/}
           </div>
         </div>
