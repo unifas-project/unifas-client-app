@@ -1,21 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import $ from "jquery";
-import { BiUser } from "react-icons/bi";
+import { BiUser, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
 
 function Header() {
+  console.log(localStorage.getItem("username"));
+
+  const storedUsername = localStorage.getItem("username");
+  const [username, setUsername] = useState(storedUsername);
+
+  useEffect(() => {
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, [storedUsername]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    setUsername(null);
+  };
+
   const handleActive = (e) => {
     document.querySelectorAll(".main-menu ul li").forEach((el) => {
       el.classList.remove("active");
     });
     e.target.parentNode.classList += " active";
   };
+
   const subActive = (e) => {
     document.querySelectorAll(".main-menu ul li ul li").forEach((el) => {
       el.classList.remove("active");
     });
     e.target.parentNode.classList += " active";
   };
+
   useEffect(() => {
     //SubMenu Dropdown Toggle
     if ($(".menu-area li.menu-item-has-children ul").length) {
@@ -181,16 +199,71 @@ function Header() {
                   <div className="header-action d-none d-md-block">
                     <ul>
                       <li className="header-search">
-                        <Link to="/#">
+                        <Link to="/">
                           <i className="flaticon-search" />
                         </Link>
                       </li>
-
-                      <li>
-                        <Link to="/login" onClick={(e)=> handleActive(e)}><BiUser style={{fontSize : "30px"}}></BiUser>
-                        </Link>
-                      </li>
-
+                      <ul>
+                        {username !== null ? (
+                          <li className="header-shop-cart">
+                            <Link to="/">
+                              <BiUser style={{ fontSize: "30px" }}></BiUser>
+                            </Link>
+                           
+                            <ul className="minicart">
+                              <li className="d-flex align-items-start">
+                                <div className="cart-img">
+                                  <a href="/#">
+                                    <BiUserCircle
+                                      style={{
+                                        fontSize: "30px",
+                                        color: "black",
+                                      }}
+                                    ></BiUserCircle>
+                                  </a>
+                                </div>
+                                <a href="/#">{username}</a>
+                              </li>
+                              <li className="d-flex align-items-start">
+                                <div className="cart-img">
+                                  <a href="/#">
+                                    <BiUserCircle
+                                      style={{
+                                        fontSize: "30px",
+                                        color: "black",
+                                      }}
+                                    ></BiUserCircle>
+                                  </a>
+                                </div>
+                                <a href="/#">Update Profile</a>
+                              </li>
+                              <li className="d-flex align-items-start">
+                                <div className="cart-img">
+                                  <a href="/#" onClick={handleLogout}>
+                                    <BiLogOutCircle
+                                      style={{
+                                        fontSize: "30px",
+                                        color: "black",
+                                      }}
+                                    ></BiLogOutCircle>
+                                  </a>
+                                </div>
+                                <h4>
+                                  <Link to="/#" onClick={handleLogout}>
+                                    Log out
+                                  </Link>
+                                </h4>
+                              </li>
+                            </ul>
+                          </li>
+                        ) : (
+                          <li>
+                            <Link to="/login">
+                              <BiUser style={{ fontSize: "30px" }}></BiUser>
+                            </Link>
+                          </li>
+                        )}
+                      </ul>
 
                       <li className="header-shop-cart">
                         <a href="/#">

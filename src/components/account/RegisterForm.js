@@ -35,7 +35,7 @@ function RegisterForm() {
                                         <input type="password" id="name" placeholder="********"/>
                                     </div>
 
-                                    <button type="button" className="btn rounded-btn">CREATE</button>
+                                    <button type="button" className="btn rounded-btn"> REGISTER</button>
                                 </form>
 
                             </div>

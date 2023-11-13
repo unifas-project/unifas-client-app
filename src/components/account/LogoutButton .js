@@ -1,9 +1,16 @@
 import React from 'react';
-import { navigate } from 'gatsby'; 
+import { useNavigate } from 'react-router-dom';
 
-const LogoutButton = () => {
+const LogoutButton = ({ onLogout }) => {
+
+  const navigate = useNavigate();
+
   const logout = () => {
+
     localStorage.removeItem('username');
+
+    onLogout();
+
     navigate("/login"); 
   };
 
