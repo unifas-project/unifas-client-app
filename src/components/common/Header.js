@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
 import { Link } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import $ from "jquery";
 import { BiUser, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
 
 function Header() {
   console.log(localStorage.getItem("username"));
+  const navigate = useNavigate();
+
 
   const storedUsername = localStorage.getItem("username");
   const [username, setUsername] = useState(storedUsername);
@@ -12,12 +15,15 @@ function Header() {
   useEffect(() => {
     if (storedUsername) {
       setUsername(storedUsername);
+      navigate("/");
     }
   }, [storedUsername]);
 
   const handleLogout = () => {
     localStorage.removeItem("username");
     setUsername(null);
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   const handleActive = (e) => {
@@ -203,11 +209,11 @@ function Header() {
                           <i className="flaticon-search" />
                         </Link>
                       </li>
-                      <ul>
+                      
                         {username !== null ? (
                           <li className="header-shop-cart">
                             <Link to="/">
-                              <BiUser style={{ fontSize: "30px" }}></BiUser>
+                              <BiUser style={{ fontSize: "27px", color : "#525252"}}></BiUser>
                             </Link>
                            
                             <ul className="minicart">
@@ -259,11 +265,10 @@ function Header() {
                         ) : (
                           <li>
                             <Link to="/login">
-                              <BiUser style={{ fontSize: "30px" }}></BiUser>
+                              <BiUser style={{ fontSize: "27px", color : "#525252"}}></BiUser>
                             </Link>
                           </li>
                         )}
-                      </ul>
 
                       <li className="header-shop-cart">
                         <a href="/#">

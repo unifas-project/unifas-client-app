@@ -40,9 +40,8 @@ function LoginForm() {
       });
 
       localStorage.setItem("username", response.data.username);
+      
       localStorage.setItem("token", response.data.token);
-
-      console.log("API response:", response.data);
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 

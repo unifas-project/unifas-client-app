@@ -443,8 +443,9 @@ label {
     display: flex;
     align-items: center;
     margin-left: 10px;
-    padding-left: 28px;
+    padding-left: 30px;
     position: relative;
+    margin-right: 10px
 }
 .header-action > ul::before {
     content: "";
