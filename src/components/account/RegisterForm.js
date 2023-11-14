@@ -29,7 +29,7 @@ function RegisterForm() {
       .oneOf([Yup.ref("password"), null], "Password must match"),
   });
 
-  const onSubmitHandler = (values)=> {
+  const submitHandler = (values)=> {
     const {username,email,password} = values;
     console.log(username);
     axios.post("http://localhost:8080/api/auth/register",{username,email,password})
@@ -66,7 +66,7 @@ function RegisterForm() {
         confirmPassword: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={onSubmitHandler}
+      onSubmit={submitHandler}
     >
       
       {({ errors, touched }) => (
