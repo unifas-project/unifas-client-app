@@ -1,9 +1,42 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  registerUser,
+  selectRegisterError,
+  selectRegisterSuccess,
+  setRegisterError,
+  setRegisterSuccess,
+} from "../../feature/registerSlice";
+import { toast } from "react-toastify";
 
 function RegisterForm() {
+  const [register, setRegister] = useState({});
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const successRegister = useSelector(selectRegisterSuccess);
+  const errorRegister = useSelector(selectRegisterError);
+
+  const handleRegisterSuccess = () => {
+    dispatch(setRegisterSuccess(false));
+    toast.success("Register Success !", {
+      position: toast.POSITION.TOP_RIGHT,
+      type: toast.TYPE.SUCCESS,
+    });
+    setTimeout(() => {
+      // closeModal.current.click();
+    }, 200);
+  };
+  const handleRegisterFail = () => {
+    toast.error(errorRegister, {
+      position: toast.POSITION.TOP_RIGHT,
+      type: toast.TYPE.ERROR,
+    });
+    dispatch(setRegisterError(null));
+  };
+
   const validationSchema = Yup.object().shape({
     username: Yup.string()
       .required("Username is required")
@@ -25,6 +58,23 @@ function RegisterForm() {
       .required("Confirm password is required")
       .oneOf([Yup.ref("password"), null], "Password must match"),
   });
+  const onSubmit = (values) => {
+    dispatch(registerUser(values));
+  };
+  useEffect(() => {
+    if (successRegister) {
+      formik.resetForm();
+      handleRegisterSuccess();
+    } else if (errorRegister) {
+      handleRegisterFail();
+    }
+  }, [successRegister, errorRegister]);
+  const formik = useFormik({
+    initialValues : { 
+    },
+    validationSchema,
+    onSubmit,
+  });
   return (
     <Formik
       initialValues={{
@@ -34,9 +84,6 @@ function RegisterForm() {
         confirmPassword: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
     >
       {({ errors, touched }) => (
         <section className="contact-area pt-110 pb-110">
@@ -69,7 +116,9 @@ function RegisterForm() {
                           name="username"
                           placeholder="Username"
                           className={
-                            errors.username && touched.username ? "input-error" : ""
+                            errors.username && touched.username
+                              ? "input-error"
+                              : ""
                           }
                         />
                         <ErrorMessage
@@ -82,8 +131,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -109,8 +157,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -138,8 +185,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -167,13 +213,12 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
 
-                      <button type="button" className="btn rounded-btn">
-                        CREATE
+                      <button type="submit" className="btn rounded-btn">
+                        Register
                       </button>
                     </form>
                   </div>
