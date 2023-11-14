@@ -1,48 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import { Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  registerUser,
-  selectRegisterError,
-  selectRegisterSuccess,
-  setRegisterError,
-  setRegisterSuccess,
-} from "../../feature/registerSlice";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 function RegisterForm() {
-  const [register, setRegister] = useState({});
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const successRegister = useSelector(selectRegisterSuccess);
-  const errorRegister = useSelector(selectRegisterError);
-
-  const handleRegisterSuccess = () => {
-    dispatch(setRegisterSuccess(false));
-    toast.success("Register Success !", {
-      position: toast.POSITION.TOP_RIGHT,
-      type: toast.TYPE.SUCCESS,
-    });
-    setTimeout(() => {
-      // closeModal.current.click();
-    }, 200);
-  };
-  const handleRegisterFail = () => {
-    toast.error(errorRegister, {
-      position: toast.POSITION.TOP_RIGHT,
-      type: toast.TYPE.ERROR,
-    });
-    dispatch(setRegisterError(null));
-  };
-
   const validationSchema = Yup.object().shape({
     username: Yup.string()
       .required("Username is required")
       .matches(
-        /^[a-z0-9_-]{3,20}$/,
-        "Username can only use letters, numbers, minimum length is 3 characters"
+        /^[a-z0-9_-]{8,20}$/,
+        "Username can only use letters, numbers, minimum length is 8 characters"
       ),
     email: Yup.string()
       .email("Invalid email")
@@ -51,31 +21,43 @@ function RegisterForm() {
     password: Yup.string()
       .required("Password is required")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        "Password must contain at least 8 characters, one letter and one number"
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])(?=.*[A-Z])[A-Za-z\d!@#$%^&*()]{8,}$/,
+            "Password must contain at least 8 characters, one number, one special character, and one capital letter"
       ),
     confirmPassword: Yup.string()
       .required("Confirm password is required")
       .oneOf([Yup.ref("password"), null], "Password must match"),
   });
-  const onSubmit = (values) => {
-    dispatch(registerUser(values));
-  };
-  useEffect(() => {
-    if (successRegister) {
-      formik.resetForm();
-      handleRegisterSuccess();
-    } else if (errorRegister) {
-      handleRegisterFail();
-    }
-  }, [successRegister, errorRegister]);
-  const formik = useFormik({
-    initialValues : { 
-    },
-    validationSchema,
-    onSubmit,
-  });
+
+  const onSubmitHandler = (values)=> {
+    const {username,email,password} = values;
+    console.log(username);
+    axios.post("http://localhost:8080/api/auth/register",{username,email,password})
+    .then((res)=>{
+      console.log(res);
+      if(res.data.data ==false){
+        toast.error(res.data.message);
+      }else if(res.data.data){
+        toast.success(res.data.message);
+        navigate("/login");
+      }
+    })
+    .catch(e => console.log("error ",e))
+  }
+
   return (
+    <>
+    <ToastContainer 
+    autoClose={1500}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="dark"
+    />
     <Formik
       initialValues={{
         username: "",
@@ -84,7 +66,9 @@ function RegisterForm() {
         confirmPassword: "",
       }}
       validationSchema={validationSchema}
+      onSubmit={onSubmitHandler}
     >
+      
       {({ errors, touched }) => (
         <section className="contact-area pt-110 pb-110">
           <div className="container">
@@ -105,7 +89,7 @@ function RegisterForm() {
                   </div>
 
                   <div className="contact-wrap-content">
-                    <form className="contact-form">
+                    <Form className="contact-form">
                       <div className="form-grp">
                         <label htmlFor="email">
                           Username <span>*</span>
@@ -220,7 +204,7 @@ function RegisterForm() {
                       <button type="submit" className="btn rounded-btn">
                         Register
                       </button>
-                    </form>
+                    </Form>
                   </div>
                 </div>
               </div>
@@ -229,6 +213,7 @@ function RegisterForm() {
         </section>
       )}
     </Formik>
+    </>
   );
 }
 
