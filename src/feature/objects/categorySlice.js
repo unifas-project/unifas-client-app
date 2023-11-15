@@ -18,15 +18,15 @@ export const categorySlice = createSlice({
     name: "category",
     initialState,
     reducers: {
-        setLoading: (state, action) => {
+        setCategoryLoading: (state, action) => {
             state.loading = action.payload;
         },
 
-        setError: (state, action) => {
+        setCategoryError: (state, action) => {
             state.error = action.payload;
         },
 
-        setSuccess: (state, action) => {
+        setCategorySuccess: (state, action) => {
             state.success = action.payload;
         },
     },
@@ -54,20 +54,20 @@ export const categorySlice = createSlice({
 });
 
 export const {
-    setLoading,
-    setError,
-    setSuccess
+    setCategoryLoading,
+    setCategoryError,
+    setCategorySuccess
 } = categorySlice.actions;
 
-export const selectLoading = (state) => state.category.loading;
-export const selectError = (state) => state.category.error;
-export const selectSuccess = (state) => state.category.success;
+export const selectCategoryLoading = (state) => state.category.loading;
+export const selectCategoryError = (state) => state.category.error;
+export const selectCategorySuccess = (state) => state.category.success;
 export const selectCategories = (state) => state.category.values;
 
 export const setLoadingTrueIfCalled = (isCalled) => (dispatch, getState) => {
-    const currentValue = selectLoading(getState());
+    const currentValue = selectCategoryLoading(getState());
     if (currentValue === isCalled) {
-        dispatch(setLoading(true));
+        dispatch(setCategoryLoading(true));
     }
 };
 

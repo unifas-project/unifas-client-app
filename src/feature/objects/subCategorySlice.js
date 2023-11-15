@@ -18,15 +18,15 @@ export const subCategorySlice = createSlice({
     name: "subCategory",
     initialState,
     reducers: {
-        setLoading: (state, action) => {
+        setSubCategoryLoading: (state, action) => {
             state.loading = action.payload;
         },
 
-        setError: (state, action) => {
+        setSubCategoryError: (state, action) => {
             state.error = action.payload;
         },
 
-        setSuccess: (state, action) => {
+        setSubCategorySuccess: (state, action) => {
             state.success = action.payload;
         },
     },
@@ -54,20 +54,20 @@ export const subCategorySlice = createSlice({
 });
 
 export const {
-    setLoading,
-    setError,
-    setSuccess1
+    setSubCategoryLoading,
+    setSubCategoryError,
+    setSubCategorySuccess
 } = subCategorySlice.actions;
 
-export const selectLoading = (state) => state.subCategory.loading;
-export const selectError = (state) => state.subCategory.error;
-export const selectSuccess1 = (state) => state.subCategory.success;
+export const selectSubCategoryLoading = (state) => state.subCategory.loading;
+export const selectSubCategoryError = (state) => state.subCategory.error;
+export const selectSubCategorySuccess = (state) => state.subCategory.success;
 export const selectSubCategories = (state) => state.subCategory.values;
 
 export const setLoadingTrueIfCalled = (isCalled) => (dispatch, getState) => {
-    const currentValue = selectLoading(getState());
+    const currentValue = selectSubCategoryLoading(getState());
     if (currentValue === isCalled) {
-        dispatch(setLoading(true));
+        dispatch(setSubCategoryLoading(true));
     }
 };
 
