@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import $ from "jquery";
-import { BiUser } from "react-icons/bi";
+import { BiUser, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSubCategories,
@@ -15,7 +16,7 @@ import {
   selectCategorySuccess,
   setCategorySuccess,
 } from "../../feature/objects/categorySlice";
-
+  
 function Header() {
   // Get List Category
   const [categories, setCategories] = useState([]);
@@ -47,12 +48,27 @@ function Header() {
     }
   }, [successSubCategory, dispatchSubCategory, SubCategoryList]);
 
+  console.log(localStorage.getItem("username"));
+  const navigate = useNavigate();
+
+
+  const storedUsername = localStorage.getItem("username");
+  const [username, setUsername] = useState(storedUsername);
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    setUsername(null);
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   const handleActive = (e) => {
     document.querySelectorAll(".main-menu ul li").forEach((el) => {
       el.classList.remove("active");
     });
     e.target.parentNode.classList += " active";
   };
+
   const subActive = (e) => {
     document.querySelectorAll(".main-menu ul li").forEach((el) => {
       el.classList.remove("active");
@@ -105,9 +121,16 @@ function Header() {
     $(".search-close").on("click", function () {
       $(".search-popup-wrap").slideUp(500);
     });
+
     getCategoryList();
     getSubCategoryList();
-  }, [getSubCategoryList, getCategoryList]);
+
+    if (storedUsername) {
+      setUsername(storedUsername);
+      navigate("/");
+    }
+
+  }, [getSubCategoryList, getCategoryList, storedUsername, navigate]);
 
   return (
     <header>
@@ -213,11 +236,67 @@ function Header() {
                           <i className="flaticon-search" />
                         </Link>
                       </li>
-                      <li className="">
-                        <a href="/#">
-                          <BiUser style={{ fontSize: "30px" }}></BiUser>
-                        </a>
-                      </li>
+                      
+                        {username !== null ? (
+                          <li className="header-shop-cart">
+                            <Link to="/">
+                              <BiUser style={{ fontSize: "27px", color : "#525252"}}></BiUser>
+                            </Link>
+                           
+                            <ul className="minicart">
+                              <li className="d-flex align-items-start">
+                                <div className="cart-img">
+                                  <a href="/#">
+                                    <BiUserCircle
+                                      style={{
+                                        fontSize: "30px",
+                                        color: "black",
+                                      }}
+                                    ></BiUserCircle>
+                                  </a>
+                                </div>
+                                <a href="/#">{username}</a>
+                              </li>
+                              <li className="d-flex align-items-start">
+                                <div className="cart-img">
+                                  <a href="/#">
+                                    <BiUserCircle
+                                      style={{
+                                        fontSize: "30px",
+                                        color: "black",
+                                      }}
+                                    ></BiUserCircle>
+                                  </a>
+                                </div>
+                                <a href="/#">Update Profile</a>
+                              </li>
+                              <li className="d-flex align-items-start">
+                                <div className="cart-img">
+                                  <a href="/#" onClick={handleLogout}>
+                                    <BiLogOutCircle
+                                      style={{
+                                        fontSize: "30px",
+                                        color: "black",
+                                      }}
+                                    ></BiLogOutCircle>
+                                  </a>
+                                </div>
+                                <h4>
+                                  <Link to="/#" onClick={handleLogout}>
+                                    Log out
+                                  </Link>
+                                </h4>
+                              </li>
+                            </ul>
+                          </li>
+                        ) : (
+                          <li>
+                            <Link to="/login">
+                              <BiUser style={{ fontSize: "27px", color : "#525252"}}></BiUser>
+                            </Link>
+                          </li>
+                        )}
+
                       <li className="header-shop-cart">
                         <a href="/#">
                           <i className="flaticon-shopping-bag" />
@@ -286,19 +365,14 @@ function Header() {
                           </li>
                         </ul>
                       </li>
-                      {/*<li className="header-btn"><Link to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
                     </ul>
                   </div>
                 </nav>
               </div>
-              
               <div className="menu-backdrop" />
             </div>
           </div>
-
-      </div>
-
-      
+        </div>
       </div>
       <div
         className="search-popup-wrap"
@@ -315,24 +389,18 @@ function Header() {
           <div className="container">
             <div className="row">
               <div className="col-12">
-                <h2 className="title">... Search Here ...</h2>
-                <div className="search-form">
-                  <form>
-                    <input
-                      type="text"
-                      name="search"
-                      placeholder="Type keywords here"
-                    />
-                    <button className="search-btn">
-                      <i className="fas fa-search" />
-                    </button>
-                  </form>
+                  <h2 className="title">... Search Here ...</h2>
+                  <div className="search-form">
+                    <form>
+                      <input type="text" name="search" placeholder="Type keywords here" />
+                      <button className="search-btn"><i className="fas fa-search" /></button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
     </header>
   );
 }
