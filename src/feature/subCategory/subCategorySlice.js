@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { findSubCategories } from "../../api/subCategoryAPI";
+import { getSubCategoryList } from "../../api/subCategoryAPI";
 
 const initialState = {
     values: null,
@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const getSubCategories = createAsyncThunk("subCategories", async () => {
-    const response = await findSubCategories();
+    const response = await getSubCategoryList();
     return response.data;
 });
 

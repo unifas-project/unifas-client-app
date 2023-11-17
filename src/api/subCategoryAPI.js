@@ -1,8 +1,9 @@
 import axios from "axios";
+import { UNIFAS_API } from "./constants";
 
-const SUBCATEGORY_MANAGEMENT_API = "http://localhost:8080/api/subCategories";
+const SUBCATEGORY_MANAGEMENT_API = `${UNIFAS_API}/subCategories`;
 
-export const findSubCategories = async () => {
+export const getSubCategoryList = async () => {
     let result = null;
     try {
         result = await axios.get(`${SUBCATEGORY_MANAGEMENT_API}`);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import $ from "jquery";
 import { BiUser, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,51 +9,69 @@ import {
   selectSubCategories,
   selectSubCategorySuccess,
   setSubCategorySuccess,
-} from "../../feature/objects/subCategorySlice";
+} from "../../feature/subCategory/subCategorySlice";
 import {
   getCategories,
   selectCategories,
   selectCategorySuccess,
   setCategorySuccess,
-} from "../../feature/objects/categorySlice";
-  
+} from "../../feature/category/categorySlice";
+
 function Header() {
+  const dispatch = useDispatch();
+
   // Get List Category
   const [categories, setCategories] = useState([]);
-  const dispatchCategory = useDispatch();
   const CategoryList = useSelector(selectCategories);
   const successCategory = useSelector(selectCategorySuccess);
 
   const getCategoryList = useCallback(async () => {
     if (!successCategory) {
-      dispatchCategory(getCategories());
+      dispatch(getCategories());
     } else {
       setCategories(CategoryList);
-      dispatchCategory(setCategorySuccess(true));
+      dispatch(setCategorySuccess(true));
     }
-  }, [successCategory, dispatchCategory, CategoryList]);
+  }, [successCategory, dispatch, CategoryList]);
 
   // Get List SubCategory
   const [subCategories, setSubCategories] = useState([]);
-  const dispatchSubCategory = useDispatch();
   const SubCategoryList = useSelector(selectSubCategories);
   const successSubCategory = useSelector(selectSubCategorySuccess);
 
   const getSubCategoryList = useCallback(async () => {
     if (!successSubCategory) {
-      dispatchSubCategory(getSubCategories());
+      dispatch(getSubCategories());
     } else {
       setSubCategories(SubCategoryList);
-      dispatchSubCategory(setSubCategorySuccess(true));
+      dispatch(setSubCategorySuccess(true));
     }
-  }, [successSubCategory, dispatchSubCategory, SubCategoryList]);
+  }, [successSubCategory, dispatch, SubCategoryList]);
 
   console.log(localStorage.getItem("username"));
   const navigate = useNavigate();
 
-
   const storedUsername = localStorage.getItem("username");
   const [username, setUsername] = useState(storedUsername);
+
+  useEffect(() => {
+    $(".header-search > a").on("click", function () {
+      $(".search-popup-wrap").slideDown();
+      return false;
+    });
+
+    $(".search-close").on("click", function () {
+      $(".search-popup-wrap").slideUp(500);
+    });
+
+    getCategoryList();
+    getSubCategoryList();
+
+    if (storedUsername) {
+      setUsername(storedUsername);
+      navigate("/");
+    }
+  }, [getSubCategoryList, getCategoryList, storedUsername, navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("username");
@@ -75,62 +93,6 @@ function Header() {
     });
     e.target.parentNode.classList += " active";
   };
-
-  useEffect(() => {
-    // SubMenu Dropdown Toggle
-    if ($(".menu-area li.menu-item-has-children ul").length) {
-      $(".menu-area .navigation li.menu-item-has-children").append(
-        '<div class="dropdown-btn"><span class="fas fa-angle-down"></span></div>'
-      );
-    }
-    if ($(".mobile-menu").length) {
-      var mobileMenuContent = $(".menu-area .main-menu").html();
-      $(".mobile-menu .menu-box .menu-outer").append(mobileMenuContent);
-
-      //Dropdown Button
-      $(".mobile-menu li.menu-item-has-children .dropdown-btn").on(
-        "click",
-        function () {
-          $(this).toggleClass("open");
-          $(this).prev("ul").slideToggle(500);
-        }
-      );
-      //Menu Toggle Btn
-      $(".mobile-nav-toggler").on("click", function () {
-        $("body").addClass("mobile-menu-visible");
-      });
-
-      //Menu Toggle Btn
-      $(".menu-backdrop, .mobile-menu .close-btn").on("click", function () {
-        $("body").removeClass("mobile-menu-visible");
-      });
-    }
-
-    $(".navbar-toggle").on("click", function () {
-      $(".navbar-nav").addClass("mobile_menu");
-    });
-    $(".navbar-nav li a").on("click", function () {
-      $(".navbar-collapse").removeClass("show");
-    });
-
-    $(".header-search > a").on("click", function () {
-      $(".search-popup-wrap").slideDown();
-      return false;
-    });
-
-    $(".search-close").on("click", function () {
-      $(".search-popup-wrap").slideUp(500);
-    });
-
-    getCategoryList();
-    getSubCategoryList();
-
-    if (storedUsername) {
-      setUsername(storedUsername);
-      navigate("/");
-    }
-
-  }, [getSubCategoryList, getCategoryList, storedUsername, navigate]);
 
   return (
     <header>
@@ -236,66 +198,70 @@ function Header() {
                           <i className="flaticon-search" />
                         </Link>
                       </li>
-                      
-                        {username !== null ? (
-                          <li className="header-shop-cart">
-                            <Link to="/">
-                              <BiUser style={{ fontSize: "27px", color : "#525252"}}></BiUser>
-                            </Link>
-                           
-                            <ul className="minicart">
-                              <li className="d-flex align-items-start">
-                                <div className="cart-img">
-                                  <a href="/#">
-                                    <BiUserCircle
-                                      style={{
-                                        fontSize: "30px",
-                                        color: "black",
-                                      }}
-                                    ></BiUserCircle>
-                                  </a>
-                                </div>
-                                <a href="/#">{username}</a>
-                              </li>
-                              <li className="d-flex align-items-start">
-                                <div className="cart-img">
-                                  <a href="/#">
-                                    <BiUserCircle
-                                      style={{
-                                        fontSize: "30px",
-                                        color: "black",
-                                      }}
-                                    ></BiUserCircle>
-                                  </a>
-                                </div>
-                                <a href="/#">Update Profile</a>
-                              </li>
-                              <li className="d-flex align-items-start">
-                                <div className="cart-img">
-                                  <a href="/#" onClick={handleLogout}>
-                                    <BiLogOutCircle
-                                      style={{
-                                        fontSize: "30px",
-                                        color: "black",
-                                      }}
-                                    ></BiLogOutCircle>
-                                  </a>
-                                </div>
-                                <h4>
-                                  <Link to="/#" onClick={handleLogout}>
-                                    Log out
-                                  </Link>
-                                </h4>
-                              </li>
-                            </ul>
-                          </li>
-                        ) : (
-                          <li>
-                            <Link to="/login">
-                              <BiUser style={{ fontSize: "27px", color : "#525252"}}></BiUser>
-                            </Link>
-                          </li>
-                        )}
+
+                      {username !== null ? (
+                        <li className="header-shop-cart">
+                          <Link to="/">
+                            <BiUser
+                              style={{ fontSize: "27px", color: "#525252" }}
+                            ></BiUser>
+                          </Link>
+
+                          <ul className="minicart">
+                            <li className="d-flex align-items-start">
+                              <div className="cart-img">
+                                <a href="/#">
+                                  <BiUserCircle
+                                    style={{
+                                      fontSize: "30px",
+                                      color: "black",
+                                    }}
+                                  ></BiUserCircle>
+                                </a>
+                              </div>
+                              <a href="/#">{username}</a>
+                            </li>
+                            <li className="d-flex align-items-start">
+                              <div className="cart-img">
+                                <a href="/#">
+                                  <BiUserCircle
+                                    style={{
+                                      fontSize: "30px",
+                                      color: "black",
+                                    }}
+                                  ></BiUserCircle>
+                                </a>
+                              </div>
+                              <a href="/#">Update Profile</a>
+                            </li>
+                            <li className="d-flex align-items-start">
+                              <div className="cart-img">
+                                <a href="/#" onClick={handleLogout}>
+                                  <BiLogOutCircle
+                                    style={{
+                                      fontSize: "30px",
+                                      color: "black",
+                                    }}
+                                  ></BiLogOutCircle>
+                                </a>
+                              </div>
+                              <h4>
+                                <Link to="/#" onClick={handleLogout}>
+                                  Log out
+                                </Link>
+                              </h4>
+                            </li>
+                          </ul>
+                        </li>
+                      ) : (
+                        <li>
+                          <Link to="/login">
+                            <BiUser
+                              style={{ fontSize: "27px", color: "#525252" }}
+                            ></BiUser>
+                          </Link>
+                        </li>
+                      )}
 
                       <li className="header-shop-cart">
                         <a href="/#">
@@ -389,18 +355,24 @@ function Header() {
           <div className="container">
             <div className="row">
               <div className="col-12">
-                  <h2 className="title">... Search Here ...</h2>
-                  <div className="search-form">
-                    <form>
-                      <input type="text" name="search" placeholder="Type keywords here" />
-                      <button className="search-btn"><i className="fas fa-search" /></button>
-                    </form>
-                  </div>
+                <h2 className="title">... Search Here ...</h2>
+                <div className="search-form">
+                  <form>
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="Type keywords here"
+                    />
+                    <button className="search-btn">
+                      <i className="fas fa-search" />
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </header>
   );
 }
