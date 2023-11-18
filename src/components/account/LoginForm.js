@@ -141,7 +141,7 @@ function LoginForm() {
                             <label htmlFor="checkbox">Remember Me</label>
                           </div>
                           <Link
-                            to="/forget"
+                            to="/forget-password"
                             className="forget-password"
                             style={{ marginLeft: "220px" }}
                           >
