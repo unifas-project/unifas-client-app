@@ -11,7 +11,7 @@ function Footer() {
           <div className="col-3 mx-0 px-0">
             <div className="footer-widget">
               <div className="f-logo">
-                <Link to="/"><img src="../../../public/img/" alt="" /></Link>
+                <Link to="/"><img src="/img/logo/UNIFAS-200px.png" alt="" style={{maxWidth : "20%"}} /></Link>
               </div>
               <div className="footer-text">
                 <p>Wear healthy, feel healthy. Our clothes are made from natural and organic materials</p>
@@ -73,7 +73,7 @@ function Footer() {
           </div>
           <div className="col-3 mx-0 px-0">
             <div className="footer-widget">
-              <h4 className="fw-title">E-Newsletterr</h4>
+              <h4 className="fw-title">E-Newsletter</h4>
               <div className="fw-link">
                 <ul>
                   <li><span style={{fontSize : "14px", color : "#676666"}}>Sign up and be the first-in-the know about new arrivals, promotions, in-store events and more.</span></li>

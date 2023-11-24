@@ -1,0 +1,1 @@
+export const UNIFAS_API = 'http://localhost:8080/api'

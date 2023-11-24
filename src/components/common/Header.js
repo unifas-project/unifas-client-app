@@ -54,7 +54,7 @@ function Header() {
     });
 
     $(".header-search > a").on("click", function () {
-      $(".search-popup-wrap").slideToggle();
+      $(".search-popup-wrap").slideDown();
       return false;
     });
 
@@ -109,7 +109,8 @@ function Header() {
           </div>
         </div>
       </div>
-      <div id="sticky-header" className="menu-area">
+
+      <div id="sticky-header" className="menu-area" style={{boxShadow : "#e8e8e8 0px 22px 10px -20px"}}>
         <div className="container custom-container">
           <div className="row">
             <div className="col-12">
@@ -120,7 +121,7 @@ function Header() {
                 <nav className="menu-nav show">
                   <div className="logo">
                     <Link to="/">
-                      <img src="../../img/logo/UNIFAS-200px.png" alt="" style={{maxWidth : "30%"}}/>
+                      <img src="/img/logo/UNIFAS-200px.png" alt="" style={{maxWidth : "30%"}}/>
                     </Link>
                   </div>
                   <div className="navbar-wrap main-menu d-none d-lg-flex">
@@ -315,169 +316,23 @@ function Header() {
         {/*<div className="header-shape" style={{backgroundImage:"url('img/bg/header_shape.png')"}}/>*/}
       </div>
 
-      <div
-        className="search-popup-wrap"
-        tabIndex={-1}
-        role="dialog"
-        aria-hidden="true"
-      >
+
+
+
+      <div className="search-popup-wrap" tabIndex={-1} role="dialog" aria-hidden="true">
         <div className="search-close">
-          <span>
-            <i className="fas fa-times" />
-          </span>
+          <span><i className="fas fa-times" /></span>
         </div>
         <div className="search-wrap text-center">
           <div className="container">
             <div className="row">
               <div className="col-12">
-{/* <<<<<<< HEAD */}
-                <div className="mobile-nav-toggler"><i className="fas fa-bars" /></div>
-                <div className="menu-wrap">
-                  <nav className="menu-nav show">
-                    <div className="logo"><Link class="link-underline" to="/"><img src="img/logo/logo.png" alt="" /></Link></div>
-                    <div className="navbar-wrap main-menu d-none d-lg-flex">
-                      <ul className="navigation">
-                        <li className="active menu-item-has-children" onClick={(e)=> handleActive(e)}>
-                          <Link class="link-underline"  to="/" >Man</Link>
-                          <ul className="submenu">
-                            <li className="active" onClick={(e)=> subActive(e)}>
-                              <Link class="link-underline" to="/" >Home One</Link>
-                            </li>
-                            <li onClick={(e)=> subActive(e)}>
-                              <Link class="link-underline" to="/home-two" >Home Two</Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="menu-item-has-children">
-                          <Link class="link-underline" to="/shop" onClick={(e)=> handleActive(e)}>Woman</Link>
-                          <ul className="submenu">
-                            <li><Link class="link-underline" to="/shop" onClick={(e)=> subActive(e)}>Cloth</Link></li>
-                            {/*<ul className="submenu">*/}
-                              <li><Link class="link-underline" to="/shop" onClick={(e)=> subActive(e)}>Skirt</Link></li>
-                            {/*</ul>*/}
-                            <li><Link class="link-underline" to="/shop-details" onClick={(e)=> subActive(e)}>Shop Details</Link></li>
-                          </ul>
-                        </li>
-                        <li><Link class="link-underline" to="/adoption" onClick={(e)=> handleActive(e)}>Adoption</Link></li>
-                        <li><Link class="link-underline" to="/contacts" onClick={(e)=> handleActive(e)}>contacts</Link></li>
-                      </ul>
-                    </div>
-                    <div className="header-action d-none d-md-block">
-                      <ul>
-                        <li className="header-search">
-                          <a href="/#" style={{textDecoration : "none"}}><i className="flaticon-search" /></a>
-                        </li>
-                        <li className="">
-                          <a href="/register"><BiUser style={{fontSize : "30px"}}></BiUser></a>
-                        </li>
-                        <li className="header-shop-cart"><a href="/#" style={{textDecoration : "none"}}><i className="flaticon-shopping-bag" /><span>2</span></a>
-                          <ul className="minicart">
-                            <li className="d-flex align-items-start">
-                              <div className="cart-img">
-                                <a href="/#"><img src="img/product/cart_p01.jpg" alt="" /></a>
-                              </div>
-                              <div className="cart-content">
-                                <h4><a href="/#">The King Charles Spaniel</a></h4>
-                                <div className="cart-price">
-                                  <span className="new">$229.9</span>
-                                  <span><del>$229.9</del></span>
-                                </div>
-                              </div>
-                              <div className="del-icon">
-                                <a href="/#"><i className="far fa-trash-alt" /></a>
-                              </div>
-                            </li>
-                            <li className="d-flex align-items-start">
-                              <div className="cart-img">
-                                <a href="/#"><img src="img/product/cart_p02.jpg" alt="" /></a>
-                              </div>
-                              <div className="cart-content">
-                                <h4><a href="/#">The Labrador Retriever</a></h4>
-                                <div className="cart-price">
-                                  <span className="new">$229.9</span>
-                                  <span><del>$229.9</del></span>
-                                </div>
-                              </div>
-                              <div className="del-icon">
-                                <a href="/#"><i className="far fa-trash-alt" /></a>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="total-price">
-                                <span className="f-left">Total:</span>
-                                <span className="f-right">$239.9</span>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="checkout-link">
-                                <a href="/#">Shopping Cart</a>
-                                <a className="black-color" href="/#">Checkout</a>
-                              </div>
-                            </li>
-                          </ul>
-                        </li>
-                        {/*<li className="header-btn"><Link class="link-underline" to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
-                      </ul>
-                    </div>
-                  </nav>
-                </div>
-
-                <div className="mobile-menu">
-                  <nav className="menu-box">
-                    <div className="close-btn"><i className="fas fa-times" /></div>
-                    <div className="nav-logo"><Link class="link-underline" to="/"><img src="img/logo/logo.png" alt="" title='true' /></Link>
-                    </div>
-                    <div className="menu-outer">
-                  
-                    </div>
-                    <div className="social-links">
-                      <ul className="clearfix">
-                        <li><a href="/#"><span className="fab fa-twitter" /></a></li>
-                        <li><a href="/#"><span className="fab fa-facebook-square" /></a></li>
-                        <li><a href="/#"><span className="fab fa-pinterest-p" /></a></li>
-                        <li><a href="/#"><span className="fab fa-instagram" /></a></li>
-                        <li><a href="/#"><span className="fab fa-youtube" /></a></li>
-                      </ul>
-                    </div>
-                  </nav>
-                </div>
-                <div className="menu-backdrop" />
-         
-              </div>
-            </div>
-          </div>
-          {/*<div className="header-shape" style={{backgroundImage:"url('img/bg/header_shape.png')"}}/>*/}
-        </div>
-       
-        <div className="search-popup-wrap" tabIndex={-1} role="dialog" aria-hidden="true">
-          <div className="search-close">
-            <span><i className="fas fa-times" /></span>
-          </div>
-          <div className="search-wrap text-center">
-            <div className="container">
-              <div className="row">
-                <div className="col-12">
-                  <h2 className="title">... Search Here ...</h2>
-                  <div className="search-form">
-                    <form>
-                      <input type="text" name="search" placeholder="Type keywords here" />
-                      <button className="search-btn"><i className="fas fa-search" /></button>
-                    </form>
-                  </div>
-{/* ======= */}
-                {/* <h2 className="title">... Search Here ...</h2> */}
-                {/* <div className="search-form"> */}
-                  {/* <form> */}
-                    {/* <input */}
-                      {/* // type="text" */}
-                      {/* // name="search" */}
-                      {/* // placeholder="Type keywords here" */}
-                    {/* // /> */}
-                    {/* <button className="search-btn"> */}
-                      {/* <i className="fas fa-search" /> */}
-                    {/* </button> */}
-                  {/* </form> */}
-{/* >>>>>>> d075c710d8fc7c1fc421aa5f33ff6213b6bb0bb5 */}
+                <h2 className="title">... Search Here ...</h2>
+                <div className="search-form">
+                  <form>
+                    <input type="text" name="search" placeholder="Type keywords here" />
+                    <button className="search-btn"><i className="fas fa-search" /></button>
+                  </form>
                 </div>
               </div>
             </div>

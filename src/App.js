@@ -6,6 +6,7 @@ import { Route, Router, Routes, Switch } from "react-router-dom";
 import React from "react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import OrderPage from "./pages/OrderPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/order" element={<OrderPage/>}></Route>
       </Routes>
       <Footer />
     </div>
