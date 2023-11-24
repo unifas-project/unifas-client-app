@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
-
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
@@ -18,13 +17,14 @@ function LoginForm() {
       .required("Password is required")
       .min(8, "Password must be at least 8 characters")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d).*$/,
-        "Password must contain both letters and numbers"
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).*$/,
+        "Password must contain letters, numbers, and at least one special character"
       ),
   });
 
   const onSubmitHandler = async (values) => {
     try {
+      // const response = "../../mock/login.json";
       const response = await axios.post(
         "http://localhost:8080/api/auth/login",
         values
@@ -39,14 +39,15 @@ function LoginForm() {
         draggable: true,
       });
 
-      localStorage.setItem("username", response.data.username);
-      
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("username", response.data.data.username);
+      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("role",response.data.data.role);
+
+      console.log(response.data);
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       navigate("/");
-      
     } catch (error) {
       console.error("API error:", error);
 
@@ -99,11 +100,9 @@ function LoginForm() {
                             placeholder="info.example@.com"
                             className={
                               errors.email && touched.email ? "input-error" : ""
-                              
                             }
-                            
                           />
-                          
+
                           <ErrorMessage
                             name="email"
                             component="div"
@@ -134,7 +133,7 @@ function LoginForm() {
                             style={{ color: "red", fontSize: "12px" }}
                           />
                         </div>
-                        
+
                         <div className="form-grp checkbox-grp">
                           <div className="remember-me">
                             <input type="checkbox" id="checkbox" />

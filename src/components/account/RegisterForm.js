@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import { Formik, Field, ErrorMessage} from "formik";
 import * as Yup from "yup";
 
 function RegisterForm() {
@@ -69,7 +69,9 @@ function RegisterForm() {
                           name="username"
                           placeholder="Username"
                           className={
-                            errors.username && touched.username ? "input-error" : ""
+                            errors.username && touched.username
+                              ? "input-error"
+                              : ""
                           }
                         />
                         <ErrorMessage
@@ -82,8 +84,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -109,8 +110,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -138,8 +138,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -167,8 +166,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
 
