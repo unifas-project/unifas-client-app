@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
+
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
@@ -41,11 +42,12 @@ function LoginForm() {
       localStorage.setItem("id",response.data.id)
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("token", response.data.token);
-      console.log("API response:", response.data);
+      localStorage.setItem("token", response.data.token);
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       navigate("/");
+      
     } catch (error) {
       console.error("API error:", error);
 
@@ -89,7 +91,7 @@ function LoginForm() {
                       <Form className="contact-form">
                         <div className="form-grp">
                           <label htmlFor="email">
-                            Your Email <span>*</span>
+                            Email <span>*</span>
                           </label>
                           <Field
                             type="text"
@@ -98,27 +100,22 @@ function LoginForm() {
                             placeholder="info.example@.com"
                             className={
                               errors.email && touched.email ? "input-error" : ""
+                              
                             }
+                            
                           />
+                          
                           <ErrorMessage
                             name="email"
                             component="div"
                             className="error"
                             style={{ color: "red", fontSize: "12px" }}
                           />
-                          {errors.email && touched.email && (
-                            <div
-                              className="error-message"
-                              style={{ color: "red", fontSize: "12px" }}
-                            >
-                              Enter a valid email address
-                            </div>
-                          )}
                         </div>
 
                         <div className="form-grp">
                           <label htmlFor="password">
-                            Your Password <span>*</span>
+                            Password <span>*</span>
                           </label>
                           <Field
                             type="password"
@@ -137,24 +134,15 @@ function LoginForm() {
                             className="error"
                             style={{ color: "red", fontSize: "12px" }}
                           />
-
-                          {errors.password && touched.password && (
-                            <div
-                              className="error-message"
-                              style={{ color: "red", fontSize: "12px" }}
-                            >
-                              Password must be at least 8 characters and contain
-                              both letters and numbers
-                            </div>
-                          )}
                         </div>
+                        
                         <div className="form-grp checkbox-grp">
                           <div className="remember-me">
                             <input type="checkbox" id="checkbox" />
                             <label htmlFor="checkbox">Remember Me</label>
                           </div>
                           <Link
-                            to="/forget"
+                            to="/forget-password"
                             className="forget-password"
                             style={{ marginLeft: "220px" }}
                           >

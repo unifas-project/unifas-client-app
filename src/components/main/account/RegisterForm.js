@@ -1,15 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import React, { useEffect} from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 function RegisterForm() {
+  const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
     username: Yup.string()
       .required("Username is required")
       .matches(
-        /^[a-z0-9_-]{3,20}$/,
-        "Username can only use letters, numbers, minimum length is 3 characters"
+        /^[a-z0-9_-]{8,20}$/,
+        "Username can only use letters, numbers, minimum length is 8 characters"
       ),
     email: Yup.string()
       .email("Invalid email")
@@ -18,14 +21,43 @@ function RegisterForm() {
     password: Yup.string()
       .required("Password is required")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        "Password must contain at least 8 characters, one letter and one number"
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])(?=.*[A-Z])[A-Za-z\d!@#$%^&*()]{8,}$/,
+            "Password must contain at least 8 characters, one number, one special character, and one capital letter"
       ),
     confirmPassword: Yup.string()
       .required("Confirm password is required")
       .oneOf([Yup.ref("password"), null], "Password must match"),
   });
+
+  const submitHandler = (values)=> {
+    const {username,email,password} = values;
+    console.log(username);
+    axios.post("http://localhost:8080/api/auth/register",{username,email,password})
+    .then((res)=>{
+      console.log(res);
+      if(res.data.data ==false){
+        toast.error(res.data.message);
+      }else if(res.data.data){
+        toast.success(res.data.message);
+        navigate("/login");
+      }
+    })
+    .catch(e => console.log("error ",e))
+  }
+
   return (
+    <>
+    <ToastContainer 
+    autoClose={1500}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="dark"
+    />
     <Formik
       initialValues={{
         username: "",
@@ -34,10 +66,9 @@ function RegisterForm() {
         confirmPassword: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
+      onSubmit={submitHandler}
     >
+      
       {({ errors, touched }) => (
         <section className="contact-area pt-110 pb-110">
           <div className="container">
@@ -58,7 +89,7 @@ function RegisterForm() {
                   </div>
 
                   <div className="contact-wrap-content">
-                    <form className="contact-form">
+                    <Form className="contact-form">
                       <div className="form-grp">
                         <label htmlFor="email">
                           Username <span>*</span>
@@ -69,7 +100,9 @@ function RegisterForm() {
                           name="username"
                           placeholder="Username"
                           className={
-                            errors.username && touched.username ? "input-error" : ""
+                            errors.username && touched.username
+                              ? "input-error"
+                              : ""
                           }
                         />
                         <ErrorMessage
@@ -82,8 +115,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -109,8 +141,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -138,8 +169,7 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
                       <div className="form-grp">
@@ -167,15 +197,14 @@ function RegisterForm() {
                           <div
                             className="error-message"
                             style={{ color: "red", fontSize: "12px" }}
-                          >
-                          </div>
+                          ></div>
                         )}
                       </div>
 
-                      <button type="button" className="btn rounded-btn">
-                        CREATE
+                      <button type="submit" className="btn rounded-btn">
+                        Register
                       </button>
-                    </form>
+                    </Form>
                   </div>
                 </div>
               </div>
@@ -184,6 +213,7 @@ function RegisterForm() {
         </section>
       )}
     </Formik>
+    </>
   );
 }
 
