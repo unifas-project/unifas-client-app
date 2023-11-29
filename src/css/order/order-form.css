@@ -32,3 +32,10 @@ div.product-code span{
     border: #ff0000 solid 1px ;
     box-shadow: 0 0 0 .2rem rgba(255, 127, 127, 0.53)
 }
+.modal-45mw{
+    max-width: 45%;
+}
+
+.address-list-modal{
+    max-height: 50%;
+}

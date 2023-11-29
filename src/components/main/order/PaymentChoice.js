@@ -11,7 +11,6 @@ const PaymentChoice = () => {
         }
     )
 
-
     return (
         <div>
             <div className="card mt-4" style={{padding: "20px"}}>
