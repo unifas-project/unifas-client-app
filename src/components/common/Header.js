@@ -187,7 +187,7 @@ function Header() {
       </div>
 
       <div id="sticky-header" className="menu-area" style={{boxShadow : "#e8e8e8 0px 22px 10px -20px"}}>
-        <div className="container custom-container">
+        <div className="container custom-container" style={{width : "85%"}}>
           <div className="row">
             <div className="col-12">
               <div className="menu-wrap">

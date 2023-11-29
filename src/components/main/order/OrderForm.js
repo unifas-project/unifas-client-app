@@ -238,7 +238,7 @@ const OrderForm = () => {
 
 
         return (
-            <section className="contact-area pt-110 pb-110">
+            <section className="contact-area pt-50 pb-50">
                 <ToastContainer/>
                 <div className="container" style={{maxWidth: "1400px"}}>
                     <h1>Order</h1>

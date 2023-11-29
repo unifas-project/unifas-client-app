@@ -91,7 +91,7 @@ function Footer() {
         <div className="row">
           <div className="col-md-8">
             <div className="copyright-text">
-              <p>Copyright © 2022 UNIFAS. All Rights Reserved.</p>
+              <p>Copyright © 2023 UNIFAS. All Rights Reserved.</p>
             </div>
           </div>
           <div className="col-md-4 d-none d-md-block">
