@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../../../feature/cart/cartSlice';
 import { getAllProducts, selectProductList, selectLoading, selectError } from '../../../feature/product/productsSlice';
 
 function Product() {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  
 
   const products = useSelector(selectProductList);
   const loading = useSelector(selectLoading);
@@ -19,7 +18,7 @@ function Product() {
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    // navigate('/cart');
+   
   };
 
   

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -8,6 +8,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const storedUsername = localStorage.getItem("username");
+  useEffect(()=>{
+    if (storedUsername) {
+      navigate("/");
+    }
+  })
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -140,7 +146,7 @@ function LoginForm() {
                             <label htmlFor="checkbox">Remember Me</label>
                           </div>
                           <Link
-                            to="/forget"
+                            to="/forget-password"
                             className="forget-password"
                             style={{ marginLeft: "220px" }}
                           >

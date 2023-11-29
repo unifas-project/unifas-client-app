@@ -58,9 +58,9 @@
 
 .cart-summary {
   margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+ 
+
+ 
 }
 
 .clear-btn {
@@ -124,6 +124,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  padding: 50px;
 }
 
 .cart-table th, .cart-table td {
@@ -178,7 +179,7 @@
   margin-top: 20px;
 }
 
-/* Cart.css */
+
 
 .cart-table {
   width: 100%;
@@ -234,11 +235,19 @@
 .cart-summary {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 11px; /* Khoảng cách giữa các cột */
+  gap: 10px; 
+  height: fit-content;
 }
 
 .summary-item {
-  text-align: center; /* Canh giữa nội dung */
+  text-align: center; 
+  height: fit-content;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    appearance: none; 
 }
 
 
