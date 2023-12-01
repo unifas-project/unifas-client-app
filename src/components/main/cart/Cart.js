@@ -248,7 +248,7 @@ const Cart = () => {
                         {cartItem.name}
                       </div>
                     </td>
-                    <td>{cartItem.price}</td>
+                    <td>${cartItem.price}</td>
                     <td>${cartItem.size}</td>
                     <td>${cartItem.color}</td>
                     <td>
@@ -307,7 +307,7 @@ const Cart = () => {
 
                     <td>
                       <h6 style={{ color: "black" }}>
-                        {cartItem.price * cartItem.cartQuantity}
+                      ${cartItem.price * cartItem.cartQuantity}
                       </h6>
                     </td>
                     <td>

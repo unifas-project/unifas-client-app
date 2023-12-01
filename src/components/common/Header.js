@@ -54,6 +54,11 @@ function Header() {
     }
   }, [successSubCategory, dispatch, SubCategoryList]);
 
+
+
+
+
+
   useEffect(() => {
     $(".header-search > a").on("click", function () {
       $(".search-popup-wrap").slideDown();
@@ -66,6 +71,7 @@ function Header() {
 
     getCategoryList();
     getSubCategoryList();
+
 
     if (storedUsername) {
       setUsername(storedUsername);

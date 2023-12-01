@@ -65,6 +65,7 @@ function BeforeAfterLogin() {
     setUsername(null);
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("id");
     navigate("/login");
   };
 

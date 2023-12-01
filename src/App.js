@@ -17,20 +17,18 @@ import AdminProduct from "./pages/adminSide/AdminProduct";
 
 
 
-
-
-
 function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 3000);
   }, []);
 
   return (
     <div className="App">
+  
       {loading ? (
         <Loading />
       ) : (
