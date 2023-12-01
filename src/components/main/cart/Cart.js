@@ -84,6 +84,10 @@ const Cart = () => {
     handleCloseClearModal();
   };
 
+  const handleStartShoppingClick = () => {
+    navigate("/");
+  };
+
   const handleCheckOutClick = async () => {
     if (username !== null) {
       // try {
@@ -106,7 +110,7 @@ const Cart = () => {
       //     );
 
       //     if (response.status === 200) {
-      navigate("/checkout");
+      navigate("/order");
       //     } else {
       //       console.error(
       //         "Failed to save information to the database. Server returned:",
@@ -135,13 +139,22 @@ const Cart = () => {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          padding:"10px 10px"
         }}
       >
         SHOPPING CART
       </h2>
       {cart.cartItems.length === 0 ? (
         <div className="cart-empty">
-          <p>Your cart is currently empty</p>
+          <p
+            style={{
+              padding: " 0px 0px",
+              color: "black",
+              fontSize: "40px",
+            }}
+          >
+            Your cart is currently empty !!!
+          </p>
           <div className="start-shopping">
             <Link
               to="/"
@@ -152,26 +165,29 @@ const Cart = () => {
                 color: "#000",
               }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                className="bi bi-arrow-left"
-                viewBox="0 0 16 16"
+              <button
+                className="btn"
+                style={{
+                  padding: "9px 9px",
+                  boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                  width: "158px",
+                }}
+                onClick={handleStartShoppingClick}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
-                />
-              </svg>
-              <span>Start Shopping</span>
+                Start Shopping
+              </button>
             </Link>
           </div>
         </div>
       ) : (
         <div>
-          <table className="cart-table">
+          <table
+            className="cart-table"
+            style={{
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+              padding: " 20px 20px",
+            }}
+          >
             <thead>
               <tr>
                 <th>Image</th>
@@ -232,7 +248,7 @@ const Cart = () => {
                         {cartItem.name}
                       </div>
                     </td>
-                    <td>${cartItem.price}</td>
+                    <td>{cartItem.price}</td>
                     <td>${cartItem.size}</td>
                     <td>${cartItem.color}</td>
                     <td>
@@ -249,6 +265,10 @@ const Cart = () => {
                           className={`btn`}
                           onClick={() => handleDecreaseCart(cartItem)}
                           disabled={cartItem.cartQuantity <= 1}
+                          style={{
+                            width: "30px",
+                            margin: "7px",
+                          }}
                         >
                           -
                         </button>
@@ -258,7 +278,12 @@ const Cart = () => {
                           value={cartItem.cartQuantity}
                           min={1}
                           max={50}
-                          style={{ width: "30px", margin: "10px" }}
+                          style={{
+                            width: "30px",
+                            margin: "10px",
+                            boxShadow:
+                              "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                          }}
                           onChange={(e) => {
                             const value = parseInt(e.target.value, 10);
                             if (!isNaN(value) && value >= 1 && value <= 50) {
@@ -270,17 +295,28 @@ const Cart = () => {
                           className={`btn`}
                           onClick={() => handleAddToCart(cartItem)}
                           disabled={cartItem.cartQuantity >= 50}
+                          style={{
+                            width: "30px",
+                            margin: "7px",
+                          }}
                         >
                           +
                         </button>
                       </div>
                     </td>
 
-                    <td>${cartItem.price * cartItem.cartQuantity}</td>
+                    <td>
+                      <h6 style={{ color: "black" }}>
+                        {cartItem.price * cartItem.cartQuantity}
+                      </h6>
+                    </td>
                     <td>
                       <button
                         className={`btn`}
-                        style={{ padding: "5px 9px" }}
+                        style={{
+                          padding: "5px 9px",
+                          boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                        }}
                         onClick={() =>
                           handleRemoveFromCartWithConfirmation(cartItem)
                         }
@@ -298,7 +334,11 @@ const Cart = () => {
               <button
                 className="btn"
                 onClick={() => handleClearCartWithConfirmation()}
-                style={{ padding: "9px 9px" }}
+                style={{
+                  padding: "9px 9px",
+                  boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                  width: "118px",
+                }}
               >
                 Clear Cart
               </button>
@@ -314,7 +354,14 @@ const Cart = () => {
                   className="bi bi-arrow-left"
                   viewBox="0 0 16 16"
                 ></svg>
-                <button className="btn" style={{ padding: "9px 9px" }}>
+                <button
+                  className="btn"
+                  style={{
+                    padding: "9px 9px",
+                    boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                    width: "200px",
+                  }}
+                >
                   Continue Shopping
                 </button>
               </Link>
@@ -323,7 +370,11 @@ const Cart = () => {
             <div className="summary-item">
               <button
                 className="btn"
-                style={{ padding: "9px 9px" }}
+                style={{
+                  padding: "9px 9px",
+                  boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                  width: "118px",
+                }}
                 onClick={handleCheckOutClick}
               >
                 Check out
@@ -331,7 +382,17 @@ const Cart = () => {
             </div>
 
             <div className="summary-item d-flex align-items-center">
-              <h3 style={{marginBottom : "0" ,     fontSize: "31px"}}>Total : ${cart.cartTotalAmount}</h3>
+              <h3
+                style={{
+                  marginBottom: "0",
+                  fontSize: "31px",
+                  boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+                  width: "258px",
+                  color: "black",
+                }}
+              >
+                Total : ${cart.cartTotalAmount}
+              </h3>
             </div>
           </div>
         </div>
@@ -339,16 +400,25 @@ const Cart = () => {
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header>
-          <Modal.Title>REMOVE ITEM</Modal.Title>
+          <Modal.Title
+            style={{ fontFamily: "Poppins, sans-serif", color: "black" }}
+          >
+            <h3>REMOVE ITEM</h3>
+          </Modal.Title>
           <button
             className="btn"
-            style={{ padding: "6px 9px" }}
+            style={{
+              padding: "6px 9px",
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+            }}
             onClick={handleCloseModal}
           >
             X
           </button>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body
+          style={{ fontFamily: "Poppins, sans-serif", color: "black" }}
+        >
           Are you sure you want to remove {itemToRemove && itemToRemove.name}{" "}
           from the cart ?
         </Modal.Body>
@@ -356,7 +426,10 @@ const Cart = () => {
           <Button
             variant="secondary"
             className="btn"
-            style={{ padding: "6px 9px" }}
+            style={{
+              padding: "6px 9px",
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+            }}
             onClick={handleCloseModal}
           >
             Cancel
@@ -364,7 +437,10 @@ const Cart = () => {
           <Button
             variant="primary"
             className="btn"
-            style={{ padding: "6px 9px" }}
+            style={{
+              padding: "6px 9px",
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+            }}
             onClick={handleConfirmRemoveFromCart}
           >
             Confirm
@@ -374,16 +450,25 @@ const Cart = () => {
 
       <Modal show={showClearModal} onHide={handleCloseClearModal}>
         <Modal.Header>
-          <Modal.Title>CLEAR CART</Modal.Title>
+          <Modal.Title
+            style={{ fontFamily: "Poppins, sans-serif", color: "black" }}
+          >
+            <h3>CLEAR CART</h3>
+          </Modal.Title>
           <button
             className="btn"
-            style={{ padding: "6px 9px" }}
+            style={{
+              padding: "6px 9px",
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+            }}
             onClick={handleCloseClearModal}
           >
             X
           </button>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body
+          style={{ fontFamily: "Poppins, sans-serif", color: "black" }}
+        >
           Are you sure you want to clear the cart ? This action cannot be
           undone.
         </Modal.Body>
@@ -391,7 +476,10 @@ const Cart = () => {
           <Button
             variant="secondary"
             className="btn"
-            style={{ padding: "6px 9px" }}
+            style={{
+              padding: "6px 9px",
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+            }}
             onClick={handleCloseClearModal}
           >
             Cancel
@@ -399,7 +487,10 @@ const Cart = () => {
           <Button
             variant="primary"
             className="btn"
-            style={{ padding: "6px 9px" }}
+            style={{
+              padding: "6px 9px",
+              boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
+            }}
             onClick={handleConfirmClearCart}
           >
             Confirm

@@ -83,7 +83,7 @@ function BeforeAfterLogin() {
                   <VscAccount
                     style={{
                       fontSize: "20px",
-                      color: "black",
+                      color: "red",
                       marginRight: "10px",
                     }}
                   ></VscAccount>
@@ -99,7 +99,7 @@ function BeforeAfterLogin() {
                 <SlUserFollowing
                   style={{
                     fontSize: "20px",
-                    color: "black",
+                    color: "red",
                     marginRight: "10px",
                   }}
                 ></SlUserFollowing>
@@ -116,7 +116,7 @@ function BeforeAfterLogin() {
                   <VscTable
                     style={{
                       fontSize: "20px",
-                      color: "black",
+                      color: "red",
                       marginRight: "10px",
                     }}
                   ></VscTable>
@@ -133,8 +133,8 @@ function BeforeAfterLogin() {
                 <VscRecord
                   style={{
                     fontSize: "20px",
-                    color: "black",
-                    marginRight: "10px", // Khoảng cách giữa icon và nội dung
+                    color: "red",
+                    marginRight: "10px", 
                   }}
                 ></VscRecord>
               </a>
