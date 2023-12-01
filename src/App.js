@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
+import Search from "./pages/Search";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/forget-password" element={<ForgetPassword />}></Route>
         <Route path="/change-password" element={<ChangePassword />}></Route>
+        <Route path="/search" element={<Search />}></Route>
       </Routes>
       <Footer />
   

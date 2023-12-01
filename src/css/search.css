@@ -1,0 +1,87 @@
+.title-start,
+.title-end {
+  font-weight: 700;
+}
+.title-start {
+  margin-top: 5em;
+  margin-bottom: 1em;
+}
+
+.straight-line {
+  width: 100%;
+  border-bottom: 1px solid rgb(186, 186, 186);
+  margin-top: 20px;
+}
+.text-bold {
+  font-weight: 700;
+}
+
+.p-panelmenu .p-panelmenu-header > a {
+  color: black;
+  text-decoration: none;
+}
+.p-panelmenu .p-panelmenu-header > a:hover {
+  text-decoration: none;
+}
+.p-panelmenu .p-panelmenu-header-link:hover {
+    text-decoration: none !important;
+}
+/* .p-panelmenu .p-panelmenu-header > a :hover{
+text-decoration: none !important;  
+}
+.p-panelmenu .p-panelmenu-content {
+  border: none !important; 
+}
+.p-menuitem-text:hover{
+text-decoration: none !important;  
+
+} */
+
+.text-small {
+    font-weight: 600;
+}
+.ip-check{
+    width: 16px;
+    height: 16px;
+}
+.text-size{
+    font-size: 16px;
+}
+.dash {
+  width: 100%;
+  border-bottom: 1px solid rgb(186, 186, 186);
+}
+.more {
+  text-align: center;
+  padding: 10px 0;
+  margin: 20px 0;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  color: black;
+}
+.positer {
+  cursor: pointer;
+}
+.more >div:hover{
+  color: rgb(116, 113, 113);
+}
+.hidden-item {
+  visibility: hidden;
+}
+.body-flex{
+  display: flex;
+  justify-content: center;
+  
+}
+.body-flex > div {
+ width: 79%;
+}
+/* .item-border{
+  border: 1px solid black;
+  padding: 5px 0;
+  box-shadow: 1px 1px 1px 1px #AAA;
+  border-radius: 2px;
+  
+} */

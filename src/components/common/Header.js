@@ -93,6 +93,12 @@ function Header() {
     });
     e.target.parentNode.classList += " active";
   };
+  const [searchValue,setSearchValue] = useState("")
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/search?name=${searchValue}`);
+     $(".search-popup-wrap").slideUp(500);
+  };
 
   return (
     <header>
@@ -357,11 +363,13 @@ function Header() {
               <div className="col-12">
                 <h2 className="title">... Search Here ...</h2>
                 <div className="search-form">
-                  <form>
+                  <form onSubmit={handleSearchSubmit}>
                     <input
                       type="text"
                       name="search"
                       placeholder="Type keywords here"
+                      value={searchValue}
+                      onChange={(e)=> setSearchValue(e.target.value)}
                     />
                     <button className="search-btn">
                       <i className="fas fa-search" />
