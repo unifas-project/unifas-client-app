@@ -1,26 +1,32 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {addAddress, getAddress, getAddressForEdit} from "../../api/addressAPI";
+import {addAddress, getAddress, getAddressForEdit, updateAddress} from "../../api/addressAPI";
 
 const initialState = {
    loading : null,
    error : null,
    success : false,
    addressList: null,
-   addressForEdit: null
+   addressForEdit: null,
+   updateAddress : null
 }
 
 export const getUserAddress = createAsyncThunk("get-address", async () =>{
    const response = await getAddress();
-   return response.data;
+   return response;
 })
 
-export const getUserAddressForEdit = createAsyncThunk("get-address-for-edit",async (id) =>{
+export const getUserAddressForUpdate = createAsyncThunk("get-address-for-edit",async (id) =>{
    const response = await getAddressForEdit(id);
-   return response.data
+   return response
 })
 
 export const addUserAddress = createAsyncThunk("add-address",async (address) => {
    const response = await addAddress(address);
+   return response;
+})
+
+export const updateUserAddress = createAsyncThunk("update-address", async (address,id) => {
+   const response = await updateAddress(address,id)
    return response;
 })
 
@@ -59,18 +65,18 @@ export const addressSlice = createSlice({
              state.addressList = action.payload.data;
           })
 
-          .addCase(getUserAddressForEdit.pending,(state) => {
+          .addCase(getUserAddressForUpdate.pending,(state) => {
              state.success = false;
              state.loading = true;
              state.error = false;
           })
-          .addCase(getUserAddressForEdit.rejected,(state, action) => {
+          .addCase(getUserAddressForUpdate.rejected,(state, action) => {
              state.succcess = false;
              state.loading = false;
              state.error = true;
 
           })
-          .addCase(getUserAddressForEdit.fulfilled, (state, action) => {
+          .addCase(getUserAddressForUpdate.fulfilled, (state, action) => {
              state.succcess = true;
              state.loading = false;
              state.error = false;
@@ -95,6 +101,24 @@ export const addressSlice = createSlice({
              state.addressList = action.payload.data;
           })
 
+          .addCase(updateUserAddress.pending,(state) => {
+             state.success = false;
+             state.loading = true;
+             state.error = false;
+          })
+          .addCase(updateUserAddress.rejected,(state, action) => {
+             state.succcess = false;
+             state.loading = false;
+             state.error = true;
+
+          })
+          .addCase(updateUserAddress.fulfilled, (state, action) => {
+             state.succcess = true;
+             state.loading = false;
+             state.error = false;
+             state.addressList = action.payload.data;
+          })
+
    }
 })
 
@@ -103,6 +127,7 @@ export const selectLoading = (state) => state.address.loading;
 export const selectError = (state) => state.address.error;
 export const selectSuccess = (state) => state.address.success;
 export const selectGetAddress = (state) => state.address.addressList;
-export const selectGetAddressForEdit = (state) => state.address.addressForEdit
+export const selectGetAddressForUpdate = (state) => state.address.addressForEdit
+export const selectUpdateAddress = (state) => state.address.updateAddress
 
 export default addressSlice.reducer;

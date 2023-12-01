@@ -39,10 +39,9 @@ function LoginForm() {
         draggable: true,
       });
 
-      localStorage.setItem("id",response.data.id)
-      localStorage.setItem("username", response.data.username);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("id",response.data.data.id)
+      localStorage.setItem("username", response.data.data.username);
+      localStorage.setItem("token", response.data.data.token);
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
