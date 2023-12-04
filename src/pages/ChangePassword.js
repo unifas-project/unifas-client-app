@@ -8,7 +8,7 @@ import {
   selectSuccessChangePass,
   setError,
   setSuccessChangePass,
-} from "../feature/userSlice";
+} from "../feature/user/userSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -156,7 +156,7 @@ function ChangePassword() {
               style={{
                 display: "flex",
                 position: "relative",
-                marginBottom: 30,
+                // marginBottom: 30,
               }}
             >
               <div>Vui lòng nhập mật khẩu mới</div>
