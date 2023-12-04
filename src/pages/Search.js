@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Subscribe from "../components/account/Subscribe";
+import Subscribe from "../components/main/account/Subscribe";
 import handleRequestParams from "../service/HandleRequestParams";
 import "../css/search.css";
 
@@ -17,7 +17,7 @@ import {
   selectSearchProductList,
   setSearchProductValues,
 } from "../feature/search/searchSlice";
-import ProductItem from "../components/account/ProductItem";
+import ProductItem from "../components/main/account/ProductItem";
 import { useLocation } from "react-router-dom";
 // Đối tượng location chứa các thông tin như pathname (đường dẫn),
 // search (chuỗi truy vấn), state (trạng thái của định tuyến), và hash (phần đánh dấu).
@@ -39,7 +39,7 @@ function Search() {
       setTempDatas(null);
     }
   }, [location?.search]);
-  //
+  //lay du lieu tren store redux tool kid khi lan dau vao component
 
   useEffect(() => {
     if (categoriesStore === null) {
@@ -58,6 +58,7 @@ function Search() {
   }, [categoriesStore, sizesStore, colorsStore, searchProductDatas]);
   console.log("c", searchProductDatas);
 
+  //cung lay tren store sreach tu lan thu 2 cho di
   const [items, setItems] = useState(null);
   useEffect(() => {
     if (
@@ -99,6 +100,8 @@ function Search() {
     }
     return items;
   }
+  //tao fill danh muc (category, size, color)
+
   const handleCheckboxChange = (labelChild, label,dataGender=null) => {
     console.log(`a`,labelChild)
     
@@ -126,8 +129,10 @@ function Search() {
     setIsFilterDatas(true);
     setItems(updatedItems);
   };
+
   const [datas, setDatas] = useState(null);
   const [tempDatas, setTempDatas] = useState(null);
+  //set product de hien thi
   useEffect(() => {
     if (searchProductDatas != null && datas == null) {
       setDatas(searchProductDatas?.data);
@@ -135,6 +140,7 @@ function Search() {
   }, [searchProductDatas, datas]);
 
   // filter search nang cao
+  //check coi trong fill co checked chua
   useEffect(() => {
     if (isAnyChecked && isFilterDatas) {
       const checkedItems = items.flatMap((itemGroup) =>
@@ -228,6 +234,7 @@ function Search() {
       setIsFilterDatas(false);
     }
   });
+  // khi co fill thi moi set product theo fill 
   useEffect(() => {
     if (tempDatas != null) {
       let tempDatasLength = tempDatas?.length;

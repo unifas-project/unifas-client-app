@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../../css/search.css";
+import "../../../css/search.css";
 
 function ProductItem({ data }) {
   const [sizes, setSizes] = useState(null);

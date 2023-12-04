@@ -86,19 +86,64 @@ function Header() {
     });
     e.target.parentNode.classList += " active";
   };
-
   const subActive = (e) => {
-    document.querySelectorAll(".main-menu ul li").forEach((el) => {
+    document.querySelectorAll(".main-menu ul li ul li").forEach((el) => {
       el.classList.remove("active");
     });
     e.target.parentNode.classList += " active";
   };
-  const [searchValue,setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState("");
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     navigate(`/search?name=${searchValue}`);
-     $(".search-popup-wrap").slideUp(500);
+    $(".search-popup-wrap").slideUp(500);
   };
+  useEffect(() => {
+    //SubMenu Dropdown Toggle
+    if ($(".menu-area li.menu-item-has-children ul").length) {
+      $(".menu-area .navigation li.menu-item-has-children").append(
+        '<div class="dropdown-btn"><span class="fas fa-angle-down"></span></div>'
+      );
+    }
+    if ($(".mobile-menu").length) {
+      var mobileMenuContent = $(".menu-area .main-menu").html();
+      $(".mobile-menu .menu-box .menu-outer").append(mobileMenuContent);
+
+      //Dropdown Button
+      $(".mobile-menu li.menu-item-has-children .dropdown-btn").on(
+        "click",
+        function () {
+          $(this).toggleClass("open");
+          $(this).prev("ul").slideToggle(500);
+        }
+      );
+      //Menu Toggle Btn
+      $(".mobile-nav-toggler").on("click", function () {
+        $("body").addClass("mobile-menu-visible");
+      });
+
+      //Menu Toggle Btn
+      $(".menu-backdrop, .mobile-menu .close-btn").on("click", function () {
+        $("body").removeClass("mobile-menu-visible");
+      });
+    }
+
+    $(".navbar-toggle").on("click", function () {
+      $(".navbar-nav").addClass("mobile_menu");
+    });
+    $(".navbar-nav li a").on("click", function () {
+      $(".navbar-collapse").removeClass("show");
+    });
+
+    $(".header-search > a").on("click", function () {
+      $(".search-popup-wrap").slideToggle();
+      return false;
+    });
+
+    $(".search-close").on("click", function () {
+      $(".search-popup-wrap").slideUp(500);
+    });
+  }, []);
 
   return (
     <header>
@@ -147,18 +192,25 @@ function Header() {
         </div>
       </div>
 
-      <div id="sticky-header" className="menu-area">
-        <div className="container custom-container">
+      <div
+        id="sticky-header"
+        className="menu-area"
+        style={{ boxShadow: "#e8e8e8 0px 22px 10px -20px" }}
+      >
+        <div className="container custom-container" style={{ width: "85%" }}>
           <div className="row">
             <div className="col-12">
               <div className="menu-wrap">
                 <nav className="menu-nav show">
                   <div className="logo">
                     <Link to="/">
-                      <img src="img/logo/logo.png" alt="" />
+                      <img
+                        src="/img/logo/UNIFAS-200px.png"
+                        alt=""
+                        style={{ maxWidth: "30%" }}
+                      />
                     </Link>
                   </div>
-
                   <div className="navbar-wrap main-menu d-none d-lg-flex">
                     <ul className="navigation">
                       {[
@@ -337,6 +389,50 @@ function Header() {
                           </li>
                         </ul>
                       </li>
+                      {/*<li className="header-btn"><Link to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
+                    </ul>
+                  </div>
+                </nav>
+              </div>
+
+              <div className="mobile-menu">
+                <nav className="menu-box">
+                  <div className="close-btn">
+                    <i className="fas fa-times" />
+                  </div>
+                  <div className="nav-logo">
+                    <Link to="/">
+                      <img src="img/logo/logo.png" alt="" title="true" />
+                    </Link>
+                  </div>
+                  <div className="menu-outer"></div>
+                  <div className="social-links">
+                    <ul className="clearfix">
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-twitter" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-facebook-square" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-pinterest-p" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-instagram" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-youtube" />
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </nav>
@@ -369,7 +465,7 @@ function Header() {
                       name="search"
                       placeholder="Type keywords here"
                       value={searchValue}
-                      onChange={(e)=> setSearchValue(e.target.value)}
+                      onChange={(e) => setSearchValue(e.target.value)}
                     />
                     <button className="search-btn">
                       <i className="fas fa-search" />
