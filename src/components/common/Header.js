@@ -48,7 +48,6 @@ function Header() {
     }
   }, [successSubCategory, dispatch, SubCategoryList]);
 
-  console.log(localStorage.getItem("username"));
   const navigate = useNavigate();
 
   const storedUsername = localStorage.getItem("username");
@@ -67,9 +66,9 @@ function Header() {
     getCategoryList();
     getSubCategoryList();
 
+
     if (storedUsername) {
       setUsername(storedUsername);
-      navigate("/");
     }
   }, [getSubCategoryList, getCategoryList, storedUsername, navigate]);
 
