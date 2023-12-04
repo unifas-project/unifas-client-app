@@ -386,7 +386,6 @@ const Cart = () => {
                 style={{
                   marginBottom: "0",
                   fontSize: "31px",
-                  boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
                   width: "258px",
                   color: "black",
                 }}

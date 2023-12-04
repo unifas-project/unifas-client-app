@@ -110,7 +110,6 @@ function ForgetPassword() {
                     style={{
                       display: "flex",
                       position: "relative",
-                      marginBottom: 30,
                     }}
                   >
                     <div>Vui lòng nhập địa chỉ email bạn đã đăng ký</div>

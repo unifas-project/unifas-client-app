@@ -28,13 +28,16 @@ function LoginForm() {
       ),
   });
 
-  const onSubmitHandler = async (values) => {
-    try {
-      // const response = "../../mock/login.json";
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        values
-      );
+ const onSubmitHandler = async (value) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/auth/login",
+        value
+    );
+
+  
+    if (response.status === 200 && response.data.data ) {
+      console.log("Login successful!");
 
       toast.success("Login successful!", {
         position: "top-right",
@@ -45,28 +48,47 @@ function LoginForm() {
         draggable: true,
       });
 
-      localStorage.setItem("id",response.data.data.id)
+      localStorage.setItem("id", response.data.data.id);
       localStorage.setItem("username", response.data.data.username);
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("role", response.data.data.role);
 
-
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
+  
       navigate("/");
-    } catch (error) {
-      console.error("API error:", error);
+   
+    } else {
 
-      toast.error("Login failed. Please check your credentials.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.error(
+        response.data && response.data.message
+          ? response.data.message
+          : "Login failed. Please check your credentials.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
     }
-  };
+  } catch (error) {
+    console.error("API error:", error);
+
+    toast.error("Login failed. Please check your credentials.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+};
+
+  
 
   return (
     <>

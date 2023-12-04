@@ -156,7 +156,7 @@ function ChangePassword() {
               style={{
                 display: "flex",
                 position: "relative",
-                marginBottom: 30,
+                // marginBottom: 30,
               }}
             >
               <div>Vui lòng nhập mật khẩu mới</div>

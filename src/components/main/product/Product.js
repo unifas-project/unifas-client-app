@@ -61,7 +61,8 @@ function Product() {
 
   return (
     <div className="home-container">
-      {loading ? (
+    
+      {  loading ?  (
         <p>Loading...</p>
       ) : error ? (
         <p>Unexpected error occurred...</p>
