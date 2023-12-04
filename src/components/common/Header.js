@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
 import { BiUser, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
+import { BsFillEmojiSunglassesFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSubCategories,
@@ -48,7 +49,7 @@ function Header() {
     }
   }, [successSubCategory, dispatch, SubCategoryList]);
 
-  console.log(localStorage.getItem("username"));
+  // console.log(localStorage.getItem("username"));
   const navigate = useNavigate();
 
   const storedUsername = localStorage.getItem("username");
@@ -69,7 +70,7 @@ function Header() {
 
     if (storedUsername) {
       setUsername(storedUsername);
-      navigate("/");
+      // navigate("/");
     }
   }, [getSubCategoryList, getCategoryList, storedUsername, navigate]);
 
@@ -77,6 +78,7 @@ function Header() {
     localStorage.removeItem("username");
     setUsername(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -148,7 +150,7 @@ function Header() {
               <div className="menu-wrap">
                 <nav className="menu-nav show">
                   <div className="logo">
-                    <Link to="/">
+                    <Link to="/#">
                       <img src="img/logo/logo.png" alt="" />
                     </Link>
                   </div>
@@ -164,7 +166,7 @@ function Header() {
                           className="menu-item-has-children"
                           onClick={(e) => handleActive(e)}
                         >
-                          <Link to="/">{gender}</Link>
+                          <Link to="/#">{gender}</Link>
                           <ul className="submenu">
                             {categories
                               .filter((category) => category.gender === gender)
@@ -210,30 +212,31 @@ function Header() {
                           <ul className="minicart">
                             <li className="d-flex align-items-start">
                               <div className="cart-img">
-                                <a href="/#">
-                                  <BiUserCircle
+                                <Link to="/user-detail">
+                                  <BsFillEmojiSunglassesFill
                                     style={{
                                       fontSize: "30px",
                                       color: "black",
                                     }}
-                                  ></BiUserCircle>
-                                </a>
+                                  ></BsFillEmojiSunglassesFill>
+                                </Link>
                               </div>
-                              <a href="/#">{username}</a>
+                              <Link to="/user-detail">{username}</Link>
+                              {/*<a href="/#">{username}</a>*/}
                             </li>
-                            <li className="d-flex align-items-start">
-                              <div className="cart-img">
-                                <a href="/#">
-                                  <BiUserCircle
-                                    style={{
-                                      fontSize: "30px",
-                                      color: "black",
-                                    }}
-                                  ></BiUserCircle>
-                                </a>
-                              </div>
-                              <a href="/#">Update Profile</a>
-                            </li>
+                            {/*<li className="d-flex align-items-start">*/}
+                            {/*  <div className="cart-img">*/}
+                            {/*    <a href="/#">*/}
+                            {/*      <BiUserCircle*/}
+                            {/*        style={{*/}
+                            {/*          fontSize: "30px",*/}
+                            {/*          color: "black",*/}
+                            {/*        }}*/}
+                            {/*      ></BiUserCircle>*/}
+                            {/*    </a>*/}
+                            {/*  </div>*/}
+                            {/*  <a href="/#">Update Profile</a>*/}
+                            {/*</li>*/}
                             <li className="d-flex align-items-start">
                               <div className="cart-img">
                                 <a href="/#" onClick={handleLogout}>

@@ -14,6 +14,7 @@ export const getSubCategories = createAsyncThunk("subCategories", async () => {
     return response.data;
 });
 
+
 export const subCategorySlice = createSlice({
     name: "subCategory",
     initialState,
