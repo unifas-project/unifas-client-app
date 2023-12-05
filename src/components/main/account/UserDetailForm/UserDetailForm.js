@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../../../css/user/userdetail/UserDetail.css";
+import "../../../../css/user/userdetail/user-detail.css";
 function UserDetailForm() {
   const [user, setUser] = useState();
   const [editMode, setEditMode] = useState(false);
