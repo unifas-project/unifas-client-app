@@ -18,11 +18,14 @@ const ShowAllSaleVoucher = () => {
     const allSaleVoucher = useSelector(selectGetAllSaleVouchers)
     const dispatch = useDispatch()
 
-    const fetchAllSaleVoucher = async (page) => {
-        await dispatch(getAllSaleVoucherForShow(page))
+    useEffect(() => {
         setTotalPages(allSaleVoucher?.totalPages)
         setCurrentPage(allSaleVoucher?.pageable.pageNumber)
         setPageSearch(currentPage+1)
+    },[allSaleVoucher,currentPage])
+
+    const fetchAllSaleVoucher = async (page) => {
+        await dispatch(getAllSaleVoucherForShow(page))
     }
 
 
@@ -72,8 +75,9 @@ const ShowAllSaleVoucher = () => {
                     <div className="col-2">
                         Textttttttttttt
                     </div>
-                    <div className="col-10 d-flex justify-content-center ">
+                    <div className="col-10 d-flex justify-content-center">
                         <div style={{width: "70%"}}>
+                            <div>
                             <h1 className="mb-10" style={{fontSize: "30px", color: "red"}}>Show All Sale Voucher</h1>
                             <div className="search-area d-inline-flex align-items-center mb-3" style={{float: "right"}}>
                                 <label className="form-label mr-3 mb-0">Search</label>
@@ -83,7 +87,7 @@ const ShowAllSaleVoucher = () => {
                                        }}
                                 />
                             </div>
-                            <div className=" table-responsive">
+                            <div className=" table-responsive" style={{minHeight:"55vh"}}>
                                 <table className="table"
                                        style={{textAlign: "center", width: "100%", borderBottom: "3px solid #dee2e6"}}>
                                     <thead>
@@ -137,30 +141,31 @@ const ShowAllSaleVoucher = () => {
                                     }
                                     </tbody>
                                 </table>
-                                <div className="paging-group mt-3" style={{float: "right"}}>
-                                    <button type="button" className={"paging-button" + (currentPage == 1 ? "disable-paging" : "")}
-                                            disabled={currentPage == 1}
-                                            onClick={() => {
-                                                fetchAllSaleVoucher(0)
-                                            }}>{"<<"}</button>
-                                    <button type="button" className={"paging-button" + (currentPage == 1 ? "disable-paging" : "")}
-                                            disabled={currentPage == 1}
-                                            onClick={() => {
-                                                fetchAllSaleVoucher(currentPage - 1)
-                                            }}>{"<"}</button>
-                                    <input type="number" className="paging-input" min={1} max={totalPages} value={pageSearch}/>
-                                    <span>of {totalPages}</span>
-                                    <button type="button" className={"paging-button" + (currentPage == totalPages-1 ? "disable-paging" : "")}
-                                            disabled={currentPage == totalPages-1}
-                                            onClick={() => {
-                                                fetchAllSaleVoucher(currentPage + 1)
-                                            }}>{">"}</button>
-                                    <button type="button" className={"paging-button" + (currentPage == totalPages-1 ? "disable-paging" : "")}
-                                            disabled={currentPage == totalPages-1}
-                                            onClick={() => {
-                                                fetchAllSaleVoucher(totalPages - 1)
-                                            }} >{">>"}</button>
+                            </div>
                                 </div>
+                            <div className="paging-group mt-3" style={{float: "right"}}>
+                                <button type="button" className={"paging-button" + (currentPage == 0 ? " disable-paging" : "")}
+                                        disabled={currentPage == 0}
+                                        onClick={() => {
+                                            fetchAllSaleVoucher(0)
+                                        }}>{"<<"}</button>
+                                <button type="button" className={"paging-button" + (currentPage == 0 ? " disable-paging" : "")}
+                                        disabled={currentPage == 0}
+                                        onClick={() => {
+                                            fetchAllSaleVoucher(currentPage - 1)
+                                        }}>{"<"}</button>
+                                <input type="number" className="paging-input" min={1} max={totalPages} value={pageSearch}/>
+                                <span>of {totalPages}</span>
+                                <button type="button" className={"paging-button" + (currentPage == totalPages-1 ? " disable-paging" : "")}
+                                        disabled={currentPage == totalPages-1}
+                                        onClick={() => {
+                                            fetchAllSaleVoucher(currentPage + 1)
+                                        }}>{">"}</button>
+                                <button type="button" className={"paging-button" + (currentPage == totalPages-1 ? " disable-paging" : "")}
+                                        disabled={currentPage == totalPages-1}
+                                        onClick={() => {
+                                            fetchAllSaleVoucher(totalPages - 1)
+                                        }} >{">>"}</button>
                             </div>
                         </div>
                     </div>
