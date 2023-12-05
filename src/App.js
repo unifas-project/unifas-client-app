@@ -9,6 +9,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
+import CreateSaleVoucherPage from "./pages/admin/CreateSaleVoucherPage";
+import ShowAllSaleVoucherPage from "./pages/admin/ShowAllSaleVoucherPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ function App() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 1000);
   }, []);
 
   return (
@@ -34,6 +36,9 @@ function App() {
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/register" element={<RegisterPage />}></Route>
             <Route path="/order" element={<OrderPage />}></Route>
+            <Route path="/loading" element={<Loading />}></Route>
+            <Route path="/admin/sale-voucher/create" element={<CreateSaleVoucherPage/>}></Route>
+            <Route path="/admin/sale-voucher/show" element={<ShowAllSaleVoucherPage/>}></Route>
           </Routes>
           <Footer />
         </>

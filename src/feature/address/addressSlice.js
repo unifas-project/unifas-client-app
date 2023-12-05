@@ -25,7 +25,7 @@ export const addUserAddress = createAsyncThunk("add-address",async (address) => 
    return response;
 })
 
-export const updateUserAddress = createAsyncThunk("update-address", async (address,id) => {
+export const updateUserAddress = createAsyncThunk("update-address", async ({address,id}) => {
    const response = await updateAddress(address,id)
    return response;
 })
@@ -62,7 +62,7 @@ export const addressSlice = createSlice({
              state.succcess = true;
              state.loading = false;
              state.error = false;
-             state.addressList = action.payload.data;
+             state.addressList = action.payload?.data;
           })
 
           .addCase(getUserAddressForUpdate.pending,(state) => {
@@ -80,7 +80,7 @@ export const addressSlice = createSlice({
              state.succcess = true;
              state.loading = false;
              state.error = false;
-             state.addressForEdit = action.payload.data;
+             state.addressForEdit = action.payload?.data;
           })
 
           .addCase(addUserAddress.pending,(state) => {
@@ -98,7 +98,7 @@ export const addressSlice = createSlice({
              state.succcess = true;
              state.loading = false;
              state.error = false;
-             state.addressList = action.payload.data;
+             state.addressList = action.payload?.data;
           })
 
           .addCase(updateUserAddress.pending,(state) => {
@@ -116,7 +116,7 @@ export const addressSlice = createSlice({
              state.succcess = true;
              state.loading = false;
              state.error = false;
-             state.addressList = action.payload.data;
+             state.addressList = action.payload?.data;
           })
 
    }

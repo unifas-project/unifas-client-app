@@ -26,9 +26,9 @@ import {
 } from "../../../feature/location/locationSlice";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {checkSaleVoucherValid, selectCheckSaleVoucherValid} from "../../../feature/saleVoucher/saleVoucherSlice";
 
 const OrderForm = () => {
-    const [render, setRender] = useState(false)
     const [showAddressList, setShowAddressList] = useState(false);
     const [showAddNewAddressForm, setShowAddNewAddressForm] = useState(false);
     const [showUpdateAddressForm, setShowUpdateAddressForm] = useState(false);
@@ -38,6 +38,13 @@ const OrderForm = () => {
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [defaultAddressChecked, setDefaultAddressChecked] = useState(null)
     const [updateAddressId, setUpdateAddressId] = useState(0)
+    const [voucherCode, setVoucherCode] = useState({})
+    const [validVoucherCode, setValidVoucherCode] = useState("")
+    const [discount, setDiscount] = useState(0)
+    const [merchandiseSubtotal, setMerchandiseSubtotal] = useState(0)
+    const [discountPrice, setDiscountPrice] = useState(0);
+    const [totalPayment, setTotalPayment] = useState(0)
+    let [currentUpdateAddress, setCurrentUpdateAddress] = useState({})
 
 
     // const [order, setOrder] = useState({})
@@ -57,9 +64,35 @@ const OrderForm = () => {
     const provinces = useSelector(selectGetProvinces)
     const districts = useSelector(selectGetDistricts)
     const wards = useSelector(selectGetWards)
+    const voucher = useSelector(selectCheckSaleVoucherValid)
     // const loading = useSelector(selectLoading)
     const success = useSelector(selectSuccess)
     // const error = useSelector(selectError)
+
+    useEffect(()=> {
+        if (updateAddress != null) {
+            setProvinceInfo(updateAddress);
+        }
+        console.log("updateAddress: " + JSON.stringify(updateAddress));
+        console.log("currentUpdateAddress: " + JSON.stringify(currentUpdateAddress));
+    }, [updateAddress]);
+
+    const fetchAddressForUpdate = (id) => {
+        if (updateAddress == null || !updateAddress) {
+            dispatch(getUserAddressForUpdate(id))
+        }
+    }
+
+    const setProvinceInfo = (updateAddress) => {
+        if (updateAddress != null) {
+            const provinceCode = findProvinceCodeByName(updateAddress?.city)
+            const districtCode = findDistrictCodeByName(updateAddress?.district)
+            handleFilterDistrictsForUpdateAddress(provinceCode)
+            handleFilterWardsForUpdateAddress(districtCode)
+            setUpdateAddressId(updateAddress?.id);
+            currentUpdateAddress = {...updateAddress};
+        }
+    }
 
     const dispatch = useDispatch();
     const handleShowAddressList = () => setShowAddressList(true);
@@ -87,9 +120,7 @@ const OrderForm = () => {
     }
 
     const fetchAddress = () => {
-        if (addresses === null) {
-            dispatch(getUserAddress());
-        }
+        dispatch(getUserAddress());
 
         if (addresses !== null) {
             if (addresses?.length === 1) {
@@ -204,7 +235,7 @@ const OrderForm = () => {
         }
 
         if ("OK" === response.payload.statusCode) {
-            dispatch(getUserAddress())
+            fetchAddress()
         }
     }
 
@@ -220,22 +251,11 @@ const OrderForm = () => {
 
     }
 
-    const fetchAddressForUpdate = async (id) => {
-        await dispatch(getUserAddressForUpdate(id))
-        // setRender(!render)
-        if (updateAddress != null){
-            const provinceCode = findProvinceCodeByName(updateAddress.city)
-            const districtCode = findDistrictCodeByName(updateAddress.district)
-            handleFilterDistrictsForUpdateAddress(provinceCode)
-            handleFilterWardsForUpdateAddress(districtCode)
-            setUpdateAddressId(updateAddress?.id)
-        }
-    }
-
     const handleSubmitUpdateAddressForm = async (values) => {
         const alert = toast.loading("Please wait for a second");
         let id = updateAddressId;
-        const response = await dispatch(updateUserAddress(values,id))
+        let address = values
+        const response = await dispatch(updateUserAddress({address, id}))
 
         if ("OK" === response.payload.statusCode) {
             toast.update(alert, {
@@ -262,24 +282,30 @@ const OrderForm = () => {
                 isLoading: false
             })
         }
+        if ("OK" === response.payload.statusCode) {
+            fetchAddress()
+            handleCloseUpdateAddressAddressForm()
+            handleShowAddressList()
+        }
+
     }
 
     const findProvinceCodeByName = (name) => {
-            for (let i= 0; i<provinces.length; i++){
-                if (provinces[i].name == name){
-                    return provinces[i].code;
-                }
+        for (let i = 0; i < provinces.length; i++) {
+            if (provinces[i].name == name) {
+                return provinces[i].code;
             }
         }
+    }
 
 
-const findDistrictCodeByName = (name) => {
-    for (let i= 0; i < districts.length; i++){
-        if (districts[i].name == name){
-            return districts[i].code;
+    const findDistrictCodeByName = (name) => {
+        for (let i = 0; i < districts.length; i++) {
+            if (districts[i].name == name) {
+                return districts[i].code;
+            }
         }
     }
-}
 
     const handleFilterDistrictsForUpdateAddress = (provinceCode) => {
         let districtsForUpdateAddressFilter = []
@@ -296,15 +322,15 @@ const findDistrictCodeByName = (name) => {
     }
 
     const handleFilterWardsForUpdateAddress = (districtCode) => {
-        let wardForUpdateAdressFilter = []
+        let wardForUpdateAddressFilter = []
         setCurrentDistrictCode(districtCode)
         if (wards != null && currentDistrictCode !== districtCode) {
             wards.forEach((ward) => {
                 if (ward.district_code == districtCode) {
-                    wardForUpdateAdressFilter.push(ward);
+                    wardForUpdateAddressFilter.push(ward);
                 }
             })
-            setFilterWardsForUpdateAddress(wardForUpdateAdressFilter);
+            setFilterWardsForUpdateAddress(wardForUpdateAddressFilter);
         }
     }
 
@@ -333,18 +359,55 @@ const findDistrictCodeByName = (name) => {
         let index = select.selectedIndex;
         let option = select.options [index];
         let districtCode = option.getAttribute("data-code")
-        let wardForUpdateAdressFilter = []
+        let wardForUpdateAddressFilter = []
         setCurrentDistrictCode(districtCode)
         if (wards != null && currentDistrictCode !== districtCode) {
             wards.forEach((ward) => {
                 if (ward.district_code == districtCode) {
-                    wardForUpdateAdressFilter.push(ward);
+                    wardForUpdateAddressFilter.push(ward);
                 }
             })
-            setFilterWardsForUpdateAddress(wardForUpdateAdressFilter);
+            setFilterWardsForUpdateAddress(wardForUpdateAddressFilter);
         }
     }
 
+    const handleChangeVoucherCode = (event) => {
+        setVoucherCode({...voucherCode, [event.target.name]: event.target.value})
+    }
+
+    const handleCheckSaleVoucher = async () => {
+        const alert = toast.loading("Please wait for a second");
+        const response = await dispatch(checkSaleVoucherValid(voucherCode))
+        if ("OK" === response.payload.statusCode) {
+            toast.update(alert, {
+                render: "Valid voucher. Have a great shopping experience", type: "success", position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                isLoading: false
+            })
+            setValidVoucherCode(voucherCode.toUpperCase())
+            setDiscount(response.payload.data.discount)
+        } else {
+            toast.update(alert, {
+                render: response.payload.message, type: "error", position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                isLoading: false
+            })
+            setValidVoucherCode("")
+            setDiscount(0)
+        }
+    }
 
 
     useEffect(() => {
@@ -357,6 +420,7 @@ const findDistrictCodeByName = (name) => {
     useEffect(() => {
             fetchAddress()
             fetchLocations();
+            // fetchAddressForUpdate();
         }, [dispatch, provinces, addresses]
     )
 
@@ -462,22 +526,22 @@ const findDistrictCodeByName = (name) => {
                                     Voucher:
                                 </span>
                                 <span className="discount-code">
-                                    DISCOUNT-123
+                                    {validVoucherCode == "" ? "Apply voucher here" : validVoucherCode}
                                 </span>
                                 <Link to=""
                                       style={{float: "right", color: "red", textDecoration: "none !important"}}
-                                      onClick={handleShowVoucher}>Select</Link>
+                                      onClick={handleShowVoucher}>Apply</Link>
                             </div>
                             <hr/>
                             <div className="product-cost" style={{lineHeight: 3}}>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Merchandise Subtotal:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}>{merchandiseSubtotal}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Discount Price:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}>{discountPrice}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Total Payment:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}>{totalPayment}đ</span>
                             </div>
                         </div>
                         <div className="mt-3 text-center" style={{width: "100%"}}>
@@ -547,10 +611,10 @@ const findDistrictCodeByName = (name) => {
                                                 border: "transparent",
                                                 height: "min-content"
                                             }} onClick={() => {
-                                                handleCloseAddressList();
-                                                handleShowUpdateAddressAddressForm()
                                                 fetchAddressForUpdate(defaultAddress?.id)
                                                 setDefaultAddressChecked(defaultAddress?.isDefault)
+                                                handleCloseAddressList();
+                                                handleShowUpdateAddressAddressForm()
                                             }}>Update
                                             </button>
                                         </div>
@@ -801,6 +865,14 @@ const findDistrictCodeByName = (name) => {
 
             {/*Update Address*/}
 
+            <form action="/action_page.php">
+                <label htmlFor="fname">First name:</label><br/>
+                <input type="text" id="fname" name="fname" value={updateAddress?.receiver}/><br/>
+                <label htmlFor="lname">Last name:</label><br/>
+                <input type="text" id="lname" name="lname" value={updateAddress?.contact}/><br/><br/>
+                <button type="submit" value="Submit"></button>
+            </form>
+
             <Modal
                 show={showUpdateAddressForm}
                 onHide={handleCloseUpdateAddressAddressForm}
@@ -945,8 +1017,11 @@ const findDistrictCodeByName = (name) => {
                                                style={{accentColor: "red"}}
                                                checked={"true" == defaultAddressChecked}
                                                onClick={() => {
-                                                   setValues({...values,isDefault : (defaultAddressChecked=="true" ? "false" : "true")})
-                                                   setDefaultAddressChecked(defaultAddressChecked=="true" ? "false" : "true")
+                                                   setValues({
+                                                       ...values,
+                                                       isDefault: (defaultAddressChecked == "true" ? "false" : "true")
+                                                   })
+                                                   setDefaultAddressChecked(defaultAddressChecked == "true" ? "false" : "true")
                                                }}
                                                disabled={updateAddress?.isDefault === "true"}
                                         />
@@ -992,8 +1067,13 @@ const findDistrictCodeByName = (name) => {
                         <form>
                             <div className="user-info input-group">
                                 <input type="text" className="form-control" placeholder="Enter Voucher Here"
-                                       style={{marginRight: "10px", borderRadius: "3px"}}/>
-                                <button className="btn" style={{padding: "5px 20px"}}>Apply</button>
+                                       style={{marginRight: "10px", borderRadius: "3px"}}
+                                       onChange={handleChangeVoucherCode}
+                                       required={true}
+                                />
+                                <button onClick={handleCheckSaleVoucher} type="button" className="btn"
+                                        style={{padding: "5px 20px"}}>Apply
+                                </button>
                             </div>
                         </form>
                     </div>

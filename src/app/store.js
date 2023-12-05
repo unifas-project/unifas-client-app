@@ -4,6 +4,7 @@ import subCategoryReducer from '../feature/subCategory/subCategorySlice'
 import userReducer from '../feature/userSlice'
 import addressReducer from "../feature/address/addressSlice";
 import locationReducer from "../feature/location/locationSlice"
+import saleVoucherReducer from "../feature/saleVoucher/saleVoucherSlice"
 
 export const store = configureStore({
     reducer:{
@@ -11,6 +12,7 @@ export const store = configureStore({
         category : categoryReducer,
         subCategory: subCategoryReducer,
         address : addressReducer,
-        location : locationReducer
+        location : locationReducer,
+        saleVoucher : saleVoucherReducer
     },
 })
