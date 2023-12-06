@@ -17,7 +17,6 @@ import AdminProduct from "./pages/adminSide/AdminProduct";
 import UserDetailPage from "./pages/UserDetailPage";
 
 
-
 function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -29,7 +28,6 @@ function App() {
 
   return (
     <div className="App">
-  
       {loading ? (
         <Loading />
       ) : (
