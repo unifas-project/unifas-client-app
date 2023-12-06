@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import "../../../../css/user/userdetail/user-detail.css";
+import Form from "react-bootstrap/Form";
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function UserDetailForm() {
   const [user, setUser] = useState();
   const [editMode, setEditMode] = useState(false);
@@ -29,7 +33,13 @@ function UserDetailForm() {
   const updateUserProfile = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.put(
+
+      if (!user.fullName || user.fullName.length < 10 || !/^[a-zA-Z\sđĐàÀáÁạẠảẢãÃăĂằẰắẮặẶẳẲẵẴâÂầẦấẤậẬẩẨẫẪđĐèÈéÉẹẸẻẺẽẼêÊềỀếẾệỆểỂễỄìÌíÍịỊỉỈĩĨòÒóÓọỌỏỎõÕôÔồỒốỐộỘổỔỗỖơƠờỜớỚợỢởỞỡỠùÙúÚụỤủỦũŨưỨừỬửữỮựỰỳỲýÝỵỴỷỶỹỸ]+$/u.test(user.fullName)) {
+        toast.error('Full name is required and should not contain special characters or numbers.');
+        return;
+      }
+
+      const response = await axios.put(
         "http://localhost:8080/api/users/update-profile",
         user,
         {
@@ -38,16 +48,22 @@ function UserDetailForm() {
           },
         }
       );
-      // Bạn có thể thêm xử lý sau khi cập nhật thành công, ví dụ như hiển thị thông báo
-      console.log("User profile updated successfully!");
+
       setEditMode(false);
+      toast.success(response.data.message || "Update profile successfully !");
+
+      setTimeout(() => {
+        toast.dismiss();
+      }, 100000);
+
     } catch (error) {
-      console.error("Error updating user profile:", error);
+      toast.error(error.response.data.message || "Failed to update profile.");
+      console.error('Error updating user profile:', error);
     }
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setUser((prevUser) => ({
       ...prevUser,
       [name]: value,
@@ -71,119 +87,104 @@ function UserDetailForm() {
   }, []);
 
   return (
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-12">
 
-    <div
-      style={{
-        width: "30%",
-        margin: "auto",
-        paddingTop: "50px",
-        paddingBottom: "100px"
+          <Form>
+            <h2 style={{color: 'red'}}>Account profile</h2>
+            <br/>
+            <div>
+              <label>Username:</label>
+              <input
+                readOnly
+                name="username"
+                value={user?.username}
+                className="form-control"
+                required
+              />
+            </div>
+            <br/>
 
-      }}
-    >
-      <form>
-        <h2 style={{ color: 'red' }}>Account profile</h2>
-        <br />
-        <div>
-          <label>Username:</label>
-                   <input
-            readOnly={!editMode}
-            name="username"
-            value={user?.username}
-            className="form-control"
-            required
-          />
+            <div>
+              <label>Email:</label>
+              <input
+                readOnly
+                name="email"
+                value={user?.email}
+                className="form-control"
+                required
+              />
+            </div>
+            <br/>
+
+            <div>
+              <label>Full name:</label>
+              <input
+                readOnly={!editMode}
+                name="fullName"
+                value={user?.fullName}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <br/>
+
+            <div>
+              <label>Date of birth:</label>
+              <input
+                readOnly={!editMode}
+                type="date"
+                name="dateOfBirth"
+                value={user?.dateOfBirth}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <br/>
+
+            <div style={{textAlign: "center"}}>
+              {editMode ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setEditMode(false)}
+                    className="btn btn-warning"
+                  > Cancel
+                  </button>
+                  &nbsp; &nbsp;
+                  <button
+                    type="button"
+                    onClick={handleSaveChanges}
+                    className="btn btn-success"
+                  > Save
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={getBackHome}
+                    className="btn btn-primary"
+                  > Home
+                  </button>
+                  &nbsp; &nbsp;
+                  <button
+                    type="button"
+                    type="text"
+                    onClick={getUserEdit}
+                    className="btn btn-danger"
+                  > Update
+                  </button>
+                </>
+              )}
+            </div>
+            <ToastContainer/>
+          </Form>
         </div>
-        <br />
-
-        <div>
-          <label>Email:</label>
-          <input
-            readOnly={!editMode}
-            name="email"
-            value={user?.email}
-            className="form-control"
-            required
-          />
-        </div>
-        <br />
-
-        <div>
-          <label>Full name:</label>
-          <input
-            readOnly={!editMode}
-            name="fullname"
-            value={user?.fullname}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <br />
-
-        <div>
-          <label>Date of birth:</label>
-          <input
-            readOnly={!editMode}
-            type="date"
-            name="dateOfBirth"
-            value={user?.dateOfBirth}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <br />
-
-        <br />
-        <div style={{ textAlign: "center" }}>
-
-          {editMode ? (
-            <>
-              <button style={{ textAlign: "center" }}
-                      type="button"
-                      onClick={() => setEditMode(false)}
-                      className="btn btn-warning"
-
-              >
-                Cancel
-              </button>
-
-              &nbsp; &nbsp;
-              <button
-                type="button"
-                style={{ textAlign: "center" }}
-                onClick={handleSaveChanges}
-                className="btn btn-success"
-              >
-                Changes
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={getBackHome}
-                className="btn btn-primary"
-              >
-                Home
-              </button>
-
-              &nbsp; &nbsp;
-
-              <button
-                type="button"
-                type="text"
-                onClick={getUserEdit}
-                className="btn btn-danger"
-              >
-                Update
-              </button>
-            </>
-
-          )}
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
