@@ -54,11 +54,6 @@ function Header() {
     }
   }, [successSubCategory, dispatch, SubCategoryList]);
 
-
-
-
-
-
   useEffect(() => {
     $(".header-search > a").on("click", function () {
       $(".search-popup-wrap").slideDown();
@@ -82,13 +77,13 @@ function Header() {
     document.querySelectorAll(".main-menu ul li").forEach((el) => {
       el.classList.remove("active");
     });
-    e.target.parentNode.classList += " active";
+    e.target.parentNode.classList += "active";
   };
   const subActive = (e) => {
     document.querySelectorAll(".main-menu ul li ul li").forEach((el) => {
       el.classList.remove("active");
     });
-    e.target.parentNode.classList += " active";
+    e.target.parentNode.classList += "active";
   };
   const [searchValue, setSearchValue] = useState("");
   const handleSearchSubmit = (e) => {
@@ -133,15 +128,17 @@ function Header() {
       $(".navbar-collapse").removeClass("show");
     });
 
-    $(".header-search > a").on("click", function () {
-      $(".search-popup-wrap").slideToggle();
-      return false;
-    });
+    // $(".header-search > a").on("click", function () {
+    //   $(".search-popup-wrap").slideToggle();
+    //   return false;
+    // });
 
-    $(".search-close").on("click", function () {
-      $(".search-popup-wrap").slideUp(500);
-    });
+    // $(".search-close").on("click", function () {
+    //   $(".search-popup-wrap").slideUp(500);
+    // });
   }, []);
+
+
 
   return (
     <header>
@@ -231,7 +228,7 @@ function Header() {
                                     {subCategories
                                       .filter(
                                         (subCategory) =>
-                                          subCategory.categoryId === category.id
+                                          subCategory.category.id === category.id
                                       )
                                       .map((subCategory) => (
                                         <li onClick={(e) => subActive(e)}>
@@ -250,9 +247,9 @@ function Header() {
                   <div className="header-action d-none d-md-block">
                     <ul>
                       <li className="header-search">
-                        <Link to="/">
+                        <a to="/">
                           <i className="flaticon-search" />
-                        </Link>
+                        </a>
                       </li>
 
                       <li>
@@ -266,93 +263,6 @@ function Header() {
                             {cartTotalQuantity}
                           </span>
                         </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </nav>
-              </div>
-
-              <div className="mobile-menu">
-                <nav className="menu-box">
-                  <div className="close-btn">
-                    <i className="fas fa-times" />
-                  </div>
-                  <div className="nav-logo">
-                    <Link to="/">
-                      <img src="img/logo/logo.png" alt="" title="true" />
-                    </Link>
-                  </div>
-                  <div className="menu-outer"></div>
-                  <div className="social-links">
-                    <ul className="clearfix">
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-twitter" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-facebook-square" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-pinterest-p" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-instagram" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-youtube" />
-                        </a>
-                      </li>
-                      {/*<li className="header-btn"><Link to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
-                    </ul>
-                  </div>
-                </nav>
-              </div>
-
-              <div className="mobile-menu">
-                <nav className="menu-box">
-                  <div className="close-btn">
-                    <i className="fas fa-times" />
-                  </div>
-                  <div className="nav-logo">
-                    <Link to="/">
-                      <img src="img/logo/logo.png" alt="" title="true" />
-                    </Link>
-                  </div>
-                  <div className="menu-outer"></div>
-                  <div className="social-links">
-                    <ul className="clearfix">
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-twitter" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-facebook-square" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-pinterest-p" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-instagram" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#">
-                          <span className="fab fa-youtube" />
-                        </a>
                       </li>
                     </ul>
                   </div>

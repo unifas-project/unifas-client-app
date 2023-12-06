@@ -11,7 +11,7 @@ const initialState = {
 
 export const getCategories = createAsyncThunk("categories", async () => {
     const response = await getCategoryList();
-    return response.data;
+    return response.data.data;
 });
 
 export const categorySlice = createSlice({
