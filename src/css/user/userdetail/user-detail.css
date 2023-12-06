@@ -1,8 +1,14 @@
 label{
-    width: 150px;
+    width: 250px;
 }
 
 button{
-    width: 200px;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
+}
+.red-text {
+    color: red;
 }
