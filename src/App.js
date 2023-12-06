@@ -15,7 +15,7 @@ import DashBoard from "./components/main/account/DashBoard";
 import List from "./pages/list/List";
 import AdminProduct from "./pages/adminSide/AdminProduct";
 import UserDetailPage from "./pages/UserDetailPage";
-
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -45,6 +45,8 @@ function App() {
             <Route path="/users" element={<List />}></Route>
             <Route path="/products" element={<AdminProduct />}></Route>
             <Route path="/user-detail" element={<UserDetailPage />}></Route>
+            <Route path="/products/:productId" element={<ProductDetailPage />}
+            ></Route>
           </Routes>
           <Footer />
         </>
