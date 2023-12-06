@@ -29,6 +29,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {checkSaleVoucherValid, selectCheckSaleVoucherValid} from "../../../feature/saleVoucher/saleVoucherSlice";
 
 const OrderForm = () => {
+    const [render, setRender] = useState(false)
     const [showAddressList, setShowAddressList] = useState(false);
     const [showAddNewAddressForm, setShowAddNewAddressForm] = useState(false);
     const [showUpdateAddressForm, setShowUpdateAddressForm] = useState(false);
@@ -38,13 +39,7 @@ const OrderForm = () => {
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [defaultAddressChecked, setDefaultAddressChecked] = useState(null)
     const [updateAddressId, setUpdateAddressId] = useState(0)
-    const [voucherCode, setVoucherCode] = useState({})
-    const [validVoucherCode, setValidVoucherCode] = useState("")
-    const [discount, setDiscount] = useState(0)
-    const [merchandiseSubtotal, setMerchandiseSubtotal] = useState(0)
-    const [discountPrice, setDiscountPrice] = useState(0);
-    const [totalPayment, setTotalPayment] = useState(0)
-    let [currentUpdateAddress, setCurrentUpdateAddress] = useState({})
+    const [inputVoucher,setInputVoucher] = useState({code:""})
 
 
     // const [order, setOrder] = useState({})
@@ -64,35 +59,10 @@ const OrderForm = () => {
     const provinces = useSelector(selectGetProvinces)
     const districts = useSelector(selectGetDistricts)
     const wards = useSelector(selectGetWards)
-    const voucher = useSelector(selectCheckSaleVoucherValid)
+    const validSaleVoucher = useSelector(selectCheckSaleVoucherValid)
     // const loading = useSelector(selectLoading)
     const success = useSelector(selectSuccess)
     // const error = useSelector(selectError)
-
-    useEffect(()=> {
-        if (updateAddress != null) {
-            setProvinceInfo(updateAddress);
-        }
-        console.log("updateAddress: " + JSON.stringify(updateAddress));
-        console.log("currentUpdateAddress: " + JSON.stringify(currentUpdateAddress));
-    }, [updateAddress]);
-
-    const fetchAddressForUpdate = (id) => {
-        if (updateAddress == null || !updateAddress) {
-            dispatch(getUserAddressForUpdate(id))
-        }
-    }
-
-    const setProvinceInfo = (updateAddress) => {
-        if (updateAddress != null) {
-            const provinceCode = findProvinceCodeByName(updateAddress?.city)
-            const districtCode = findDistrictCodeByName(updateAddress?.district)
-            handleFilterDistrictsForUpdateAddress(provinceCode)
-            handleFilterWardsForUpdateAddress(districtCode)
-            setUpdateAddressId(updateAddress?.id);
-            currentUpdateAddress = {...updateAddress};
-        }
-    }
 
     const dispatch = useDispatch();
     const handleShowAddressList = () => setShowAddressList(true);
@@ -120,7 +90,9 @@ const OrderForm = () => {
     }
 
     const fetchAddress = () => {
-        dispatch(getUserAddress());
+        if (addresses === null) {
+            dispatch(getUserAddress());
+        }
 
         if (addresses !== null) {
             if (addresses?.length === 1) {
@@ -235,7 +207,7 @@ const OrderForm = () => {
         }
 
         if ("OK" === response.payload.statusCode) {
-            fetchAddress()
+            dispatch(getUserAddress())
         }
     }
 
@@ -251,11 +223,21 @@ const OrderForm = () => {
 
     }
 
+    const fetchAddressForUpdate = async (id) => {
+        await dispatch(getUserAddressForUpdate(id))
+        // setRender(!render)
+        if (updateAddress != null){
+            const provinceCode = findProvinceCodeByName(updateAddress.city)
+            const districtCode = findDistrictCodeByName(updateAddress.district)
+            handleFilterDistrictsForUpdateAddress(provinceCode)
+            handleFilterWardsForUpdateAddress(districtCode)
+            setUpdateAddressId(updateAddress?.id)
+        }
+    }
+
     const handleSubmitUpdateAddressForm = async (values) => {
         const alert = toast.loading("Please wait for a second");
-        let id = updateAddressId;
-        let address = values
-        const response = await dispatch(updateUserAddress({address, id}))
+        const response = await dispatch(updateUserAddress(values))
 
         if ("OK" === response.payload.statusCode) {
             toast.update(alert, {
@@ -269,6 +251,7 @@ const OrderForm = () => {
                 theme: "light",
                 isLoading: false
             })
+            dispatch(getUserAddress())
         } else {
             toast.update(alert, {
                 render: response.payload.message, type: "error", position: "top-right",
@@ -282,17 +265,11 @@ const OrderForm = () => {
                 isLoading: false
             })
         }
-        if ("OK" === response.payload.statusCode) {
-            fetchAddress()
-            handleCloseUpdateAddressAddressForm()
-            handleShowAddressList()
-        }
-
     }
 
     const findProvinceCodeByName = (name) => {
-        for (let i = 0; i < provinces.length; i++) {
-            if (provinces[i].name == name) {
+        for (let i= 0; i<provinces.length; i++){
+            if (provinces[i].name == name){
                 return provinces[i].code;
             }
         }
@@ -300,8 +277,8 @@ const OrderForm = () => {
 
 
     const findDistrictCodeByName = (name) => {
-        for (let i = 0; i < districts.length; i++) {
-            if (districts[i].name == name) {
+        for (let i= 0; i < districts.length; i++){
+            if (districts[i].name == name){
                 return districts[i].code;
             }
         }
@@ -322,15 +299,15 @@ const OrderForm = () => {
     }
 
     const handleFilterWardsForUpdateAddress = (districtCode) => {
-        let wardForUpdateAddressFilter = []
+        let wardForUpdateAdressFilter = []
         setCurrentDistrictCode(districtCode)
         if (wards != null && currentDistrictCode !== districtCode) {
             wards.forEach((ward) => {
                 if (ward.district_code == districtCode) {
-                    wardForUpdateAddressFilter.push(ward);
+                    wardForUpdateAdressFilter.push(ward);
                 }
             })
-            setFilterWardsForUpdateAddress(wardForUpdateAddressFilter);
+            setFilterWardsForUpdateAddress(wardForUpdateAdressFilter);
         }
     }
 
@@ -359,55 +336,53 @@ const OrderForm = () => {
         let index = select.selectedIndex;
         let option = select.options [index];
         let districtCode = option.getAttribute("data-code")
-        let wardForUpdateAddressFilter = []
+        let wardForUpdateAdressFilter = []
         setCurrentDistrictCode(districtCode)
         if (wards != null && currentDistrictCode !== districtCode) {
             wards.forEach((ward) => {
                 if (ward.district_code == districtCode) {
-                    wardForUpdateAddressFilter.push(ward);
+                    wardForUpdateAdressFilter.push(ward);
                 }
             })
-            setFilterWardsForUpdateAddress(wardForUpdateAddressFilter);
+            setFilterWardsForUpdateAddress(wardForUpdateAdressFilter);
         }
     }
 
-    const handleChangeVoucherCode = (event) => {
-        setVoucherCode({...voucherCode, [event.target.name]: event.target.value})
-    }
+    const handleCheckVoucher = async (event) => {
+        event.preventDefault()
+        if (inputVoucher != null && inputVoucher.code !== ""){
+            const alert = toast.loading("Please wait for a second");
+            const response = await dispatch(checkSaleVoucherValid(inputVoucher))
 
-    const handleCheckSaleVoucher = async () => {
-        const alert = toast.loading("Please wait for a second");
-        const response = await dispatch(checkSaleVoucherValid(voucherCode))
-        if ("OK" === response.payload.statusCode) {
-            toast.update(alert, {
-                render: "Valid voucher. Have a great shopping experience", type: "success", position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                isLoading: false
-            })
-            setValidVoucherCode(voucherCode.toUpperCase())
-            setDiscount(response.payload.data.discount)
-        } else {
-            toast.update(alert, {
-                render: response.payload.message, type: "error", position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                isLoading: false
-            })
-            setValidVoucherCode("")
-            setDiscount(0)
+            if ("OK" === response.payload.statusCode) {
+                toast.update(alert, {
+                    render: "Update address successfully", type: "success", position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    isLoading: false
+                })
+                dispatch(getUserAddress())
+            } else {
+                toast.update(alert, {
+                    render: response.payload.message, type: "error", position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    isLoading: false
+                })
+            }
         }
     }
+
 
 
     useEffect(() => {
@@ -420,7 +395,6 @@ const OrderForm = () => {
     useEffect(() => {
             fetchAddress()
             fetchLocations();
-            // fetchAddressForUpdate();
         }, [dispatch, provinces, addresses]
     )
 
@@ -526,22 +500,22 @@ const OrderForm = () => {
                                     Voucher:
                                 </span>
                                 <span className="discount-code">
-                                    {validVoucherCode == "" ? "Apply voucher here" : validVoucherCode}
+                                    {validSaleVoucher ? validSaleVoucher.code.toUpperCase() : "Select voucher here"}
                                 </span>
                                 <Link to=""
                                       style={{float: "right", color: "red", textDecoration: "none !important"}}
-                                      onClick={handleShowVoucher}>Apply</Link>
+                                      onClick={handleShowVoucher}>Select</Link>
                             </div>
                             <hr/>
                             <div className="product-cost" style={{lineHeight: 3}}>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Merchandise Subtotal:</span>
-                                <span style={{float: "right"}}>{merchandiseSubtotal}đ</span>
+                                <span style={{float: "right"}}>1,000,000đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Discount Price:</span>
-                                <span style={{float: "right"}}>{discountPrice}đ</span>
+                                <span style={{float: "right"}}>1,000,000đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Total Payment:</span>
-                                <span style={{float: "right"}}>{totalPayment}đ</span>
+                                <span style={{float: "right"}}>1,000,000đ</span>
                             </div>
                         </div>
                         <div className="mt-3 text-center" style={{width: "100%"}}>
@@ -611,10 +585,10 @@ const OrderForm = () => {
                                                 border: "transparent",
                                                 height: "min-content"
                                             }} onClick={() => {
-                                                fetchAddressForUpdate(defaultAddress?.id)
-                                                setDefaultAddressChecked(defaultAddress?.isDefault)
                                                 handleCloseAddressList();
                                                 handleShowUpdateAddressAddressForm()
+                                                fetchAddressForUpdate(defaultAddress?.id)
+                                                setDefaultAddressChecked(defaultAddress?.isDefault)
                                             }}>Update
                                             </button>
                                         </div>
@@ -697,6 +671,7 @@ const OrderForm = () => {
                     <Button style={{backgroundColor: "red", maxHeight: "40px"}} variant="primary"
                             onClick={() => {
                                 handleSelectAddress()
+                                handleCloseAddressList()
                             }}
                     >Confirm</Button>
                 </Modal.Footer>
@@ -841,7 +816,7 @@ const OrderForm = () => {
                                         <Field name="isDefault" type="checkbox"
                                                style={{accentColor: "red"}}
                                         />
-                                        <label className="ml-2 mb-0"><span>Set as Default Address</span></label>
+                                        <label className="ml-2 mb-0" style={{width:"max-content", fontSize:"14px"}}><span>Set as Default Address</span></label>
                                     </div>
                                     <Modal.Footer>
                                         <Button style={{backgroundColor: "black", maxHeight: "40px"}}
@@ -865,14 +840,6 @@ const OrderForm = () => {
 
             {/*Update Address*/}
 
-            <form action="/action_page.php">
-                <label htmlFor="fname">First name:</label><br/>
-                <input type="text" id="fname" name="fname" value={updateAddress?.receiver}/><br/>
-                <label htmlFor="lname">Last name:</label><br/>
-                <input type="text" id="lname" name="lname" value={updateAddress?.contact}/><br/><br/>
-                <button type="submit" value="Submit"></button>
-            </form>
-
             <Modal
                 show={showUpdateAddressForm}
                 onHide={handleCloseUpdateAddressAddressForm}
@@ -891,6 +858,7 @@ const OrderForm = () => {
                         <Formik
                             onSubmit={handleSubmitUpdateAddressForm}
                             initialValues={{
+                                id: updateAddress?.id,
                                 receiver: updateAddress?.receiver,
                                 contact: updateAddress?.contact,
                                 city: updateAddress?.city,
@@ -1017,15 +985,12 @@ const OrderForm = () => {
                                                style={{accentColor: "red"}}
                                                checked={"true" == defaultAddressChecked}
                                                onClick={() => {
-                                                   setValues({
-                                                       ...values,
-                                                       isDefault: (defaultAddressChecked == "true" ? "false" : "true")
-                                                   })
-                                                   setDefaultAddressChecked(defaultAddressChecked == "true" ? "false" : "true")
+                                                   setValues({...values,isDefault : (defaultAddressChecked=="true" ? "false" : "true")})
+                                                   setDefaultAddressChecked(defaultAddressChecked=="true" ? "false" : "true")
                                                }}
                                                disabled={updateAddress?.isDefault === "true"}
                                         />
-                                        <label className="ml-2 mb-0"><span>Set as Default Address</span></label>
+                                        <label className="ml-2 mb-0" style={{width:"max-content", fontSize:"14px"}}><span>Set as Default Address</span></label>
                                     </div>
                                     <Modal.Footer>
                                         <Button style={{backgroundColor: "black", maxHeight: "40px"}}
@@ -1037,7 +1002,15 @@ const OrderForm = () => {
                                         </Button>
                                         <Button type="submit"
                                                 style={{backgroundColor: "red", maxHeight: "40px"}}
-                                                variant="primary">{"Submit"}</Button>
+                                                variant="primary"
+                                                onClick={() => {
+                                                    setTimeout(() =>{
+                                                        handleCloseUpdateAddressAddressForm()
+                                                        handleShowAddressList()
+                                                    },2000 )
+                                                }}
+                                        >{"Submit"}
+                                        </Button>
                                     </Modal.Footer>
                                 </Form>
                             )}
@@ -1064,16 +1037,15 @@ const OrderForm = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="add-new-address-form">
-                        <form>
+                        <form onSubmit={handleCheckVoucher}>
                             <div className="user-info input-group">
                                 <input type="text" className="form-control" placeholder="Enter Voucher Here"
                                        style={{marginRight: "10px", borderRadius: "3px"}}
-                                       onChange={handleChangeVoucherCode}
-                                       required={true}
+                                       onChange={(event) => {
+                                           setInputVoucher({...inputVoucher,["code"] : event.target.value})
+                                       }}
                                 />
-                                <button onClick={handleCheckSaleVoucher} type="button" className="btn"
-                                        style={{padding: "5px 20px"}}>Apply
-                                </button>
+                                <button className="btn" style={{padding: "5px 20px"}}>Apply</button>
                             </div>
                         </form>
                     </div>

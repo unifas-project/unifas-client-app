@@ -1150,7 +1150,7 @@ label {
 .slider-bg {
     background-position: center;
     background-size: cover;
-    min-height: 793px;
+    min-height: 600px;
     position: relative;
 }
 .slider-content {
@@ -1317,7 +1317,7 @@ label {
     background: red;
     position: relative;
     margin-left: 80px;
-	background-image: url(../img/images/find_shape.png);
+	/*background-image: url(../img/images/find_shape.png);*/
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -2296,7 +2296,7 @@ label {
     top: 0;
     width: 100%;
     height: 24px;
-    background-image: url(../img/bg/testi_bg_shape01.png);
+    /*background-image: url(../img/bg/testi_bg_shape01.png);*/
     background-repeat: repeat;
     background-position: center;
 	z-index: 1;
@@ -2304,7 +2304,7 @@ label {
 .testimonial-bg::after {
 	top: auto;
 	bottom: 0;
-	background-image: url(../img/bg/testi_bg_shape02.png);
+	/*background-image: url(../img/bg/testi_bg_shape02.png);*/
 }
 .testimonial-item {
     background-image: url(../img/images/testimonial.svg);

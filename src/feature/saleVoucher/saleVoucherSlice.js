@@ -8,7 +8,8 @@ const initialState = {
     success : false,
     saleVoucherValid: null,
     newSaleVoucher : null,
-    allSaleVouchers: null
+    allSaleVouchers: null,
+    searchPage: 1,
 }
 
 export const checkSaleVoucherValid = createAsyncThunk("check-sale-voucher",async (saleVoucher) => {
@@ -31,6 +32,8 @@ export const deleteCurrentSaleVoucher = createAsyncThunk("delete-sale-voucher", 
     return response
 })
 
+
+
 export const saleVoucherSlice = createSlice({
     name : "saleVoucher",
     initialState,
@@ -43,7 +46,11 @@ export const saleVoucherSlice = createSlice({
         },
         setSuccess : (state, action) => {
             state.success = action.payload
+        },
+         setSearchPage : (state, action) => {
+            state.searchPage = action.payload
         }
+
     },
     extraReducers: builder => {
         builder
@@ -103,9 +110,10 @@ export const saleVoucherSlice = createSlice({
     }
 })
 
-export const {setLoading,setError,setSuccess} = addressSlice.actions;
+export const {setLoading,setError,setSuccess,setSearchPage} = saleVoucherSlice.actions;
 
 export const selectCheckSaleVoucherValid = (state) => state.saleVoucher.saleVoucherValid
 export const selectCreateNewSaleVoucher = (state) => state.saleVoucher.newSaleVoucher
 export const selectGetAllSaleVouchers = (state) => state.saleVoucher.allSaleVouchers
+export const selectSearchPage = (state) => state.saleVoucher.searchPage
 export default saleVoucherSlice.reducer;

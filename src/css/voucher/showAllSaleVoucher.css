@@ -53,3 +53,15 @@ input[type=number]::-webkit-outer-spin-button {
     color: white;
     font-weight: 100;
 }
+
+.column-1 {
+    overflow-y: auto;
+    height: 80vh;
+}
+
+.show-vouchers{
+    height: 80vh;
+}
+.show-vouchers-area{
+    flex: 6 1;
+}

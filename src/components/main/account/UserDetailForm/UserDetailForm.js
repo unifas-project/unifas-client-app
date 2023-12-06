@@ -143,7 +143,7 @@ function UserDetailForm() {
               <button style={{ textAlign: "center" }}
                       type="button"
                       onClick={() => setEditMode(false)}
-                      className="btn btn-warning"
+                      className="btn btn-warning user-detail-btn"
 
               >
                 Cancel
@@ -154,7 +154,7 @@ function UserDetailForm() {
                 type="button"
                 style={{ textAlign: "center" }}
                 onClick={handleSaveChanges}
-                className="btn btn-success"
+                className="btn btn-success user-detail-btn"
               >
                 Changes
               </button>
@@ -164,7 +164,7 @@ function UserDetailForm() {
               <button
                 type="button"
                 onClick={getBackHome}
-                className="btn btn-primary"
+                className="btn btn-primary user-detail-btn"
               >
                 Home
               </button>
@@ -175,7 +175,7 @@ function UserDetailForm() {
                 type="button"
                 type="text"
                 onClick={getUserEdit}
-                className="btn btn-danger"
+                className="btn btn-danger user-detail-btn"
               >
                 Update
               </button>
