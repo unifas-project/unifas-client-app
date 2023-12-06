@@ -1,28 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/search.css";
 
 function ProductItem({ data }) {
-  const [sizes, setSizes] = useState(null);
-  const [colors,setColors] = useState(null);
-  useEffect(() => {
-    if (sizes === null) {
-        let arrSize = []
-      for (let i = 0; i < data?.variantResponseList?.length; i++) {
-        let item = data?.variantResponseList[i];
-        arrSize.push(item?.sizeResponse?.name);
-    }
-    setSizes([...new Set(arrSize)]);
-    }
-    if (colors === null) {
-      let arrColor = [];
-      for (let i = 0; i < data?.variantResponseList?.length; i++) {
-        let item = data?.variantResponseList[i];
-        arrColor.push(item?.colorResponse?.code);
-      }
-      setColors([...new Set(arrColor)]);
-    }
-  });
+
+  const uniqueColors = new Set();
+
   return (
     <div className="col-lg-4 col-md-4 ">
       <div className="adoption-shop-item item-border">
@@ -33,29 +16,45 @@ function ProductItem({ data }) {
           </Link>
         </div>
         <div className="adoption-shop-content">
-          <h4 className="title">
-            <Link to="/shop-details">{data?.name}</Link>
+          <h4 className="title name-truncate">
+            <Link to="/shop-details line-clamp-2 ">{data?.name}</Link>
           </h4>
           <div className="adoption-meta">
-            <ul>
-              <li>
-                <h4 className="text-small text-uppercase">
-                  {sizes?.join(",")}
-                </h4>
+            <ul className="size-color-center item-center">
+              <li className="item-center text-small text-uppercase">
+                {[
+                  ...new Set(
+                    data?.variantResponseList?.map(
+                      (variant) => variant.sizeResponse?.name
+                    )
+                  ),
+                ].join(",")}
+                {/* {sizes?.join(",")} */}
               </li>
-              <li className="d-flex">
-                {colors?.map((color, key) => (
-                  <div
-                    key={key}
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      margin: "0 0 0 4px",
-                      border: "1px solid black",
-                      backgroundColor: `${color}`,
-                    }}
-                  ></div>
-                ))}
+              <li className="d-flex item-center">
+                {data?.variantResponseList?.map((variant, key) => {
+                  const color = variant?.colorResponse?.code;
+
+                  // Chỉ render nếu màu không trùng nhau
+                  if (!uniqueColors.has(color)) {
+                    uniqueColors.add(color);
+
+                    return (
+                      <div
+                        key={key}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          margin: "0 0 0 4px",
+                          border: "1px solid black",
+                          backgroundColor: `${color}`,
+                        }}
+                      ></div>
+                    );
+                  }
+
+                  return null; // Không render nếu màu trùng nhau
+                })}{" "}
               </li>
             </ul>
           </div>
@@ -67,7 +66,7 @@ function ProductItem({ data }) {
                 ))}
               </li>
               <li className="price">
-                Total Price : <span>{data?.price}</span>
+                Price : <span className="price">{data?.price}</span>
               </li>
             </ul>
           </div>

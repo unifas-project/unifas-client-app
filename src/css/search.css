@@ -85,3 +85,28 @@ text-decoration: none !important;
   border-radius: 2px;
   
 } */
+.size-color-center{
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.item-center{
+  align-items: center;
+}
+.name-truncate {
+  max-width: 200px;
+  max-height: 2em; /* Chiều cao tối đa của 2 dòng (tương đương 2 lần chiều cao của một dòng) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1em; /* Chiều cao của một dòng */
+}
+.ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Số dòng muốn hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.price{
+  font-size: 17px;
+}

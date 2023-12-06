@@ -10,7 +10,6 @@ const initialState = {
 };
 
 export const searchProductList = createAsyncThunk("search/product", async (name) => {
-  console.log(name)
   const response = await searchNameList(name);
   return response.data;
 });

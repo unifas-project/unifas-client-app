@@ -53,10 +53,8 @@ function Search() {
     }
     if (searchProductDatas === null) {
       dispatch(searchProductList(handleRequestParams(location?.search)));
-      console.log("b");
     }
   }, [categoriesStore, sizesStore, colorsStore, searchProductDatas]);
-  console.log("c", searchProductDatas);
 
   //cung lay tren store sreach tu lan thu 2 cho di
   const [items, setItems] = useState(null);
@@ -83,18 +81,18 @@ function Search() {
       ];
       setItems(itemList);
     }
-  });
+  }, [categoriesStore, sizesStore, colorsStore, items]);
   function getListProduct(arr, groupLabel) {
     let items = [];
     for (let i = 0; i < arr?.length; i++) {
       let nameItem = arr[i]?.name;
-      let gender =  arr[i]?.gender || null;
+      let gender = arr[i]?.gender || null;
       let item = {
         id: arr[i].id,
         label: `${nameItem}`,
         checked: false,
         groupLabel: groupLabel,
-        gender
+        gender,
       };
       items.push(item);
     }
@@ -102,20 +100,18 @@ function Search() {
   }
   //tao fill danh muc (category, size, color)
 
-  const handleCheckboxChange = (labelChild, label,dataGender=null) => {
-    console.log(`a`,labelChild)
-    
+  const handleCheckboxChange = (labelChild, label, dataGender = null) => {
     const updatedItems = items.map((itemGroup) => {
       if (itemGroup.label === label) {
         return {
           ...itemGroup,
           items: itemGroup.items.map((item) => {
-              if (item.label === labelChild && dataGender=== item?.gender) {
-                return {
-                  ...item,
-                  checked: !item.checked,
-                };
-              }
+            if (item.label === labelChild && dataGender === item?.gender) {
+              return {
+                ...item,
+                checked: !item.checked,
+              };
+            }
             return item;
           }),
         };
@@ -134,10 +130,12 @@ function Search() {
   const [tempDatas, setTempDatas] = useState(null);
   //set product de hien thi
   useEffect(() => {
+
     if (searchProductDatas != null && datas == null) {
-      setDatas(searchProductDatas?.data);
+      let productListLength = searchProductDatas?.data?.length;
+      handleValidMore(productListLength, searchProductDatas?.data);
     }
-  }, [searchProductDatas, datas]);
+  }, [searchProductDatas]);
 
   // filter search nang cao
   //check coi trong fill co checked chua
@@ -159,7 +157,7 @@ function Search() {
       let filteredProductsByCategory = searchProductDatas?.data.filter(
         (element) => {
           return filterCategoryEmtry.some(
-            (filterItem) => element?.categoryResponse?.name === filterItem.label
+            (filterItem) => element?.categoryResponse?.name === filterItem.label && element?.categoryResponse?.gender == filterItem?.gender
           );
         }
       );
@@ -233,8 +231,8 @@ function Search() {
       setTempDatas(searchProductDatas?.data);
       setIsFilterDatas(false);
     }
-  });
-  // khi co fill thi moi set product theo fill 
+  }, [items]);
+  // khi co fill thi moi set product theo fill
   useEffect(() => {
     if (tempDatas != null) {
       let tempDatasLength = tempDatas?.length;
@@ -248,7 +246,7 @@ function Search() {
         setDatas(tempArr);
       }
     }
-  });
+  }, [tempDatas]);
   // sort
   const [selectedValue, setSelectedValue] = useState("");
 
@@ -265,7 +263,7 @@ function Search() {
         setDatas(sortedDatas);
       }
     }
-  });
+  }, [selectedValue, datas]);
 
   // show and hidden item menu
   const [itemVisibility, setItemVisibility] = useState({});
@@ -289,7 +287,21 @@ function Search() {
   };
 
   function handleValidMore(supLength, subList) {
-    let datasLength = datas?.length;
+    let datasLength = datas?.length == null ? 0 : datas?.length;
+    if (datasLength == 0) {
+      let elementArr = [];
+      if (supLength > 20) {
+        for (let i = 0; i < 20; i++) {
+          elementArr.push(subList[i]);
+        }
+      } else {
+        for (let i = 0; i < supLength; i++) {
+          elementArr.push(subList[i]);
+        }
+      }
+      setDatas(elementArr);
+      return;
+    }
     if (supLength <= datasLength) {
       return;
     } else if (supLength > datasLength) {
@@ -303,114 +315,137 @@ function Search() {
           elementArr.push(subList[i]);
         }
       }
-      setDatas((praveState) => [...praveState, elementArr]);
+      setDatas((praveState) => [...praveState, ...elementArr]);
     }
   }
+
+  // an hien xem them theo do dai cua searchProductDatas và tempDatas nếu có tồn tại
+  const [showMore,setShowMore] = useState(false);
+  useEffect(()=>{
+    if(tempDatas != null){
+      if(datas?.length < tempDatas?.length ){
+        setShowMore(true);
+      }else{
+        setShowMore(false);
+      }
+    }else if(searchProductDatas != null && tempDatas== null){
+      if(datas?.length < searchProductDatas?.data?.length ){
+        setShowMore(true);
+      }else{
+        setShowMore(false);
+      }
+    }
+  })
   return (
     <main>
       <Subscribe />
       <div className="body-flex">
-      <div className=" mt-5">
-        <h3 className="title-start">TÌM KIẾM KẾT QUẢ CHO</h3>
-        <h2 className="title-end">{handleRequestParams(location?.search)}</h2>
-        <div className="straight-line"></div>
+        <div className=" mt-5">
+          <h3 className="title-start">TÌM KIẾM KẾT QUẢ CHO</h3>
+          <h2 className="title-end">{handleRequestParams(location?.search)}</h2>
+          <div className="straight-line"></div>
 
-        <div className="d-flex justify-content-between mt-2 item-center mb-4">
-          <div className="col-4 ">
-            <div className="mb-2 text-bold">KẾT QUẢ</div>
-            {tempDatas !== null ? (
-              <div>{tempDatas?.length} Sản phẩm</div>
-            ) : (
-              <div>{searchProductDatas?.data?.length} Sản phẩm</div>
-            )}
+          <div className="d-flex justify-content-between mt-2 item-center mb-4">
+            <div className="col-4 ">
+              <div className="mb-2 text-bold">KẾT QUẢ</div>
+              {tempDatas !== null ? (
+                <div>{tempDatas?.length} Sản phẩm</div>
+              ) : (
+                <div>{searchProductDatas?.data?.length} Sản phẩm</div>
+              )}
+            </div>
+            <div className="col-5"></div>
+            <div className="col-3">
+              <div className="mb-2 text-bold">SẮP XẾP THEO </div>
+              <select
+                class="form-select px-4 py-3 col-10"
+                aria-label="Default select example"
+                value={selectedValue}
+                onChange={handleSelectChange}
+              >
+                <option disabled selected value="">
+                  default
+                </option>
+                <option value="priceLowToHight">Giá từ thấp đến cao</option>
+                <option value="priceHightToLow">Giá từ cao đến thấp</option>
+                {/* <option value="3">Three</option> */}
+              </select>
+            </div>
           </div>
-          <div className="col-5"></div>
-          <div className="col-3">
-            <div className="mb-2 text-bold">SẮP XẾP THEO </div>
-            <select
-              class="form-select px-4 py-3 col-10"
-              aria-label="Default select example"
-              value={selectedValue}
-              onChange={handleSelectChange}
-            >
-              <option disabled selected value="">
-                default
-              </option>
-              <option value="priceLowToHight">Giá từ thấp đến cao</option>
-              <option value="priceHightToLow">Giá từ cao đến thấp</option>
-              {/* <option value="3">Three</option> */}
-            </select>
-          </div>
-        </div>
-        <div className="d-flex justify-content-between">
-          <div className="col-3">
-            {items?.map((item, key) => {
-              return (
-                <React.Fragment key={key}>
-                  <div
-                    className="d-flex justify-content-between items-center positer mb-2"
-                    onClick={() => handleClickItem(item?.label)}
-                  >
-                    <h4 className="text-small">{item?.label}</h4>
-                    {itemVisibility[item?.label] ? (
-                      <FaChevronUp />
-                    ) : (
-                      <FaChevronDown />
-                    )}
-                  </div>
-                  {itemVisibility[item?.label] && (
-                    <div className={`d-flex  flex-column pl-4 mb-3 `}>
-                      {item?.items?.map((data, index) => (
-                        <label className="" key={index}>
-                          <input
-                            type="checkbox"
-                            className="ip-check"
-                            checked={data.checked}
-                            onChange={() =>
-                              handleCheckboxChange(data.label, item.label,data?.gender)
-                            }
-                          />
-                          <span className="checkmark pl-3 text-size">
-                            {`${data?.label} ${data?.gender == null ? "": data?.gender}`}
-                          </span>
-                        </label>
-                      ))}
+          <div className="d-flex justify-content-between">
+            <div className="col-3 ">
+              {items?.map((item, key) => {
+                return (
+                  <React.Fragment key={key}>
+                    <div
+                      className="d-flex justify-content-between items-center positer mb-2"
+                      onClick={() => handleClickItem(item?.label)}
+                    >
+                      <h4 className="text-small">{item?.label}</h4>
+                      {itemVisibility[item?.label] ? (
+                        <FaChevronUp />
+                      ) : (
+                        <FaChevronDown />
+                      )}
                     </div>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
-          <div className="col-9 ">
-            <section className="adoption-shop-area p-0">
-              <div className="container">
-                <div className="row justify-content-center">
-                  {datas?.map((data, key) => (
-                    <ProductItem data={data} key={key} />
-                  ))}
+                    {itemVisibility[item?.label] && (
+                      <div className={`d-flex  flex-column pl-4 mb-3 `}>
+                        {item?.items?.map((data, index) => (
+                          <label className="" key={index}>
+                            <input
+                              type="checkbox"
+                              className="ip-check"
+                              checked={data.checked}
+                              onChange={() =>
+                                handleCheckboxChange(
+                                  data.label,
+                                  item.label,
+                                  data?.gender
+                                )
+                              }
+                            />
+                            <span className="checkmark pl-3 text-size">
+                              {`${data?.label} ${
+                                data?.gender == null ? "" : data?.gender
+                              }`}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+            <div className="col-9 ">
+              <section className="adoption-shop-area p-0">
+                <div className="container">
+                  <div className="row justify-content-center">
+                    {datas?.map((data, key) => (
+                      <ProductItem data={data} key={key} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </section>
-            <div className="dash"></div>
-            {datas?.length > 20 ? (
-              <div className="more">
-                <div
-                  className="d-flex items-center positer"
-                  onClick={() => handleClickMore()}
-                >
-                  <div className="mr-4">Xem Thêm</div>
-                  <span>
-                    <FaChevronDown />
-                  </span>
+              </section>
+              <div className="dash"></div>
+              {showMore ? (
+                <div className="more">
+                  <div
+                    className="d-flex items-center positer"
+                    onClick={() => handleClickMore()}
+                  >
+                    <div className="mr-4">Xem Thêm</div>
+                    <span>
+                      <FaChevronDown />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <></>
-            )}
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-
       </div>
     </main>
   );
