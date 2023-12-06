@@ -18,7 +18,6 @@ import UserDetailPage from "./pages/UserDetailPage";
 import UserPasswordPage from "./pages/UserPasswordPage";
 
 
-
 function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -30,7 +29,6 @@ function App() {
 
   return (
     <div className="App">
-  
       {loading ? (
         <Loading />
       ) : (
