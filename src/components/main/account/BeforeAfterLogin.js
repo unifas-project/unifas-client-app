@@ -1,13 +1,15 @@
 import React from "react";
-import { BiUser } from "react-icons/bi";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { SlUserFollowing } from "react-icons/sl";
-import { VscAccount } from "react-icons/vsc";
-import { VscTable } from "react-icons/vsc";
-import { VscRecord } from "react-icons/vsc";
+import {BiUser} from "react-icons/bi";
+import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {SlUserFollowing} from "react-icons/sl";
+import {VscAccount} from "react-icons/vsc";
+import {VscTable} from "react-icons/vsc";
+import {VscRecord} from "react-icons/vsc";
 import axios from "axios";
+import {RiLockPasswordLine} from "react-icons/ri";
+import {RiLogoutCircleLine} from "react-icons/ri";
 
 function BeforeAfterLogin() {
   const navigate = useNavigate();
@@ -24,13 +26,13 @@ function BeforeAfterLogin() {
     }
   }, [storedUsername]);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
 
     // try {
     //     const cartItemsFromLocalStorage = localStorage.getItem("cartItems");
 
     //     if (cartItemsFromLocalStorage) {
-          
+
     //       const cartItems = JSON.parse(cartItemsFromLocalStorage);
     //       const requestData = { cartItems };
 
@@ -74,26 +76,26 @@ function BeforeAfterLogin() {
       {username !== null ? (
         <li className="header-shop-cart">
           <Link to="/">
-            <BiUser style={{ fontSize: "27px", color: "#525252" }}></BiUser>
+            <BiUser style={{fontSize: "27px", color: "#525252"}}></BiUser>
           </Link>
 
           <ul className="minicart">
             <li className="d-flex align-items-start">
-             
-                <Link to="/#">
-                  <VscAccount
-                    style={{
-                      fontSize: "20px",
-                      color: "red",
-                      marginRight: "10px",
-                    }}
-                  ></VscAccount>
-                </Link>
 
-                <Link to="/" style={{ fontSize: "16px", color: "black" }}>
-                  {username}
-                </Link>
-            
+              <Link to="/#">
+                <VscAccount
+                  style={{
+                    fontSize: "20px",
+                    color: "red",
+                    marginRight: "10px",
+                  }}
+                ></VscAccount>
+              </Link>
+
+              <Link to="/" style={{fontSize: "16px", color: "black"}}>
+                {username}
+              </Link>
+
             </li>
             <li className="d-flex align-items-start">
               <a href="/#">
@@ -106,14 +108,33 @@ function BeforeAfterLogin() {
                 ></SlUserFollowing>
               </a>
 
-              <Link to="/user-detail" style={{ fontSize: "16px", color: "black" }}>
+              <Link to="/user-detail" style={{fontSize: "16px", color: "black"}}>
                 Account Profile
               </Link>
             </li>
 
+            <li className="d-flex align-items-start">
+              <a href="/#">
+                <RiLockPasswordLine
+                  style={{
+                    fontSize: "20px",
+                    color: "red",
+                    marginRight: "10px",
+                  }}
+                ></RiLockPasswordLine>
+              </a>
+
+              <Link to="/user-password" style={{fontSize: "16px", color: "black"}}>
+                Password
+              </Link>
+            </li>
+
+
+            {/*<RiLockPasswordLine />*/}
+
             {role === "ROLE_ADMIN" && (
               <li className="d-flex align-items-start">
-                 <Link to="/dashboard">
+                <Link to="/dashboard">
                   <VscTable
                     style={{
                       fontSize: "20px",
@@ -123,7 +144,7 @@ function BeforeAfterLogin() {
                   ></VscTable>
                 </Link>
 
-                <Link to="/dashboard" style={{ fontSize: "16px", color: "black" }}>
+                <Link to="/dashboard" style={{fontSize: "16px", color: "black"}}>
                   Dashboard
                 </Link>
               </li>
@@ -131,19 +152,19 @@ function BeforeAfterLogin() {
 
             <li className="d-flex align-items-start">
               <a href="/#" onClick={handleLogout}>
-                <VscRecord
+                <RiLogoutCircleLine
                   style={{
                     fontSize: "20px",
                     color: "red",
-                    marginRight: "10px", 
+                    marginRight: "10px",
                   }}
-                ></VscRecord>
+                ></RiLogoutCircleLine>
               </a>
 
               <Link
                 to="/#"
                 onClick={handleLogout}
-                style={{ fontSize: "16px", color: "black" }}
+                style={{fontSize: "16px", color: "black"}}
               >
                 Logout
               </Link>
@@ -153,7 +174,7 @@ function BeforeAfterLogin() {
       ) : (
         <li>
           <Link to="/login">
-            <BiUser style={{ fontSize: "27px", color: "#525252" }}></BiUser>
+            <BiUser style={{fontSize: "27px", color: "#525252"}}></BiUser>
           </Link>
         </li>
       )}

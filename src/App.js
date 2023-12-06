@@ -19,6 +19,7 @@ import AdminProduct from "./pages/adminSide/AdminProduct";
 import UserDetailPage from "./pages/UserDetailPage";
 import HomePage from "./pages/HomePage";
 
+import UserPasswordPage from "./pages/UserPasswordPage";
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             <Route path="/user-detail" element={<UserDetailPage />}></Route>
             <Route path="/admin/sale-voucher/create" element={<CreateSaleVoucherPage/>}></Route>
             <Route path="/admin/sale-voucher/show" element={<ShowAllSaleVoucherPage/>}></Route>
+            <Route path="/user-password" element={<UserPasswordPage />}></Route>
           </Routes>
           <Footer />
         </>
