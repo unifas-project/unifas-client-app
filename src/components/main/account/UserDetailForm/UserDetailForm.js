@@ -173,7 +173,6 @@ function UserDetailForm() {
                   &nbsp; &nbsp;
                   <button
                     type="button"
-                    type="text"
                     onClick={getUserEdit}
                     className="btn btn-danger"
                   > Update
