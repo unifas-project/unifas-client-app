@@ -106,8 +106,8 @@ function BeforeAfterLogin() {
                 ></SlUserFollowing>
               </a>
 
-              <Link to="/" style={{ fontSize: "16px", color: "black" }}>
-                Edit Profile
+              <Link to="/user-detail" style={{ fontSize: "16px", color: "black" }}>
+                Account Profile
               </Link>
             </li>
 
