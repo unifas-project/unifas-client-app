@@ -15,6 +15,7 @@ import DashBoard from "./components/main/account/DashBoard";
 import List from "./pages/list/List";
 import AdminProduct from "./pages/adminSide/AdminProduct";
 import UserDetailPage from "./pages/UserDetailPage";
+import UserPasswordPage from "./pages/UserPasswordPage";
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
             <Route path="/users" element={<List />}></Route>
             <Route path="/products" element={<AdminProduct />}></Route>
             <Route path="/user-detail" element={<UserDetailPage />}></Route>
+            <Route path="/user-password" element={<UserPasswordPage />}></Route>
           </Routes>
           <Footer />
         </>
