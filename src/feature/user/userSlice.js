@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { changePassword, forgetPassword } from "../api/userAPI";
+import { changePassword, forgetPassword } from "../../api/userAPI";
 
 const initialState = {
   value: null,

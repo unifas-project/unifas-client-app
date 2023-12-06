@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
-import { BiUser, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSubCategories,
@@ -16,9 +15,16 @@ import {
   selectCategorySuccess,
   setCategorySuccess,
 } from "../../feature/category/categorySlice";
+import BeforeAfterLogin from "../main/account/BeforeAfterLogin";
 
 function Header() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const storedUsername = localStorage.getItem("username");
+  const [username, setUsername] = useState(storedUsername);
+
+  const { cartTotalQuantity } = useSelector((state) => state.cart);
 
   // Get List Category
   const [categories, setCategories] = useState([]);
@@ -48,10 +54,10 @@ function Header() {
     }
   }, [successSubCategory, dispatch, SubCategoryList]);
 
-  const navigate = useNavigate();
 
-  const storedUsername = localStorage.getItem("username");
-  const [username, setUsername] = useState(storedUsername);
+
+
+
 
   useEffect(() => {
     $(".header-search > a").on("click", function () {
@@ -70,14 +76,7 @@ function Header() {
     if (storedUsername) {
       setUsername(storedUsername);
     }
-  }, [getSubCategoryList, getCategoryList, storedUsername, navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("username");
-    setUsername(null);
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+  }, [getSubCategoryList, storedUsername, getCategoryList, navigate]);
 
   const handleActive = (e) => {
     document.querySelectorAll(".main-menu ul li").forEach((el) => {
@@ -256,137 +255,60 @@ function Header() {
                         </Link>
                       </li>
 
-                      {username !== null ? (
-                        <li className="header-shop-cart">
-                          <Link to="/">
-                            <BiUser
-                              style={{ fontSize: "27px", color: "#525252" }}
-                            ></BiUser>
-                          </Link>
-
-                          <ul className="minicart">
-                            <li className="d-flex align-items-start">
-                              <div className="cart-img">
-                                <a href="/#">
-                                  <BiUserCircle
-                                    style={{
-                                      fontSize: "30px",
-                                      color: "black",
-                                    }}
-                                  ></BiUserCircle>
-                                </a>
-                              </div>
-                              <a href="/#">{username}</a>
-                            </li>
-                            <li className="d-flex align-items-start">
-                              <div className="cart-img">
-                                <a href="/#">
-                                  <BiUserCircle
-                                    style={{
-                                      fontSize: "30px",
-                                      color: "black",
-                                    }}
-                                  ></BiUserCircle>
-                                </a>
-                              </div>
-                              <a href="/#">Update Profile</a>
-                            </li>
-                            <li className="d-flex align-items-start">
-                              <div className="cart-img">
-                                <a href="/#" onClick={handleLogout}>
-                                  <BiLogOutCircle
-                                    style={{
-                                      fontSize: "30px",
-                                      color: "black",
-                                    }}
-                                  ></BiLogOutCircle>
-                                </a>
-                              </div>
-                              <h4>
-                                <Link to="/#" onClick={handleLogout}>
-                                  Log out
-                                </Link>
-                              </h4>
-                            </li>
-                          </ul>
-                        </li>
-                      ) : (
-                        <li>
-                          <Link to="/login">
-                            <BiUser
-                              style={{ fontSize: "27px", color: "#525252" }}
-                            ></BiUser>
-                          </Link>
-                        </li>
-                      )}
+                      <li>
+                        <BeforeAfterLogin />
+                      </li>
 
                       <li className="header-shop-cart">
-                        <a href="/#">
+                        <Link to="/cart">
                           <i className="flaticon-shopping-bag" />
-                          <span>2</span>
+                          <span style={{ color: "red" }}>
+                            {cartTotalQuantity}
+                          </span>
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </nav>
+              </div>
+
+              <div className="mobile-menu">
+                <nav className="menu-box">
+                  <div className="close-btn">
+                    <i className="fas fa-times" />
+                  </div>
+                  <div className="nav-logo">
+                    <Link to="/">
+                      <img src="img/logo/logo.png" alt="" title="true" />
+                    </Link>
+                  </div>
+                  <div className="menu-outer"></div>
+                  <div className="social-links">
+                    <ul className="clearfix">
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-twitter" />
                         </a>
-                        <ul className="minicart">
-                          <li className="d-flex align-items-start">
-                            <div className="cart-img">
-                              <a href="/#">
-                                <img src="img/product/cart_p01.jpg" alt="" />
-                              </a>
-                            </div>
-                            <div className="cart-content">
-                              <h4>
-                                <a href="/#">The King Charles Spaniel</a>
-                              </h4>
-                              <div className="cart-price">
-                                <span className="new">$229.9</span>
-                                <span>
-                                  <del>$229.9</del>
-                                </span>
-                              </div>
-                            </div>
-                            <div className="del-icon">
-                              <a href="/#">
-                                <i className="far fa-trash-alt" />
-                              </a>
-                            </div>
-                          </li>
-                          <li className="d-flex align-items-start">
-                            <div className="cart-img">
-                              <a href="/#">
-                                <img src="img/product/cart_p02.jpg" alt="" />
-                              </a>
-                            </div>
-                            <div className="cart-content">
-                              <h4>
-                                <a href="/#">The Labrador Retriever</a>
-                              </h4>
-                              <div className="cart-price">
-                                <span className="new">$229.9</span>
-                                <span>
-                                  <del>$229.9</del>
-                                </span>
-                              </div>
-                            </div>
-                            <div className="del-icon">
-                              <a href="/#">
-                                <i className="far fa-trash-alt" />
-                              </a>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="total-price">
-                              <span className="f-left">Total:</span>
-                              <span className="f-right">$239.9</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="checkout-link">
-                              <a href="/#">Shopping Cart</a>
-                              <a className="black-color" href="/#">
-                                Checkout
-                              </a>
-                            </div>
-                          </li>
-                        </ul>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-facebook-square" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-pinterest-p" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-instagram" />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#">
+                          <span className="fab fa-youtube" />
+                        </a>
                       </li>
                       {/*<li className="header-btn"><Link to="/adoption" className="btn">Adopt Here <img src="img/icon/w_pawprint.png" alt="" /></Link></li>*/}
                     </ul>
