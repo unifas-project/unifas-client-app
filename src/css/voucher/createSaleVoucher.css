@@ -1,0 +1,18 @@
+.form-label{
+    font-size: 18px;
+    font-weight: 500;
+    color: #777777;
+}
+
+.voucher-input-area{
+    flex: 6 1;
+}
+
+.column-1 {
+    overflow-y: auto;
+    height: 80vh;
+}
+
+.create-voucher {
+    height: 80vh;
+}

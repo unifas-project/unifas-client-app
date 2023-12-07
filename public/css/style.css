@@ -869,7 +869,7 @@ label {
 .slider-bg {
     background-position: center;
     background-size: cover;
-    min-height: 793px;
+    min-height: 600px;
     position: relative;
 }
 .slider-content {
@@ -1036,7 +1036,7 @@ label {
     background: red;
     position: relative;
     margin-left: 80px;
-	background-image: url(../img/images/find_shape.png);
+	/*background-image: url(../img/images/find_shape.png);*/
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -1999,7 +1999,7 @@ label {
 
 /* 16. Testimonial */
 .testimonial-bg {
-	background-image: url(../img/bg/testimonial_bg.jpg);
+	background-color: #f5f2eb;
 	background-position: center;
 	background-size: cover;
 	padding: 110px 0 110px;
@@ -2015,7 +2015,7 @@ label {
     top: 0;
     width: 100%;
     height: 24px;
-    background-image: url(../img/bg/testi_bg_shape01.png);
+    /*background-image: url(../img/bg/testi_bg_shape01.png);*/
     background-repeat: repeat;
     background-position: center;
 	z-index: 1;
@@ -2023,7 +2023,7 @@ label {
 .testimonial-bg::after {
 	top: auto;
 	bottom: 0;
-	background-image: url(../img/bg/testi_bg_shape02.png);
+	/*background-image: url(../img/bg/testi_bg_shape02.png);*/
 }
 .testimonial-item {
     background-image: url(../img/images/testimonial.svg);
@@ -2591,14 +2591,41 @@ label {
 .shop-details-color ul li.active::before {
     opacity: 1;
 }
-.shop-details-color ul li.black {
-    background: #485566;
+.shop-details-color ul li.Black {
+    background: #000000;
 }
-.shop-details-color ul li.green {
-    background: #8dd244;
+.shop-details-color ul li.White {
+    background: #FFFFFF;
 }
-.shop-details-color ul li.blue {
-    background: #50b1f9;
+.shop-details-color ul li.Red {
+    background: #FF0000;
+}
+.shop-details-color ul li.Blue {
+    background: #0000FF;
+}
+.shop-details-color ul li.Yellow {
+    background: #FFFF00;
+}
+.shop-details-color ul li.Pink {
+    background: #FF00FF;
+}
+.shop-details-color ul li.Gray {
+    background: #808080;
+}
+.shop-details-color ul li.Green {
+    background: #008000;
+}
+.shop-details-color ul li.Purple {
+    background: #800080;
+}
+.shop-details-color ul li.Navy {
+    background: #000080;
+}
+.shop-details-color ul li.Brown {
+    background: #FFCC99;
+}
+.shop-details-color ul li.Orange {
+    background: #FF9900;
 }
 .shop-details-color {
     margin-bottom: 30px;

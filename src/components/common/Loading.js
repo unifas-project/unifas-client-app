@@ -8,7 +8,7 @@ const Loading = () => {
                 <div className="logo d-flex justify-content-center align-items-center mb-3">
                 <img src="/img/logo/UNIFAS-200px.png" alt="" style={{maxWidth : "50%"}}/>
                 </div>
-            <div className="wrapper">
+            <div className="wrapper-loading">
                 <div className="circle"></div>
                 <div className="circle"></div>
                 <div className="circle"></div>
