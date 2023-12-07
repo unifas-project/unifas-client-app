@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getProductList, findProduct } from "../../api/productAPI";
+import {
+  getProductList,
+  findProduct,
+  findProductByCategoryId,
+  findProductBySubCategoryId,
+} from "../../api/productAPI";
 
 const initialState = {
   values: null,
@@ -13,6 +18,22 @@ export const getAllProduct = createAsyncThunk("products/list", async () => {
   const response = await getProductList();
   return response.data.data;
 });
+
+export const getProductByCategoryId = createAsyncThunk(
+  "products/category/list",
+  async (categoryId) => {
+    const response = await findProductByCategoryId(categoryId);
+    return response.data.data;
+  }
+);
+
+export const getProductBySubCategoryId = createAsyncThunk(
+  "products/subCategory/list",
+  async (subCategoryId) => {
+    const response = await findProductBySubCategoryId(subCategoryId);
+    return response.data.data;
+  }
+);
 
 export const getProduct = createAsyncThunk(
   "products/detail",
@@ -56,7 +77,7 @@ const productSlice = createSlice({
         state.error = false;
       })
 
-      //Update states of get book action
+      //Update states of get product action
       .addCase(getProduct.pending, (state) => {
         state.success = false;
         state.loading = true;
@@ -72,16 +93,55 @@ const productSlice = createSlice({
         state.loading = false;
         state.value = action.payload;
         state.error = false;
+      })
+
+      //Update states of get product by category action
+      .addCase(getProductByCategoryId.pending, (state) => {
+        state.success = false;
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(getProductByCategoryId.rejected, (state, action) => {
+        state.success = false;
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(getProductByCategoryId.fulfilled, (state, action) => {
+        state.success = true;
+        state.loading = false;
+        state.value = action.payload;
+        state.error = false;
+      })
+
+      //Update states of get product by subcategory action
+      .addCase(getProductBySubCategoryId.pending, (state) => {
+        state.success = false;
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(getProductBySubCategoryId.rejected, (state, action) => {
+        state.success = false;
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(getProductBySubCategoryId.fulfilled, (state, action) => {
+        state.success = true;
+        state.loading = false;
+        state.value = action.payload;
+        state.error = false;
       });
   },
 });
 
-export const { setProductLoading, setProductError, setProductSuccess } = productSlice.actions;
+export const { setProductLoading, setProductError, setProductSuccess } =
+  productSlice.actions;
 
 export const selectProductLoading = (state) => state.product.loading;
 export const selectProductError = (state) => state.product.error;
 export const selectProductSuccess = (state) => state.product.success;
 export const selectProductList = (state) => state.product.values;
+export const selectProductByCategoryId = (state) => state.product.values;
+export const selectProductBýubCategoryId = (state) => state.product.values;
 export const selectProductDetail = (state) => state.product.value;
 // export const selectProductAdded = (state) => state.product.value;
 // export const selectProductEdited = (state) => state.product.value;
