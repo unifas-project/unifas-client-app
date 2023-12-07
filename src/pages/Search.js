@@ -180,7 +180,7 @@ function Search() {
               return variant?.sizeResponse?.name === filterSize?.label;
             });
           });
-        });
+        }); 
       }
 
       let filteredProductsByColor;
