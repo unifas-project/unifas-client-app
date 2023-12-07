@@ -32,6 +32,8 @@ const Cart = () => {
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
   };
+
+  
   const handleDecreaseCart = (product) => {
     dispatch(decreaseCart(product));
   };
@@ -345,7 +347,7 @@ const Cart = () => {
             </div>
 
             <div className="summary-item">
-              <Link to="/">
+              <Link to="/show-product">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
