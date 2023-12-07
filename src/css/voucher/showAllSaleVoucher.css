@@ -1,0 +1,67 @@
+.table td{
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+.paging-button{
+    width: 35px;
+    padding-top: 2px;
+    margin: 0 4px;
+    background-color: red;
+    border: red solid 1px;
+    border-radius: 5px;
+    color: white;
+    font-size: 20px;
+}
+
+.paging-button:hover{
+    width: 35px;
+    padding-top: 2px;
+    margin: 0 4px;
+    background-color: white;
+    border: red solid 1px;
+    border-radius: 5px;
+    color: red;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.paging-input{
+    color: #131313;
+    margin: 0 5px;
+    width: 50px;
+    height: 35px;
+    border: solid #ff0000 1px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.disable-paging{
+    background-color: #b2b2b2;
+    border: solid 1px #b2b2b2;
+}
+
+.disable-paging:hover{
+    background-color: #b2b2b2;
+    border: solid 1px #b2b2b2;
+    color: white;
+    font-weight: 100;
+}
+
+.column-1 {
+    overflow-y: auto;
+    height: 80vh;
+}
+
+.show-vouchers{
+    height: 80vh;
+}
+.show-vouchers-area{
+    flex: 6 1;
+}

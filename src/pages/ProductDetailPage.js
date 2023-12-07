@@ -21,12 +21,12 @@ function ProductDetailPage() {
   const { productId } = useParams();
   const productDetail = useSelector(selectProductDetail);
   const location = useLocation();
-  useEffect(()=>{
-    if(productDetail != null){
+  useEffect(() => {
+    if (productDetail != null) {
       dispatch(getProduct(location.pathname.slice(10)));
       window.scrollTo(0, 0);
     }
-  },[location.pathname.slice(10)])
+  }, [location.pathname.slice(10)]);
 
   const getProductList = useCallback(async () => {
     if (!successProduct) {
@@ -76,7 +76,7 @@ function ProductDetailPage() {
     document.querySelectorAll(".shop-details-color ul li").forEach((el) => {
       el.classList.remove("active");
     });
-    e.target.classList += "active";
+    e.target.classList += " active";
   };
 
   const settings = {
@@ -245,7 +245,7 @@ function ProductDetailPage() {
                           .map((variant, index) => (
                             <li
                               key={index}
-                              className={`${index === 0 ? "active" : ""} ${
+                              className={`${index === 0 ? "  active" : ""} ${
                                 variant.colorResponse.name
                               }`}
                               onClick={(e) => colorActive(e)}
@@ -406,7 +406,6 @@ function ProductDetailPage() {
                         : "Updating..."}
                     </span>
                     <h4 className="title">
-                      
                       <Link to={`/products/${product.id}`}>{product.name}</Link>
                     </h4>
                     <div className="shop-content-bottom">

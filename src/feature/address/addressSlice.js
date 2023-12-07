@@ -25,8 +25,8 @@ export const addUserAddress = createAsyncThunk("add-address",async (address) => 
    return response;
 })
 
-export const updateUserAddress = createAsyncThunk("update-address", async (address,id) => {
-   const response = await updateAddress(address,id)
+export const updateUserAddress = createAsyncThunk("update-address", async (address) => {
+   const response = await updateAddress(address)
    return response;
 })
 
