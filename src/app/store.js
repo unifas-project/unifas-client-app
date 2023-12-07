@@ -10,6 +10,7 @@ import searchReducer from "../feature/search/searchSlice";
 import addressReducer from "../feature/address/addressSlice";
 import locationReducer from "../feature/location/locationSlice"
 import saleVoucherReducer from "../feature/saleVoucher/saleVoucherSlice"
+import orderReducer from "../feature/order/orderSlice"
 
 
 export const store = configureStore({
@@ -25,5 +26,6 @@ export const store = configureStore({
         color: colorReducer,
         size: sizeReducer,
         search: searchReducer,
+        order: orderReducer
     },
 })

@@ -23,13 +23,15 @@ const Feedback = () => {
     const handleSubmitFeedbackForm = async (values) => {
         const {customerName, phoneNumber, feedback} = values;
         try {
-            const response = await fetch(
+            const response = await axios.get(
                 `https://script.google.com/macros/s/AKfycbyeEcIcAl2KqsLAROSwDxfn24RQIixeL0YXlxTblmhudoBeg-IYWQYpvHgEkwmtZsiO0Q/exec?callback=googleDocCallback&customerName=${customerName}&phoneNumber=${phoneNumber}&feedback=${feedback}`,
                 {
-                    method: "get",
-                },
+                    headers: {
+                        "Access-Control-Allow-Origin": "*"
+                    }
+                }
             );
-            const json = await response.json();
+            const json = await response.data;
             console.log("Success:", JSON.stringify(json));
         } catch (error) {
             console.error("Error:", error);
@@ -46,13 +48,14 @@ const Feedback = () => {
                             <div className="newsletter-wrap d-flex align-items-start">
                                 <div className="newsletter-content">
                                     <h2 className="title">Feedback</h2>
-                                    <p style={{width : "80%"}}>Your sincerely feedback is the best contribute to our development</p>
+                                    <p style={{width: "80%"}}>Your sincerely feedback is the best contribute to our
+                                        development</p>
                                 </div>
                                 <div className="form-feedback">
                                     <Formik
                                         onSubmit={handleSubmitFeedbackForm}
                                         initialValues={{
-                                            customerName:"",
+                                            customerName: "",
                                             phoneNumber: "",
                                             feedback: "",
                                         }}
@@ -102,11 +105,17 @@ const Feedback = () => {
                                                 </div>
                                                 <br/>
                                                 <div className="d-flex justify-content-center">
-                                                <button type="submit" className="btn" style={{backgroundColor:"white", color:"red", width:"max-content"}}>Send</button>
+                                                    <button type="submit" className="btn" style={{
+                                                        backgroundColor: "white",
+                                                        color: "red",
+                                                        width: "max-content"
+                                                    }}>Send
+                                                    </button>
                                                 </div>
                                             </Form>
                                         )}
                                     </Formik>
+
                                 </div>
                             </div>
                         </div>

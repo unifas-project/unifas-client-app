@@ -68,10 +68,14 @@ function Header() {
     getSubCategoryList();
 
 
+
+  }, [getSubCategoryList, getCategoryList]);
+
+  useEffect(() => {
     if (storedUsername) {
       setUsername(storedUsername);
     }
-  }, [getSubCategoryList, storedUsername, getCategoryList, navigate]);
+  },[storedUsername])
 
   const handleActive = (e) => {
     document.querySelectorAll(".main-menu ul li").forEach((el) => {

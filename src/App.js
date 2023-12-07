@@ -21,9 +21,15 @@ import UserDetailPage from "./pages/UserDetailPage";
 import HomePage from "./pages/HomePage";
 
 import UserPasswordPage from "./pages/UserPasswordPage";
+import cors from "cors";
+
+
 
 
 function App() {
+
+
+
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);

@@ -27,9 +27,9 @@ import {
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {checkSaleVoucherValid, selectCheckSaleVoucherValid} from "../../../feature/saleVoucher/saleVoucherSlice";
+import {getOrderLineListForCreateOrder, selectGetOrderLineListForCreateOrder} from "../../../feature/order/orderSlice";
 
 const OrderForm = () => {
-    const [render, setRender] = useState(false)
     const [showAddressList, setShowAddressList] = useState(false);
     const [showAddNewAddressForm, setShowAddNewAddressForm] = useState(false);
     const [showUpdateAddressForm, setShowUpdateAddressForm] = useState(false);
@@ -40,8 +40,11 @@ const OrderForm = () => {
     const [defaultAddressChecked, setDefaultAddressChecked] = useState(null)
     const [updateAddressId, setUpdateAddressId] = useState(0)
     const [inputVoucher,setInputVoucher] = useState({code:""})
-
-    const number111 = 1000000000000;
+    const [paymentChoice, setPaymentChoice] = useState("cod")
+    const [merchandiseSubtotal, setMerchandiseSubtotal] = useState(1000000)
+    const [discount, setDiscount] = useState(0)
+    const [discountPrice, setDiscountPrice] = useState(0)
+    const [totalPayment, setTotalPayment] = useState(0)
 
     // const [order, setOrder] = useState({})
     // const [orderItemList, setOrderItemList] = useState([])
@@ -61,6 +64,7 @@ const OrderForm = () => {
     const districts = useSelector(selectGetDistricts)
     const wards = useSelector(selectGetWards)
     const validSaleVoucher = useSelector(selectCheckSaleVoucherValid)
+    const orderLineListForCreateOrder = useSelector(selectGetOrderLineListForCreateOrder)
     // const loading = useSelector(selectLoading)
     const success = useSelector(selectSuccess)
     // const error = useSelector(selectError)
@@ -77,6 +81,76 @@ const OrderForm = () => {
 
     const handleShowVoucher = () => setShowVoucher(true)
     const handleCloseVoucher = () => setShowVoucher(false)
+
+    const handleSelectPaymentChoice = (e) => setPaymentChoice(e)
+
+    useEffect(() => {
+        $('.address-info').on('click', function () {
+            let input = $(this).find('input');
+            input.prop('checked', true);
+        })
+    },)
+
+    useEffect(() => {
+            fetchAddress()
+            fetchLocations();
+        }, [dispatch, provinces, addresses]
+    )
+
+    useEffect(() => {
+        fetchOrderLinesForCreate()
+    },[])
+
+
+    const fetchOrderLinesForCreate = async () => {
+        const alert = toast.loading("Please wait for handling information");
+        const response = await dispatch(getOrderLineListForCreateOrder())
+        if ("OK" === response.payload.statusCode){
+            // calculatePayment()
+
+            toast.update(alert, {
+                render: "Everything is ok", type: "success", position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                isLoading: false
+            })
+        }else {
+            toast.update(alert, {
+                render: response.payload.message, type: "error", position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                isLoading: false
+            })
+        }
+    }
+
+    const calculatePayment = () => {
+        if (orderLineListForCreateOrder != null){
+            let price = 0;
+            for (let i=0; i<orderLineListForCreateOrder.length; i++){
+                price += Number(orderLineListForCreateOrder[i].subtotal)
+            }
+            setMerchandiseSubtotal(price)
+            setTotalPayment(merchandiseSubtotal)
+        }
+    }
+
+
+
+
+
+
+
 
     const fetchLocations = () => {
         if (provinces === null) {
@@ -232,7 +306,7 @@ const OrderForm = () => {
             const districtCode = findDistrictCodeByName(updateAddress.district)
             handleFilterDistrictsForUpdateAddress(provinceCode)
             handleFilterWardsForUpdateAddress(districtCode)
-            setUpdateAddressId(updateAddress?.id)
+            // setUpdateAddressId(updateAddress?.id)
         }
     }
 
@@ -353,9 +427,13 @@ const OrderForm = () => {
         event.preventDefault()
         if (inputVoucher != null && inputVoucher.code !== ""){
             const alert = toast.loading("Please wait for a second");
-            const response = await dispatch(checkSaleVoucherValid(inputVoucher))
-
+        dispatch(checkSaleVoucherValid(inputVoucher)).then( (response) => {
             if ("OK" === response.payload.statusCode) {
+                setDiscount(response.payload.data.discount)
+                setDiscountPrice(Number(merchandiseSubtotal * response.payload.data.discount / 100))
+                setTotalPayment(Number(merchandiseSubtotal - (merchandiseSubtotal * response.payload.data.discount / 100)))
+
+
                 toast.update(alert, {
                     render: "Update address successfully", type: "success", position: "top-right",
                     autoClose: 5000,
@@ -367,7 +445,7 @@ const OrderForm = () => {
                     theme: "light",
                     isLoading: false
                 })
-                dispatch(getUserAddress())
+                // dispatch(getUserAddress())
             } else {
                 toast.update(alert, {
                     render: response.payload.message, type: "error", position: "top-right",
@@ -381,30 +459,19 @@ const OrderForm = () => {
                     isLoading: false
                 })
             }
+        })
+
+
         }
     }
 
 
-
-    useEffect(() => {
-        $('.address-info').on('click', function () {
-            let input = $(this).find('input');
-            input.prop('checked', true);
-        })
-    },)
-
-    useEffect(() => {
-            fetchAddress()
-            fetchLocations();
-        }, [dispatch, provinces, addresses]
-    )
-
-
     return (
         <section className="contact-area pt-50 pb-50">
+
             <ToastContainer/>
             <div className="container" style={{maxWidth: "1400px"}}>
-                <h1>Order</h1>
+                <h1 style={{textAlign:"left", marginBottom:"0.5rem"}}>Order</h1>
                 <div className="row d-flex justify-content-center">
                     <div className="col-8">
                         <div className="card" style={{padding: "20px"}}>
@@ -434,64 +501,26 @@ const OrderForm = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QUẦN TÂY M1QTY11301BBGTR - 30</td>
-                                    <td>XL</td>
-                                    <td>RED</td>
-                                    <td>500,000</td>
-                                    <td>2</td>
-                                    <td>1,000,000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QUẦN TÂY M1QTY11301BBGTR - 30</td>
-                                    <td>XL</td>
-                                    <td>RED</td>
-                                    <td>500,000</td>
-                                    <td>2</td>
-                                    <td>1,000,000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QUẦN TÂY M1QTY11301BBGTR - 30</td>
-                                    <td>XL</td>
-                                    <td>RED</td>
-                                    <td>500,000</td>
-                                    <td>2</td>
-                                    <td>1,000,000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QUẦN TÂY M1QTY11301BBGTR - 30</td>
-                                    <td>XL</td>
-                                    <td>RED</td>
-                                    <td>500,000</td>
-                                    <td>2</td>
-                                    <td>1,000,000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QUẦN TÂY M1QTY11301BBGTR - 30</td>
-                                    <td>XL</td>
-                                    <td>RED</td>
-                                    <td>500,000</td>
-                                    <td>2</td>
-                                    <td>1,000,000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QUẦN TÂY M1QTY11301BBGTR - 30</td>
-                                    <td>XL</td>
-                                    <td>RED</td>
-                                    <td>500,000</td>
-                                    <td>2</td>
-                                    <td>1,000,000</td>
-                                </tr>
+
+                                {/*{*/}
+                                {/*    orderLineListForCreateOrder?.map((orderLine,index) => (*/}
+                                {/*        <tr>*/}
+                                {/*            <td>{index}</td>*/}
+                                {/*            <td>{orderLine?.productName}</td>*/}
+                                {/*            <td>{orderLine?.size.toUpperCase()}</td>*/}
+                                {/*            <td>{orderLine?.color.toUpperCase()}</td>*/}
+                                {/*            <td>{orderLine?.price.toLocaleString()}</td>*/}
+                                {/*            <td>{orderLine?.quantity}</td>*/}
+                                {/*            <td>{orderLine?.subtotal.toLocaleString()}</td>*/}
+                                {/*        </tr>*/}
+                                {/*    ))*/}
+                                {/*}*/}
                                 </tbody>
                             </table>
                         </div>
-                        <PaymentChoice/>
+
+                        <PaymentChoice handleSelectPaymentChoice={handleSelectPaymentChoice}/>
+
                     </div>
                     <div className="col-4">
                         <div className="card" style={{padding: "20px"}}>
@@ -510,13 +539,13 @@ const OrderForm = () => {
                             <hr/>
                             <div className="product-cost" style={{lineHeight: 3}}>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Merchandise Subtotal:</span>
-                                <span style={{float: "right"}}>{number111.toLocaleString()}đ</span>
+                                <span style={{float: "right"}}>{merchandiseSubtotal.toLocaleString()}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Discount Price:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}><span className="mr-3" style={{fontWeight:"800", color:"red"}}>{discount!=0 ? (`(${discount}%)`) : ""}</span>   {discountPrice.toLocaleString()}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Total Payment:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}>{totalPayment.toLocaleString()}đ</span>
                             </div>
                         </div>
                         <div className="mt-3 text-center" style={{width: "100%"}}>
