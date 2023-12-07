@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Star from "../components/common/Star";
 import { addToCart } from "../feature/cart/cartSlice";
+import axios from 'axios';
 
 function ProductDetailPage() {
   const dispatch = useDispatch();
@@ -57,20 +58,33 @@ function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
 
-  const handleAddToCart = () => {
-    if (selectedVariant) {
-      const cartItemRequest = {
-        productId: product.id,
-        quantity,
-        color: selectedVariant.colorResponse.name,
-        size: selectedVariant.sizeResponse.name,
-      };
-
-      dispatch(addToCart(cartItemRequest));
-    } else {
-      // Handle the case where no variant is selected
-      console.error("Please select a color and size.");
+  const handleAddToCart = async (product) => {
+  
+  
+    const cartItem = {
+      productId: product.id,
+      size: selectedSize,
+      color: selectedColor,
+      quantity,
+    };
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/cart', cartItem, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    
+      if (response.status === 200) {
+        dispatch(addToCart(cartItem));
+        console.log('Item added to cart successfully');
+      } else {
+        console.error('Failed to add item to cart');
+      }
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
     }
+
   };
 
   const imdb = product.star;
@@ -95,7 +109,7 @@ function ProductDetailPage() {
     });
     e.target.parentNode.classList = "active";
 
-    setSelectedSize(size);
+   
   };
 
   const colorActive = (e) => {
@@ -106,7 +120,7 @@ function ProductDetailPage() {
     });
     e.target.classList += " active";
 
-    setSelectedColor(color);
+   
   };
 
   const settings = {
