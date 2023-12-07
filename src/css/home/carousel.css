@@ -1,0 +1,46 @@
+.slider-content .title {
+    font-size: 50px;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 0;
+    letter-spacing: -.9px;
+}
+
+.slider-btn{
+    -moz-user-select: none;
+    user-select: none;
+    background: #ffffff none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 3px;
+    color: #363636;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1;
+    margin-bottom: 0;
+    padding: 17px 25px;
+    text-align: center;
+    text-transform: capitalize;
+    touch-action: manipulation;
+    transition: all 0.3s ease 0s;
+    vertical-align: middle;
+    white-space: nowrap;
+    font-family: 'Nunito', sans-serif;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.find-wrap .location {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    padding: 40px 45px;
+    width: 20.7%;
+    flex: 0 0 38.7%;
+    display: flex;
+    align-items: center;
+}

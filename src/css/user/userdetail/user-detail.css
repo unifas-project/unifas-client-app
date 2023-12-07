@@ -1,0 +1,14 @@
+label{
+    width: 250px;
+}
+
+.user-detail-btn{
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.red-text {
+    color: red;
+}

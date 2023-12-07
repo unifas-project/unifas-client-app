@@ -9,6 +9,8 @@ import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
 import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
+import CreateIcon from '@mui/icons-material/Create';
+import BackupTableIcon from '@mui/icons-material/BackupTable';
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -54,6 +56,7 @@ const Sidebar = () => {
             <NotificationsNoneIcon className="icon" />
             <span>Notifications</span>
           </li>
+
           <p className="title">SERVICE</p>
           <li>
             <SettingsSystemDaydreamOutlinedIcon className="icon" />
@@ -66,6 +69,22 @@ const Sidebar = () => {
           <li>
             <SettingsApplicationsIcon className="icon" />
             <span>Settings</span>
+          </li>
+
+          <p className="title">VOUCHER</p>
+          <li>
+            <Link to="/admin/sale-voucher/create" style={{ textDecoration: "none" }}>
+              <div style={{ textDecoration: "none" }}>
+            <CreateIcon className="icon" />
+            <span >Create Voucher</span>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/sale-voucher/show" style={{ textDecoration: "none" }}>
+            <BackupTableIcon className="icon" />
+            <span style={{ textDecoration: "none" }}>Show Voucher</span>
+            </Link>
           </li>
         </ul>
       </div>

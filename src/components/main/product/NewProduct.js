@@ -173,8 +173,8 @@ function NewProduct() {
     axios
       .get("http://localhost:8080/api/categories")
       .then((response) => {
-        setCategories(response.data);
-        console.log(response.data);
+        setCategories(response.data.data);
+        console.log(response.data.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -185,7 +185,7 @@ function NewProduct() {
     axios
       .get("http://localhost:8080/api/subCategories")
       .then((response) => {
-        setSubCategories(response.data);
+        setSubCategories(response.data.data);
       })
       .catch((error) => {
         console.error("Error fetching subcategories:", error);
@@ -416,7 +416,7 @@ function NewProduct() {
               onChange={handleChangeSize}
             >
               <option value="">Select Size</option>
-              {sizes.map((size) => (
+              {sizes?.map((size) => (
                 <option key={size.id} value={size.name}>
                   {size.name}
                 </option>
