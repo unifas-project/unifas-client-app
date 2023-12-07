@@ -17,7 +17,7 @@ import {
   selectSearchProductList,
   setSearchProductValues,
 } from "../feature/search/searchSlice";
-import ProductItem from "../components/main/account/ProductItem";
+import ProductItem from "../components/main/product/ProductItem";
 import { useLocation } from "react-router-dom";
 // Đối tượng location chứa các thông tin như pathname (đường dẫn),
 // search (chuỗi truy vấn), state (trạng thái của định tuyến), và hash (phần đánh dấu).

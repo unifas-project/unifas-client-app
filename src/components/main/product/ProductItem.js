@@ -12,7 +12,7 @@ function ProductItem({ data }) {
         <div className="adoption-shop-thumb">
           <img src={`${data?.imgResponseList[0]?.url}`} alt="" />
           <Link to="/shop-details" className="btn">
-            Adoption <img src="img/icon/w_pawprint.png" alt="" />
+            Buy <img src="img/icon/w_pawprint.png" alt="" />
           </Link>
         </div>
         <div className="adoption-shop-content">
