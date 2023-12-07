@@ -18,9 +18,9 @@ const Find = () => {
                                     </div>
                                     <div className="find-category">
                                         <ul style={{borderRadius:"0px 15px 15px 0px", fontSize:"25px", fontFamily:"'Nunito', sans-serif", color: "white", fontWeight:"800"}}>
-                                            <li className="d-flex align-items-center"><TouchAppIcon fontSize="large"/> <span className="ml-3"> Fast</span></li>
-                                            <li className="d-flex align-items-center"><VolunteerActivismIcon fontSize="large"/><span className="ml-3"> Reputation</span></li>
-                                            <li className="d-flex align-items-center"><SpeedIcon fontSize="large"/><span className="ml-3"> Conscientious</span></li>
+                                            <li className="d-flex align-items-center"><SpeedIcon fontSize="large"/> <span className="ml-3"> Fast</span></li>
+                                            <li className="d-flex align-items-center"><TouchAppIcon fontSize="large"/><span className="ml-3"> Reputation</span></li>
+                                            <li className="d-flex align-items-center"><VolunteerActivismIcon fontSize="large"/><span className="ml-3"> Conscientious</span></li>
                                         </ul>
                                     </div>
                                 </div>

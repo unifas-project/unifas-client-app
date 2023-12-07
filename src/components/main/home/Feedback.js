@@ -39,7 +39,7 @@ const Feedback = () => {
 
     return (
         <div>
-            <div className="newsletter-area pb-110">
+            <div className="newsletter-area pb-110 mt-50">
                 <div className="container">
                     <div className="row">
                         <div className="col-12">

@@ -41,6 +41,7 @@ const OrderForm = () => {
     const [updateAddressId, setUpdateAddressId] = useState(0)
     const [inputVoucher,setInputVoucher] = useState({code:""})
 
+    const number111 = 1000000000000;
 
     // const [order, setOrder] = useState({})
     // const [orderItemList, setOrderItemList] = useState([])
@@ -423,12 +424,12 @@ const OrderForm = () => {
                             <table className="table" style={{width: "100%"}}>
                                 <thead>
                                 <tr>
-                                    <th scope="col">STT</th>
+                                    <th scope="col">No.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Size</th>
                                     <th scope="col">Color</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col">Quantity</th>
                                     <th scope="col">Sub Total</th>
                                 </tr>
                                 </thead>
@@ -509,7 +510,7 @@ const OrderForm = () => {
                             <hr/>
                             <div className="product-cost" style={{lineHeight: 3}}>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Merchandise Subtotal:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}>{number111.toLocaleString()}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Discount Price:</span>
                                 <span style={{float: "right"}}>1,000,000đ</span>
