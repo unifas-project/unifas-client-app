@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/search.css";
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 
 function ProductItem({ data }) {
@@ -13,7 +14,7 @@ function ProductItem({ data }) {
         <div className="adoption-shop-thumb">
           <img src={`${data?.imgResponseList[0]?.url}`} alt="" />
           <Link to="/shop-details" className="btn">
-            Buy <img src="img/icon/w_pawprint.png" alt="" />
+            Buy <ShoppingBagIcon style={{marginLeft:"5px"}}/>
           </Link>
         </div>
         <div className="adoption-shop-content">
@@ -67,7 +68,7 @@ function ProductItem({ data }) {
                 ))}
               </li>
               <li className="price">
-                Price : <span className="price">{data?.price}</span>
+                Price : <span className="price">{data?.price.toLocaleString()}</span>
               </li>
             </ul>
           </div>

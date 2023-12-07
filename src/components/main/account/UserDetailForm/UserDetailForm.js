@@ -5,6 +5,7 @@ import "../../../../css/user/userdetail/user-detail.css";
 import Form from "react-bootstrap/Form";
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {UNIFAS_API} from "../../../../constants/api";
 
 function UserDetailForm() {
   const [user, setUser] = useState();
@@ -15,7 +16,7 @@ function UserDetailForm() {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/users/profile",
+        `${UNIFAS_API}/users/profile`,
         {
           headers: {
             Accept: "application/json",
@@ -34,13 +35,13 @@ function UserDetailForm() {
     const token = localStorage.getItem("token");
     try {
 
-      if (!user.fullName || user.fullName.length < 10 || !/^[a-zA-Z\sđĐàÀáÁạẠảẢãÃăĂằẰắẮặẶẳẲẵẴâÂầẦấẤậẬẩẨẫẪđĐèÈéÉẹẸẻẺẽẼêÊềỀếẾệỆểỂễỄìÌíÍịỊỉỈĩĨòÒóÓọỌỏỎõÕôÔồỒốỐộỘổỔỗỖơƠờỜớỚợỢởỞỡỠùÙúÚụỤủỦũŨưỨừỬửữỮựỰỳỲýÝỵỴỷỶỹỸ]+$/u.test(user.fullName)) {
+      if (!user.fullName || user.fullName.length < 6 || !/^[a-zA-Z\sđĐàÀáÁạẠảẢãÃăĂằẰắẮặẶẳẲẵẴâÂầẦấẤậẬẩẨẫẪđĐèÈéÉẹẸẻẺẽẼêÊềỀếẾệỆểỂễỄìÌíÍịỊỉỈĩĨòÒóÓọỌỏỎõÕôÔồỒốỐộỘổỔỗỖơƠờỜớỚợỢởỞỡỠùÙúÚụỤủỦũŨưỨừỬửữỮựỰỳỲýÝỵỴỷỶỹỸ]+$/u.test(user.fullName)) {
         toast.error('Full name is required and should not contain special characters or numbers.');
         return;
       }
 
       const response = await axios.put(
-        "http://localhost:8080/api/users/update-profile",
+        `${UNIFAS_API}/users/update-profile`,
         user,
         {
           headers: {
@@ -145,7 +146,7 @@ function UserDetailForm() {
             </div>
             <br/>
 
-            <div style={{textAlign: "center"}}>
+            <div className="row justify-content-center">
               {editMode ? (
                 <>
                   <button
@@ -167,7 +168,7 @@ function UserDetailForm() {
                   <button
                     type="button"
                     onClick={getBackHome}
-                    className="btn btn-primary"
+                    className="btn btn-primary user-detail-btn"
                   > Home
                   </button>
                   &nbsp; &nbsp;
