@@ -1,16 +1,22 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getAllOrderLineForCreateOrder} from "../../api/orderAPI";
+import {createOrder, getAllOrderLineForCreateOrder} from "../../api/orderAPI";
 
 
 const initialState = {
     loading : null,
     error : null,
     success : false,
-    orderLineListForCreateOrder: null
+    orderLineListForCreateOrder: null,
+    newOrder: null
 }
 
 export const getOrderLineListForCreateOrder = createAsyncThunk("get-orderLine-for-create-order", async () =>{
     const response = await getAllOrderLineForCreateOrder();
+    return response;
+})
+
+export const createNewOrder = createAsyncThunk("create-new-order", async (order) =>{
+    const response = await createOrder(order);
     return response;
 })
 
@@ -49,6 +55,23 @@ export const orderSlice = createSlice({
                 state.loading = false;
                 state.error = false;
                 state.orderLineListForCreateOrder = action.payload?.data;
+            })
+            .addCase(createNewOrder.pending,(state) => {
+                state.success = false;
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(createNewOrder.rejected,(state, action) => {
+                state.succcess = false;
+                state.loading = false;
+                state.error = true;
+
+            })
+            .addCase(createNewOrder.fulfilled, (state, action) => {
+                state.succcess = true;
+                state.loading = false;
+                state.error = false;
+                state.newOrder = action.payload?.data;
             })
     }
 })

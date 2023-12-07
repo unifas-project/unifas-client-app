@@ -15,6 +15,8 @@ if (localStorage.getItem("cartItems")) {
   );
 }
 
+
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -118,5 +120,7 @@ export const {
   clearCart,
   updateCartQuantity,
 } = cartSlice.actions;
+
+export const selectAllCartItems = (state) => state.cartItem.cartItems;
 
 export default cartSlice.reducer;

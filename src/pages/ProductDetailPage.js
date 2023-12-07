@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Star from "../components/common/Star";
 import { addToCart } from "../feature/cart/cartSlice";
 import axios from 'axios';
+import {toast} from "react-toastify";
 
 function ProductDetailPage() {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ function ProductDetailPage() {
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState([]);
   const { productId } = useParams();
+
   const location = useLocation();
 
   const productDetail = useSelector(selectProductDetail);
@@ -58,31 +60,63 @@ function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
 
-  const handleAddToCart = async (product) => {
-  
-  
-    const cartItem = {
-      productId: product.id,
-      size: selectedSize,
-      color: selectedColor,
-      quantity,
-    };
-  
+  const [cartItem, setCartItem] = useState({
+    productId: productId,
+    size : "",
+    color : "",
+    quantity : 1
+  })
+
+
+  const handleAddToCart = async () => {
+    const alert = toast.loading("Please wait for a second");
+    const userId = localStorage.getItem("id")
     try {
-      const response = await axios.post('http://localhost:8080/api/cart', cartItem, {
+      const response = await axios.post(`http://localhost:8080/api/user/${userId}/cart`, cartItem, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-    
+
       if (response.status === 200) {
         dispatch(addToCart(cartItem));
-        console.log('Item added to cart successfully');
+        toast.update(alert, {
+          render: "Added item successfully", type: "success", position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          isLoading: false
+        })
       } else {
-        console.error('Failed to add item to cart');
+        toast.update(alert, {
+          render: "Failed to add item to cart", type: "error", position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          isLoading: false
+        })
+
       }
     } catch (error) {
-      console.error('Error adding item to cart:', error);
+      toast.update(alert, {
+        render: "Some error happen", type: "error", position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        isLoading: false
+      })
     }
 
   };
@@ -101,6 +135,10 @@ function ProductDetailPage() {
     }
   };
 
+  useEffect(() => {
+    setCartItem({...cartItem,quantity: val})
+  },[val])
+
   const handleActive = (e) => {
     e.preventDefault();
 
@@ -109,7 +147,7 @@ function ProductDetailPage() {
     });
     e.target.parentNode.classList = "active";
 
-   
+
   };
 
   const colorActive = (e) => {
@@ -120,7 +158,7 @@ function ProductDetailPage() {
     });
     e.target.classList += " active";
 
-   
+
   };
 
   const settings = {
@@ -263,7 +301,10 @@ function ProductDetailPage() {
                             <li
                               key={index}
                               className={index === 0 ? "active" : ""}
-                              onClick={(e) => handleActive(e, variant.sizeResponse.name)}
+                              value={variant.sizeResponse.name}
+                              onClick={(e) => {handleActive(e, variant.sizeResponse.name)
+                                setCartItem({...cartItem,size: e.target.innerText})
+                              }}
                             >
                               <a href="/#">
                                 {variant.sizeResponse.name}
@@ -290,10 +331,13 @@ function ProductDetailPage() {
                           .map((variant, index) => (
                             <li
                               key={index}
+                              value={variant.colorResponse.name}
                               className={`${index === 0 ? "  active" : ""} ${
                                 variant.colorResponse.name
                               }`}
-                              onClick={(e) => colorActive(e, variant.colorResponse.name)}
+                              onClick={(e) => {colorActive(e, variant.colorResponse.name)
+                                setCartItem({...cartItem,color: e.target.classList.value})
+                              }}
                             ></li>
                           ));
                       })()}
@@ -304,23 +348,30 @@ function ProductDetailPage() {
                   <div className="cart-plus-minus">
                     <input value={val} readOnly
                      type="number"
-                     onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
                     />
                     <div className="dec qtybutton" onClick={() => decrease()}>
                       -
                     </div>
-                    <div className="inc qtybutton" onClick={() => increase()}>
+                    <div className="inc qtybutton" onClick={() => {
+                      increase()
+                    }}>
                       +
                     </div>
                   </div>
-                  <div>
-                    <button
+
+                </div>
+                <div>
+                  <button
+                      className="btn mt-3"
                       value={JSON.stringify(product)}
-                      onClick={() => handleAddToCart(JSON.parse(this.value))}
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
+                      onClick={() => {
+                        // handleAddToCart(JSON.parse(this.value))
+                        handleAddToCart().then()
+
+                      }}
+                  >
+                    Add To Cart
+                  </button>
                 </div>
               </div>
             </div>

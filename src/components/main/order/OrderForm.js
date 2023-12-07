@@ -27,7 +27,11 @@ import {
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {checkSaleVoucherValid, selectCheckSaleVoucherValid} from "../../../feature/saleVoucher/saleVoucherSlice";
-import {getOrderLineListForCreateOrder, selectGetOrderLineListForCreateOrder} from "../../../feature/order/orderSlice";
+import {
+    createNewOrder,
+    getOrderLineListForCreateOrder,
+    selectGetOrderLineListForCreateOrder
+} from "../../../feature/order/orderSlice";
 
 const OrderForm = () => {
     const [showAddressList, setShowAddressList] = useState(false);
@@ -39,14 +43,15 @@ const OrderForm = () => {
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [defaultAddressChecked, setDefaultAddressChecked] = useState(null)
     const [updateAddressId, setUpdateAddressId] = useState(0)
-    const [inputVoucher,setInputVoucher] = useState({code:""})
+    const [inputVoucher, setInputVoucher] = useState({code: ""})
     const [paymentChoice, setPaymentChoice] = useState("cod")
-    const [merchandiseSubtotal, setMerchandiseSubtotal] = useState(1000000)
+    const [merchandiseSubtotal, setMerchandiseSubtotal] = useState(0)
     const [discount, setDiscount] = useState(0)
     const [discountPrice, setDiscountPrice] = useState(0)
     const [totalPayment, setTotalPayment] = useState(0)
+    const [render, setRender] = useState(false)
 
-    // const [order, setOrder] = useState({})
+    const [newOrder, setNewOrder] = useState({})
     // const [orderItemList, setOrderItemList] = useState([])
 
     const [filterDistricts, setFilterDistricts] = useState([])
@@ -56,6 +61,10 @@ const OrderForm = () => {
 
     const [filterDistrictsForUpdate, setFilterDistrictsForUpdateAddress] = useState([])
     const [filterWardsForUpdate, setFilterWardsForUpdateAddress] = useState([])
+
+    const [realUpdateAddress, setRealUpdateAddress] = useState(null);
+
+    const [realNewOrder, setRealNewOrder] = useState(null)
 
 
     const addresses = useSelector(selectGetAddress)
@@ -99,15 +108,17 @@ const OrderForm = () => {
 
     useEffect(() => {
         fetchOrderLinesForCreate()
-    },[])
+    }, [])
+
+    useEffect(() => {
+        setRealUpdateAddress(updateAddress)
+    },[updateAddress])
 
 
     const fetchOrderLinesForCreate = async () => {
         const alert = toast.loading("Please wait for handling information");
         const response = await dispatch(getOrderLineListForCreateOrder())
-        if ("OK" === response.payload.statusCode){
-            // calculatePayment()
-
+        if ("OK" === response.payload?.statusCode) {
             toast.update(alert, {
                 render: "Everything is ok", type: "success", position: "top-right",
                 autoClose: 5000,
@@ -119,9 +130,9 @@ const OrderForm = () => {
                 theme: "light",
                 isLoading: false
             })
-        }else {
+        } else {
             toast.update(alert, {
-                render: response.payload.message, type: "error", position: "top-right",
+                render: response.payload?.message, type: "error", position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -134,22 +145,20 @@ const OrderForm = () => {
         }
     }
 
-    const calculatePayment = () => {
-        if (orderLineListForCreateOrder != null){
+    useEffect(() => {
+        if (orderLineListForCreateOrder != null) {
             let price = 0;
-            for (let i=0; i<orderLineListForCreateOrder.length; i++){
+            for (let i = 0; i < orderLineListForCreateOrder.length; i++) {
                 price += Number(orderLineListForCreateOrder[i].subtotal)
             }
             setMerchandiseSubtotal(price)
-            setTotalPayment(merchandiseSubtotal)
         }
-    }
 
+    }, [orderLineListForCreateOrder])
 
-
-
-
-
+    useEffect(() => {
+        setTotalPayment(merchandiseSubtotal)
+    },[merchandiseSubtotal])
 
 
     const fetchLocations = () => {
@@ -301,7 +310,7 @@ const OrderForm = () => {
     const fetchAddressForUpdate = async (id) => {
         await dispatch(getUserAddressForUpdate(id))
         // setRender(!render)
-        if (updateAddress != null){
+        if (updateAddress != null) {
             const provinceCode = findProvinceCodeByName(updateAddress.city)
             const districtCode = findDistrictCodeByName(updateAddress.district)
             handleFilterDistrictsForUpdateAddress(provinceCode)
@@ -343,8 +352,8 @@ const OrderForm = () => {
     }
 
     const findProvinceCodeByName = (name) => {
-        for (let i= 0; i<provinces.length; i++){
-            if (provinces[i].name == name){
+        for (let i = 0; i < provinces.length; i++) {
+            if (provinces[i].name == name) {
                 return provinces[i].code;
             }
         }
@@ -352,8 +361,8 @@ const OrderForm = () => {
 
 
     const findDistrictCodeByName = (name) => {
-        for (let i= 0; i < districts.length; i++){
-            if (districts[i].name == name){
+        for (let i = 0; i < districts.length; i++) {
+            if (districts[i].name == name) {
                 return districts[i].code;
             }
         }
@@ -423,47 +432,112 @@ const OrderForm = () => {
         }
     }
 
+
+    useEffect(() => {
+        if (validSaleVoucher != null) {
+            setDiscount(validSaleVoucher.discount)
+            setDiscountPrice(Number(merchandiseSubtotal * validSaleVoucher.discount / 100))
+            setTotalPayment(Number(merchandiseSubtotal - (merchandiseSubtotal * validSaleVoucher?.discount / 100)))
+        }
+    }, [validSaleVoucher,merchandiseSubtotal])
+
+    useEffect(() => {
+
+    },[discountPrice])
+
+
     const handleCheckVoucher = async (event) => {
         event.preventDefault()
-        if (inputVoucher != null && inputVoucher.code !== ""){
+        if (inputVoucher != null && inputVoucher.code !== "") {
             const alert = toast.loading("Please wait for a second");
-        dispatch(checkSaleVoucherValid(inputVoucher)).then( (response) => {
-            if ("OK" === response.payload.statusCode) {
-                setDiscount(response.payload.data.discount)
-                setDiscountPrice(Number(merchandiseSubtotal * response.payload.data.discount / 100))
-                setTotalPayment(Number(merchandiseSubtotal - (merchandiseSubtotal * response.payload.data.discount / 100)))
+            dispatch(checkSaleVoucherValid(inputVoucher)).then((response) => {
+                if ("OK" === response.payload.statusCode) {
 
 
-                toast.update(alert, {
-                    render: "Update address successfully", type: "success", position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    isLoading: false
-                })
-                // dispatch(getUserAddress())
-            } else {
-                toast.update(alert, {
-                    render: response.payload.message, type: "error", position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    isLoading: false
-                })
-            }
-        })
+                    toast.update(alert, {
+                        render: "Update address successfully", type: "success", position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        isLoading: false
+                    })
+                    // dispatch(getUserAddress())
+                } else {
+                    toast.update(alert, {
+                        render: response.payload.message, type: "error", position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        isLoading: false
+                    })
+                }
+            })
 
 
         }
     }
+
+    const handleOrderInformation = () => {
+        setNewOrder({
+            ...newOrder,
+            addressId : selectedAddress.id,
+            totalAmount : merchandiseSubtotal,
+            finalPrice : totalPayment,
+            payment : paymentChoice,
+            cartItemDtoList : orderLineListForCreateOrder
+        })
+    }
+
+
+
+
+    useEffect(() => {
+        setRealNewOrder(newOrder)
+        console.log(newOrder)
+    },[newOrder])
+
+
+    const handleCreateOrder = async () => {
+        const alert = toast.loading("Order is being sent");
+        const response = await dispatch(createNewOrder(newOrder))
+
+        if ("OK" === response.payload?.statusCode) {
+
+
+            toast.update(alert, {
+                render: "Order will be delivered to you soon. Have a nice day", type: "success", position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                isLoading: false
+            })
+        } else {
+            toast.update(alert, {
+                render: "Some error has been occurred", type: "error", position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                isLoading: false
+            })
+        }
+    }
+
 
 
     return (
@@ -471,7 +545,7 @@ const OrderForm = () => {
 
             <ToastContainer/>
             <div className="container" style={{maxWidth: "1400px"}}>
-                <h1 style={{textAlign:"left", marginBottom:"0.5rem"}}>Order</h1>
+                <h1 style={{textAlign: "left", marginBottom: "0.5rem"}}>Order</h1>
                 <div className="row d-flex justify-content-center">
                     <div className="col-8">
                         <div className="card" style={{padding: "20px"}}>
@@ -502,19 +576,19 @@ const OrderForm = () => {
                                 </thead>
                                 <tbody>
 
-                                {/*{*/}
-                                {/*    orderLineListForCreateOrder?.map((orderLine,index) => (*/}
-                                {/*        <tr>*/}
-                                {/*            <td>{index}</td>*/}
-                                {/*            <td>{orderLine?.productName}</td>*/}
-                                {/*            <td>{orderLine?.size.toUpperCase()}</td>*/}
-                                {/*            <td>{orderLine?.color.toUpperCase()}</td>*/}
-                                {/*            <td>{orderLine?.price.toLocaleString()}</td>*/}
-                                {/*            <td>{orderLine?.quantity}</td>*/}
-                                {/*            <td>{orderLine?.subtotal.toLocaleString()}</td>*/}
-                                {/*        </tr>*/}
-                                {/*    ))*/}
-                                {/*}*/}
+                                {
+                                    orderLineListForCreateOrder?.map((orderLine, index) => (
+                                        <tr>
+                                            <td>{index + 1}</td>
+                                            <td>{orderLine?.productName}</td>
+                                            <td>{orderLine?.size.toUpperCase()}</td>
+                                            <td>{orderLine?.color.toUpperCase()}</td>
+                                            <td>{orderLine?.price.toLocaleString()}</td>
+                                            <td>{orderLine?.quantity}</td>
+                                            <td>{orderLine?.subtotal.toLocaleString()}</td>
+                                        </tr>
+                                    ))
+                                }
                                 </tbody>
                             </table>
                         </div>
@@ -542,15 +616,28 @@ const OrderForm = () => {
                                 <span style={{float: "right"}}>{merchandiseSubtotal.toLocaleString()}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Discount Price:</span>
-                                <span style={{float: "right"}}><span className="mr-3" style={{fontWeight:"800", color:"red"}}>{discount!=0 ? (`(${discount}%)`) : ""}</span>   {discountPrice.toLocaleString()}đ</span>
+                                <span style={{float: "right"}}><span className="mr-3" style={{
+                                    fontWeight: "800",
+                                    color: "red"
+                                }}>{discount != 0 ? (`(${discount}%)`) : ""}</span> {discountPrice.toLocaleString()}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Total Payment:</span>
                                 <span style={{float: "right"}}>{totalPayment.toLocaleString()}đ</span>
                             </div>
                         </div>
                         <div className="mt-3 text-center" style={{width: "100%"}}>
-                            <button type="button" className="btn btn-danger place-order-button">Place Order</button>
+                            <button type="button" className="btn btn-info" style={{backgroundColor : "#0492c2"}}
+                                    onClick={handleOrderInformation}
+                            >Confirm Information
+                            </button>
                         </div>
+                        <div className="mt-3 text-center" style={{width: "100%"}}>
+                            <button type="button" className="btn btn-danger place-order-button"
+                                    onClick={handleCreateOrder}
+                            >Place Order
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -846,7 +933,8 @@ const OrderForm = () => {
                                         <Field name="isDefault" type="checkbox"
                                                style={{accentColor: "red"}}
                                         />
-                                        <label className="ml-2 mb-0" style={{width:"max-content", fontSize:"14px"}}><span>Set as Default Address</span></label>
+                                        <label className="ml-2 mb-0"
+                                               style={{width: "max-content", fontSize: "14px"}}><span>Set as Default Address</span></label>
                                     </div>
                                     <Modal.Footer>
                                         <Button style={{backgroundColor: "black", maxHeight: "40px"}}
@@ -888,14 +976,14 @@ const OrderForm = () => {
                         <Formik
                             onSubmit={handleSubmitUpdateAddressForm}
                             initialValues={{
-                                id: updateAddress?.id,
-                                receiver: updateAddress?.receiver,
-                                contact: updateAddress?.contact,
-                                city: updateAddress?.city,
-                                district: updateAddress?.district,
-                                ward: updateAddress?.ward,
-                                street: updateAddress?.street,
-                                isDefault: updateAddress?.isDefault
+                                id: realUpdateAddress?.id,
+                                receiver: realUpdateAddress?.receiver,
+                                contact: realUpdateAddress?.contact,
+                                city: realUpdateAddress?.city,
+                                district: realUpdateAddress?.district,
+                                ward: realUpdateAddress?.ward,
+                                street: realUpdateAddress?.street,
+                                isDefault: realUpdateAddress?.isDefault
                             }}
                             validationSchema={newAddressValidationSchema}
                             validateOnChange={true}
@@ -1015,12 +1103,16 @@ const OrderForm = () => {
                                                style={{accentColor: "red"}}
                                                checked={"true" == defaultAddressChecked}
                                                onClick={() => {
-                                                   setValues({...values,isDefault : (defaultAddressChecked=="true" ? "false" : "true")})
-                                                   setDefaultAddressChecked(defaultAddressChecked=="true" ? "false" : "true")
+                                                   setValues({
+                                                       ...values,
+                                                       isDefault: (defaultAddressChecked == "true" ? "false" : "true")
+                                                   })
+                                                   setDefaultAddressChecked(defaultAddressChecked == "true" ? "false" : "true")
                                                }}
                                                disabled={updateAddress?.isDefault === "true"}
                                         />
-                                        <label className="ml-2 mb-0" style={{width:"max-content", fontSize:"14px"}}><span>Set as Default Address</span></label>
+                                        <label className="ml-2 mb-0"
+                                               style={{width: "max-content", fontSize: "14px"}}><span>Set as Default Address</span></label>
                                     </div>
                                     <Modal.Footer>
                                         <Button style={{backgroundColor: "black", maxHeight: "40px"}}
@@ -1034,10 +1126,10 @@ const OrderForm = () => {
                                                 style={{backgroundColor: "red", maxHeight: "40px"}}
                                                 variant="primary"
                                                 onClick={() => {
-                                                    setTimeout(() =>{
+                                                    setTimeout(() => {
                                                         handleCloseUpdateAddressAddressForm()
                                                         handleShowAddressList()
-                                                    },2000 )
+                                                    }, 2000)
                                                 }}
                                         >{"Submit"}
                                         </Button>
@@ -1072,7 +1164,7 @@ const OrderForm = () => {
                                 <input type="text" className="form-control" placeholder="Enter Voucher Here"
                                        style={{marginRight: "10px", borderRadius: "3px"}}
                                        onChange={(event) => {
-                                           setInputVoucher({...inputVoucher,["code"] : event.target.value})
+                                           setInputVoucher({...inputVoucher, ["code"]: event.target.value})
                                        }}
                                 />
                                 <button className="btn" style={{padding: "5px 20px"}}>Apply</button>

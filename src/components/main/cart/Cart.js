@@ -13,9 +13,12 @@ import {
   removeFromCart,
   updateCartQuantity,
 } from "../../../feature/cart/cartSlice";
+import {selectUpdateAddress} from "../../../feature/address/addressSlice";
+import axios from "axios";
+import {UNIFAS_API} from "../../../constants/api";
 
 const Cart = () => {
-  const cart = useSelector((state) => state.cart);
+  const [cart,setCart] = useState([])
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,11 +26,28 @@ const Cart = () => {
   // const token = localStorage.getItem("token");
 
   useEffect(() => {
+    handleGetAllCartItem()
+  },[])
+
+  useEffect(() => {
     dispatch(getTotals());
   }, [cart, dispatch]);
 
+  useEffect(() => {
+
+    // console.log(cart)
+  },[cart])
+
   const [showModal, setShowModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
+
+  const handleGetAllCartItem = async () => {
+    const userId = localStorage.getItem("id")
+    const response = await axios.get(`${UNIFAS_API}/cart/${userId}`)
+    console.log(response.data.data)
+    setCart(response.data.data)
+
+  }
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -146,7 +166,7 @@ const Cart = () => {
       >
         SHOPPING CART
       </h2>
-      {cart.cartItems.length === 0 ? (
+      {cart?.cartItemList?.length === 0 ? (
         <div className="cart-empty">
           <p
             style={{
@@ -203,9 +223,9 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody>
-              {cart.cartItems &&
-                cart.cartItems.map((cartItem) => (
-                  <tr key={cartItem.id}>
+              {cart?.cartItemResponseList &&
+                cart?.cartItemResponseList.map((cartItem) => (
+                  <tr key={cartItem?.id}>
                     <td
                       style={{
                         display: "flex",
@@ -225,8 +245,8 @@ const Cart = () => {
                         className="cart-product"
                       >
                         <img
-                          src={cartItem.image}
-                          alt={cartItem.name}
+                          src={cartItem?.image}
+                          alt={cartItem?.name}
                           style={{
                             width: "100%",
                             maxWidth: "100px",
@@ -247,12 +267,12 @@ const Cart = () => {
                         }}
                         className="cart-product"
                       >
-                        {cartItem.name}
+                        {cartItem?.name}
                       </div>
                     </td>
-                    <td>${cartItem.price}</td>
-                    <td>${cartItem.size}</td>
-                    <td>${cartItem.color}</td>
+                    <td>{cartItem?.price}$</td>
+                    <td>{cartItem?.size}</td>
+                    <td>{cartItem?.color}</td>
                     <td>
                       <div
                         style={{
@@ -266,7 +286,7 @@ const Cart = () => {
                         <button
                           className={`btn`}
                           onClick={() => handleDecreaseCart(cartItem)}
-                          disabled={cartItem.cartQuantity <= 1}
+                          disabled={cartItem?.cartQuantity <= 1}
                           style={{
                             width: "30px",
                             margin: "7px",
@@ -277,7 +297,7 @@ const Cart = () => {
                         <input
                           type="number"
                           className="count text-center"
-                          value={cartItem.cartQuantity}
+                          value={cartItem?.quantity}
                           min={1}
                           max={50}
                           style={{
@@ -296,7 +316,7 @@ const Cart = () => {
                         <button
                           className={`btn`}
                           onClick={() => handleAddToCart(cartItem)}
-                          disabled={cartItem.cartQuantity >= 50}
+                          disabled={cartItem?.cartQuantity >= 50}
                           style={{
                             width: "30px",
                             margin: "7px",
@@ -309,7 +329,7 @@ const Cart = () => {
 
                     <td>
                       <h6 style={{ color: "black" }}>
-                      ${cartItem.price * cartItem.cartQuantity}
+                      ${cartItem?.price * cartItem?.quantity}
                       </h6>
                     </td>
                     <td>
@@ -392,7 +412,7 @@ const Cart = () => {
                   color: "black",
                 }}
               >
-                Total : ${cart.cartTotalAmount}
+                Total : ${cart?.cartTotalAmount}
               </h3>
             </div>
           </div>
