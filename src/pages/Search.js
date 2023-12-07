@@ -31,16 +31,9 @@ function Search() {
   const colorsStore = useSelector(selectColors);
   const [isAnyChecked, setIsAnyChecked] = useState(false);
   const [isFilterDatas, setIsFilterDatas] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
 
-  useEffect(() => {
-    if (searchProductDatas !== null) {
-      dispatch(setSearchProductValues(null));
-      setDatas(null);
-      setTempDatas(null);
-    }
-  }, [location?.search]);
   //lay du lieu tren store redux tool kid khi lan dau vao component
-
   useEffect(() => {
     if (categoriesStore === null) {
       dispatch(getCategories());
@@ -238,33 +231,35 @@ function Search() {
       let tempDatasLength = tempDatas?.length;
       if (tempDatasLength < 20) {
         setDatas(tempDatas);
+        moreFunction();
       } else {
         let tempArr = [];
         for (let i = 0; i < 20; i++) {
           tempArr.push(tempDatas[i]);
         }
         setDatas(tempArr);
+        moreFunction();
       }
     }
   }, [tempDatas]);
   // sort
-  const [selectedValue, setSelectedValue] = useState("");
 
   const handleSelectChange = (e) => {
     setSelectedValue(e.target.value);
   };
   useEffect(() => {
+    moreFunction();
+  }, [selectedValue]);
+  const moreFunction = () => {
     if (selectedValue !== "") {
       if (selectedValue === "priceLowToHight") {
-        const sortedDatas = [...datas].sort((a, b) => a.price - b.price);
-        setDatas(sortedDatas);
+        setDatas(provState =>  [...provState].sort((a, b) => a.price - b.price));
       } else if (selectedValue === "priceHightToLow") {
-        const sortedDatas = [...datas].sort((a, b) => b.price - a.price);
-        setDatas(sortedDatas);
+        setDatas(provState =>  [...provState].sort((a, b) => b.price - a.price));
       }
     }
-  }, [selectedValue, datas]);
 
+  }
   // show and hidden item menu
   const [itemVisibility, setItemVisibility] = useState({});
 
@@ -336,6 +331,19 @@ function Search() {
       }
     }
   })
+  // khi url thay doi thi chay
+  useEffect(() => {
+    if (searchProductDatas !== null) {
+      dispatch(setSearchProductValues(null));
+      setDatas(null);
+      setTempDatas(null);
+      setSelectedValue("");
+      setItems(proveState =>  proveState?.map((itemGroup)=>{return {...itemGroup,items:itemGroup?.items?.map((element)=> {return {...element,checked:false}})}} ))
+    }
+
+    // Update the flag after the initial load
+  }, [location?.search]);
+
   return (
     <main>
       <Subscribe />
