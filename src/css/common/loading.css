@@ -1,4 +1,4 @@
-.wrapper {
+.wrapper-loading {
     width: 200px;
     height: 60px;
     position: relative;
@@ -37,7 +37,7 @@
 
 .circle:nth-child(2) {
     left: 45%;
-    animation-delay: .2s;
+    animation-delay: .15s;
 }
 
 .circle:nth-child(3) {

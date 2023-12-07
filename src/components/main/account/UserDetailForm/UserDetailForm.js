@@ -151,14 +151,14 @@ function UserDetailForm() {
                   <button
                     type="button"
                     onClick={() => setEditMode(false)}
-                    className="btn btn-warning"
+                    className="btn btn-warning user-detail-btn "
                   > Cancel
                   </button>
                   &nbsp; &nbsp;
                   <button
                     type="button"
                     onClick={handleSaveChanges}
-                    className="btn btn-success"
+                    className="btn btn-success user-detail-btn"
                   > Save
                   </button>
                 </>
@@ -174,7 +174,7 @@ function UserDetailForm() {
                   <button
                     type="button"
                     onClick={getUserEdit}
-                    className="btn btn-danger"
+                    className="btn btn-danger user-detail-btn"
                   > Update
                   </button>
                 </>

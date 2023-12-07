@@ -26,6 +26,7 @@ import {
 } from "../../../feature/location/locationSlice";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {checkSaleVoucherValid, selectCheckSaleVoucherValid} from "../../../feature/saleVoucher/saleVoucherSlice";
 
 const OrderForm = () => {
     const [render, setRender] = useState(false)
@@ -38,7 +39,9 @@ const OrderForm = () => {
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [defaultAddressChecked, setDefaultAddressChecked] = useState(null)
     const [updateAddressId, setUpdateAddressId] = useState(0)
+    const [inputVoucher,setInputVoucher] = useState({code:""})
 
+    const number111 = 1000000000000;
 
     // const [order, setOrder] = useState({})
     // const [orderItemList, setOrderItemList] = useState([])
@@ -57,6 +60,7 @@ const OrderForm = () => {
     const provinces = useSelector(selectGetProvinces)
     const districts = useSelector(selectGetDistricts)
     const wards = useSelector(selectGetWards)
+    const validSaleVoucher = useSelector(selectCheckSaleVoucherValid)
     // const loading = useSelector(selectLoading)
     const success = useSelector(selectSuccess)
     // const error = useSelector(selectError)
@@ -234,8 +238,7 @@ const OrderForm = () => {
 
     const handleSubmitUpdateAddressForm = async (values) => {
         const alert = toast.loading("Please wait for a second");
-        let id = updateAddressId;
-        const response = await dispatch(updateUserAddress(values,id))
+        const response = await dispatch(updateUserAddress(values))
 
         if ("OK" === response.payload.statusCode) {
             toast.update(alert, {
@@ -249,6 +252,7 @@ const OrderForm = () => {
                 theme: "light",
                 isLoading: false
             })
+            dispatch(getUserAddress())
         } else {
             toast.update(alert, {
                 render: response.payload.message, type: "error", position: "top-right",
@@ -265,21 +269,21 @@ const OrderForm = () => {
     }
 
     const findProvinceCodeByName = (name) => {
-            for (let i= 0; i<provinces.length; i++){
-                if (provinces[i].name == name){
-                    return provinces[i].code;
-                }
+        for (let i= 0; i<provinces.length; i++){
+            if (provinces[i].name == name){
+                return provinces[i].code;
             }
         }
+    }
 
 
-const findDistrictCodeByName = (name) => {
-    for (let i= 0; i < districts.length; i++){
-        if (districts[i].name == name){
-            return districts[i].code;
+    const findDistrictCodeByName = (name) => {
+        for (let i= 0; i < districts.length; i++){
+            if (districts[i].name == name){
+                return districts[i].code;
+            }
         }
     }
-}
 
     const handleFilterDistrictsForUpdateAddress = (provinceCode) => {
         let districtsForUpdateAddressFilter = []
@@ -345,6 +349,41 @@ const findDistrictCodeByName = (name) => {
         }
     }
 
+    const handleCheckVoucher = async (event) => {
+        event.preventDefault()
+        if (inputVoucher != null && inputVoucher.code !== ""){
+            const alert = toast.loading("Please wait for a second");
+            const response = await dispatch(checkSaleVoucherValid(inputVoucher))
+
+            if ("OK" === response.payload.statusCode) {
+                toast.update(alert, {
+                    render: "Update address successfully", type: "success", position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    isLoading: false
+                })
+                dispatch(getUserAddress())
+            } else {
+                toast.update(alert, {
+                    render: response.payload.message, type: "error", position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    isLoading: false
+                })
+            }
+        }
+    }
+
 
 
     useEffect(() => {
@@ -385,12 +424,12 @@ const findDistrictCodeByName = (name) => {
                             <table className="table" style={{width: "100%"}}>
                                 <thead>
                                 <tr>
-                                    <th scope="col">STT</th>
+                                    <th scope="col">No.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Size</th>
                                     <th scope="col">Color</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col">Quantity</th>
                                     <th scope="col">Sub Total</th>
                                 </tr>
                                 </thead>
@@ -462,7 +501,7 @@ const findDistrictCodeByName = (name) => {
                                     Voucher:
                                 </span>
                                 <span className="discount-code">
-                                    DISCOUNT-123
+                                    {validSaleVoucher ? validSaleVoucher.code.toUpperCase() : "Select voucher here"}
                                 </span>
                                 <Link to=""
                                       style={{float: "right", color: "red", textDecoration: "none !important"}}
@@ -471,7 +510,7 @@ const findDistrictCodeByName = (name) => {
                             <hr/>
                             <div className="product-cost" style={{lineHeight: 3}}>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Merchandise Subtotal:</span>
-                                <span style={{float: "right"}}>1,000,000đ</span>
+                                <span style={{float: "right"}}>{number111.toLocaleString()}đ</span>
                                 <br/>
                                 <span style={{fontWeight: "600", marginRight: "10px"}}>Discount Price:</span>
                                 <span style={{float: "right"}}>1,000,000đ</span>
@@ -633,6 +672,7 @@ const findDistrictCodeByName = (name) => {
                     <Button style={{backgroundColor: "red", maxHeight: "40px"}} variant="primary"
                             onClick={() => {
                                 handleSelectAddress()
+                                handleCloseAddressList()
                             }}
                     >Confirm</Button>
                 </Modal.Footer>
@@ -777,7 +817,7 @@ const findDistrictCodeByName = (name) => {
                                         <Field name="isDefault" type="checkbox"
                                                style={{accentColor: "red"}}
                                         />
-                                        <label className="ml-2 mb-0"><span>Set as Default Address</span></label>
+                                        <label className="ml-2 mb-0" style={{width:"max-content", fontSize:"14px"}}><span>Set as Default Address</span></label>
                                     </div>
                                     <Modal.Footer>
                                         <Button style={{backgroundColor: "black", maxHeight: "40px"}}
@@ -819,6 +859,7 @@ const findDistrictCodeByName = (name) => {
                         <Formik
                             onSubmit={handleSubmitUpdateAddressForm}
                             initialValues={{
+                                id: updateAddress?.id,
                                 receiver: updateAddress?.receiver,
                                 contact: updateAddress?.contact,
                                 city: updateAddress?.city,
@@ -950,7 +991,7 @@ const findDistrictCodeByName = (name) => {
                                                }}
                                                disabled={updateAddress?.isDefault === "true"}
                                         />
-                                        <label className="ml-2 mb-0"><span>Set as Default Address</span></label>
+                                        <label className="ml-2 mb-0" style={{width:"max-content", fontSize:"14px"}}><span>Set as Default Address</span></label>
                                     </div>
                                     <Modal.Footer>
                                         <Button style={{backgroundColor: "black", maxHeight: "40px"}}
@@ -962,7 +1003,15 @@ const findDistrictCodeByName = (name) => {
                                         </Button>
                                         <Button type="submit"
                                                 style={{backgroundColor: "red", maxHeight: "40px"}}
-                                                variant="primary">{"Submit"}</Button>
+                                                variant="primary"
+                                                onClick={() => {
+                                                    setTimeout(() =>{
+                                                        handleCloseUpdateAddressAddressForm()
+                                                        handleShowAddressList()
+                                                    },2000 )
+                                                }}
+                                        >{"Submit"}
+                                        </Button>
                                     </Modal.Footer>
                                 </Form>
                             )}
@@ -989,10 +1038,14 @@ const findDistrictCodeByName = (name) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="add-new-address-form">
-                        <form>
+                        <form onSubmit={handleCheckVoucher}>
                             <div className="user-info input-group">
                                 <input type="text" className="form-control" placeholder="Enter Voucher Here"
-                                       style={{marginRight: "10px", borderRadius: "3px"}}/>
+                                       style={{marginRight: "10px", borderRadius: "3px"}}
+                                       onChange={(event) => {
+                                           setInputVoucher({...inputVoucher,["code"] : event.target.value})
+                                       }}
+                                />
                                 <button className="btn" style={{padding: "5px 20px"}}>Apply</button>
                             </div>
                         </form>

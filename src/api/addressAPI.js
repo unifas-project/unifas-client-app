@@ -40,9 +40,9 @@ export const addAddress = async (address) => {
     return result?.data;
 }
 
-export const updateAddress = async (address,addressId) => {
+export const updateAddress = async (address) => {
     try {
-        let response = await axios.put(`${UPDATE_ADDRESS_API}/${addressId}`,address)
+        let response = await axios.put(`${UPDATE_ADDRESS_API}`,address)
         return response.data
     }catch (e){
         console.log("Add address fail. Error: " + e)

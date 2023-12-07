@@ -1,0 +1,11 @@
+.feedback-input{
+    border-radius: 11px;
+    border: none;
+    width: 40vw;
+    height: 5vh;
+}
+
+.feedback-input::placeholder{
+    position: absolute;
+    left: 20px;
+}
