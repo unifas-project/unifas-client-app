@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import React, { useEffect, useState, useCallback } from "react";
 import {
@@ -10,16 +10,23 @@ import {
 } from "../../src/feature/product/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Star from "../components/common/Star";
-import { useNavigate } from "react-router-dom";
 
 function ProductDetailPage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   // Get List Product
   const [products, setProducts] = useState([]);
   const ProductList = useSelector(selectProductList);
   const successProduct = useSelector(selectProductSuccess);
+  const [product, setProduct] = useState([]);
+  const { productId } = useParams();
+  const productDetail = useSelector(selectProductDetail);
+  const location = useLocation();
+  useEffect(()=>{
+    if(productDetail != null){
+      dispatch(getProduct(location.pathname.slice(10)));
+      window.scrollTo(0, 0);
+    }
+  },[location.pathname.slice(10)])
 
   const getProductList = useCallback(async () => {
     if (!successProduct) {
@@ -29,25 +36,18 @@ function ProductDetailPage() {
     }
   }, [successProduct, dispatch, ProductList]);
 
-  useEffect(() => {
-    getProductList();
-  }, [getProductList]);
-
-  const [product, setProduct] = useState([]);
-  const { productId } = useParams();
-  const productDetail = useSelector(selectProductDetail);
-
-  const getProductDetail = async () => {
+  const getProductDetail = useCallback(async () => {
     if (productDetail == null) {
       dispatch(getProduct(productId));
     } else {
       setProduct(productDetail);
     }
-  };
+  }, [productId, dispatch, productDetail]);
 
   useEffect(() => {
     getProductDetail();
-  }, [productId, productDetail]);
+    getProductList();
+  }, [productId, getProductDetail, getProductList]);
 
   const imdb = product.star;
 
@@ -390,7 +390,7 @@ function ProductDetailPage() {
         <div className="related-products-wrap">
           <h2 className="title">Related Products</h2>
           <Slider className="row related-product-active" {...settings}>
-            {products.map((product, index) => (
+            {products?.map((product, index) => (
               <div className="col-lg">
                 <div className="shop-item mb-55" key={index}>
                   <div className="shop-thumb">
@@ -406,6 +406,7 @@ function ProductDetailPage() {
                         : "Updating..."}
                     </span>
                     <h4 className="title">
+                      
                       <Link to={`/products/${product.id}`}>{product.name}</Link>
                     </h4>
                     <div className="shop-content-bottom">

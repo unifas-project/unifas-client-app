@@ -18,7 +18,6 @@ export const getProduct = createAsyncThunk(
   "products/detail",
   async (productId) => {
     const response = await findProduct(productId);
-    console.log(response.data.data);
     return response.data.data;
   }
 );

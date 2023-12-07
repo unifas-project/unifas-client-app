@@ -16,6 +16,8 @@ import List from "./pages/list/List";
 import AdminProduct from "./pages/adminSide/AdminProduct";
 import UserDetailPage from "./pages/UserDetailPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import UserPasswordPage from "./pages/UserPasswordPage";
+
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -47,6 +49,7 @@ function App() {
             <Route path="/user-detail" element={<UserDetailPage />}></Route>
             <Route path="/products/:productId" element={<ProductDetailPage />}
             ></Route>
+            <Route path="/user-password" element={<UserPasswordPage />}></Route>
           </Routes>
           <Footer />
         </>
