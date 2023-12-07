@@ -85,7 +85,13 @@ function Header() {
     });
     e.target.parentNode.classList += "active";
   };
-
+  const [searchValue, setSearchValue] = useState("");
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/search?name=${searchValue}`);
+    $(".search-popup-wrap").slideUp(500);
+  };
+  
   return (
     <header>
       <div className="header-top-area">
@@ -133,15 +139,23 @@ function Header() {
         </div>
       </div>
 
-      <div id="sticky-header" className="menu-area" style={{boxShadow : "#e8e8e8 0px 22px 10px -20px"}}>
-        <div className="container custom-container" style={{width : "85%"}}>
+      <div
+        id="sticky-header"
+        className="menu-area"
+        style={{ boxShadow: "#e8e8e8 0px 22px 10px -20px" }}
+      >
+        <div className="container custom-container" style={{ width: "85%" }}>
           <div className="row">
             <div className="col-12">
               <div className="menu-wrap">
                 <nav className="menu-nav show">
                   <div className="logo">
                     <Link to="/">
-                      <img src="/img/logo/UNIFAS-200px.png" alt="" style={{maxWidth : "30%"}}/>
+                      <img
+                        src="/img/logo/UNIFAS-200px.png"
+                        alt=""
+                        style={{ maxWidth: "30%" }}
+                      />
                     </Link>
                   </div>
                   <div className="navbar-wrap main-menu d-none d-lg-flex">
@@ -185,9 +199,9 @@ function Header() {
                   <div className="header-action d-none d-md-block">
                     <ul>
                       <li className="header-search">
-                        <Link to="/">
+                        <a to="/">
                           <i className="flaticon-search" />
-                        </Link>
+                        </a>
                       </li>
 
                       <li>
@@ -226,82 +240,20 @@ function Header() {
           <div className="container">
             <div className="row">
               <div className="col-12">
-                <div className="mobile-menu">
-                  <nav className="menu-box">
-                    <div className="close-btn">
-                      <i className="fas fa-times" />
-                    </div>
-                    <div className="nav-logo">
-                      <Link class="link-underline" to="/">
-                        <img src="img/logo/logo.png" alt="" title="true" />
-                      </Link>
-                    </div>
-                    <div className="menu-outer"></div>
-                    <div className="social-links">
-                      <ul className="clearfix">
-                        <li>
-                          <a href="/#">
-                            <span className="fab fa-twitter" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="/#">
-                            <span className="fab fa-facebook-square" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="/#">
-                            <span className="fab fa-pinterest-p" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="/#">
-                            <span className="fab fa-instagram" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="/#">
-                            <span className="fab fa-youtube" />
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </nav>
-                </div>
-                <div className="menu-backdrop" />
-              </div>
-            </div>
-          </div>
-          <div className="header-shape" style={{backgroundImage:"url('img/bg/header_shape.png')"}}/>
-        </div>
-        <div
-          className="search-popup-wrap"
-          tabIndex={-1}
-          role="dialog"
-          aria-hidden="true"
-        >
-          <div className="search-close">
-            <span>
-              <i className="fas fa-times" />
-            </span>
-          </div>
-          <div className="search-wrap text-center">
-            <div className="container">
-              <div className="row">
-                <div className="col-12">
-                  <h2 className="title">... Search Here ...</h2>
-                  <div className="search-form">
-                    <form>
-                      <input
-                        type="text"
-                        name="search"
-                        placeholder="Type keywords here"
-                      />
-                      <button className="search-btn">
-                        <i className="fas fa-search" />
-                      </button>
-                    </form>
-                  </div>
+                <h2 className="title">... Search Here ...</h2>
+                <div className="search-form">
+                  <form onSubmit={handleSearchSubmit}>
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="Type keywords here"
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                    <button className="search-btn">
+                      <i className="fas fa-search" />
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>

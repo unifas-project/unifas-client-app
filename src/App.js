@@ -13,6 +13,7 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
 import CreateSaleVoucherPage from "./pages/admin/CreateSaleVoucherPage";
 import ShowAllSaleVoucherPage from "./pages/admin/ShowAllSaleVoucherPage";
+import Search from "./pages/Search";
 import DashBoard from "./components/main/account/DashBoard";
 import List from "./pages/list/List";
 import AdminProduct from "./pages/adminSide/AdminProduct";
@@ -28,7 +29,7 @@ function App() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 3000);
   }, []);
 
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path="/change-password" element={<ChangePassword />}></Route>
             <Route path="/order" element={<OrderPage />}></Route>
             <Route path="/loading" element={<Loading />}></Route>
+            <Route path="/search" element={<Search />}></Route>
             <Route path="/dashboard" element={<DashBoard />}></Route>
             <Route path="/users" element={<List />}></Route>
             <Route path="/products" element={<AdminProduct />}></Route>
