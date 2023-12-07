@@ -2591,14 +2591,41 @@ label {
 .shop-details-color ul li.active::before {
     opacity: 1;
 }
-.shop-details-color ul li.black {
-    background: #485566;
+.shop-details-color ul li.Black {
+    background: #000000;
 }
-.shop-details-color ul li.green {
-    background: #8dd244;
+.shop-details-color ul li.White {
+    background: #FFFFFF;
 }
-.shop-details-color ul li.blue {
-    background: #50b1f9;
+.shop-details-color ul li.Red {
+    background: #FF0000;
+}
+.shop-details-color ul li.Blue {
+    background: #0000FF;
+}
+.shop-details-color ul li.Yellow {
+    background: #FFFF00;
+}
+.shop-details-color ul li.Pink {
+    background: #FF00FF;
+}
+.shop-details-color ul li.Gray {
+    background: #808080;
+}
+.shop-details-color ul li.Green {
+    background: #008000;
+}
+.shop-details-color ul li.Purple {
+    background: #800080;
+}
+.shop-details-color ul li.Navy {
+    background: #000080;
+}
+.shop-details-color ul li.Brown {
+    background: #FFCC99;
+}
+.shop-details-color ul li.Orange {
+    background: #FF9900;
 }
 .shop-details-color {
     margin-bottom: 30px;
