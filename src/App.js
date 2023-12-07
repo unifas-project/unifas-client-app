@@ -11,6 +11,7 @@ import CartPage from "./pages/CartPage";
 import ProductPage from "./pages/ProductPage";
 import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
+import Search from "./pages/Search";
 import DashBoard from "./components/main/account/DashBoard";
 import List from "./pages/list/List";
 import AdminProduct from "./pages/adminSide/AdminProduct";
@@ -42,6 +43,7 @@ function App() {
             <Route path="/forget-password" element={<ForgetPassword />}></Route>
             <Route path="/change-password" element={<ChangePassword />}></Route>
             <Route path="/order" element={<OrderPage />}></Route>
+            <Route path="/search" element={<Search />}></Route>
             <Route path="/dashboard" element={<DashBoard />}></Route>
             <Route path="/users" element={<List />}></Route>
             <Route path="/products" element={<AdminProduct />}></Route>
