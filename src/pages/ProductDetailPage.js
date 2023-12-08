@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import React, { useEffect, useState, useCallback } from "react";
 import {
@@ -20,6 +20,15 @@ function ProductDetailPage() {
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState([]);
   const { productId } = useParams();
+
+  const usernameLocal = localStorage.getItem("username");
+
+  const [username, setUsername] = useState(usernameLocal);
+
+
+  
+   const navigate = useNavigate("");
+
 
   const location = useLocation();
 
@@ -55,11 +64,7 @@ function ProductDetailPage() {
     getProductList();
   }, [productId, getProductDetail, getProductList]);
 
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedSize, setSelectedSize] = useState("");
-
+ 
   const [cartItem, setCartItem] = useState({
     productId: productId,
     size : "",
@@ -69,19 +74,57 @@ function ProductDetailPage() {
 
 
   const handleAddToCart = async () => {
-    const alert = toast.loading("Please wait for a second");
-    const userId = localStorage.getItem("id")
-    try {
-      const response = await axios.post(`http://localhost:8080/api/user/${userId}/cart`, cartItem, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.status === 200) {
-        dispatch(addToCart(cartItem));
+    if (username !== null) {
+      const alert = toast.loading("Please wait for a second");
+      const userId = localStorage.getItem("id");
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/api/user/${userId}/cart`,
+          cartItem,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          dispatch(addToCart(cartItem));
+          toast.update(alert, {
+            render: "Added item successfully",
+            type: "success",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            isLoading: false,
+          });
+          console.log(response.data);
+        } else {
+          toast.update(alert, {
+            render: "Failed to add item to cart",
+            type: "error",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            isLoading: false,
+          });
+        }
+      } catch (error) {
+        console.error('Error adding item to cart:', error);
         toast.update(alert, {
-          render: "Added item successfully", type: "success", position: "top-right",
+          render: "Some error happened",
+          type: "error",
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -89,37 +132,15 @@ function ProductDetailPage() {
           draggable: true,
           progress: undefined,
           theme: "light",
-          isLoading: false
-        })
-      } else {
-        toast.update(alert, {
-          render: "Failed to add item to cart", type: "error", position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          isLoading: false
-        })
-
+          isLoading: false,
+        });
       }
-    } catch (error) {
-      toast.update(alert, {
-        render: "Some error happen", type: "error", position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        isLoading: false
-      })
+    } else {
+      navigate("/register");
     }
-
   };
+  
+
 
   const imdb = product.star;
 

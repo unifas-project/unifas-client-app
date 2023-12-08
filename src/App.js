@@ -22,7 +22,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import HomePage from "./pages/HomePage";
 
 import UserPasswordPage from "./pages/UserPasswordPage";
-import cors from "cors";
+
 
 
 
