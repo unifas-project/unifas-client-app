@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UNIFAS_API } from "../constants/api";
 
-const PRODUCT_MANAGEMENT = `${UNIFAS_API}/products`
+const PRODUCT_MANAGEMENT = `${UNIFAS_API}/products`;
 
 export const getProductList = async () => {
   let result = null;
@@ -41,3 +41,26 @@ export const createProduct = async (newProduct) => {
     return false;
   }
 };
+
+export const findProductByCategoryId = async (categoryId) => {
+    let result = null;
+    try {
+        result = await axios.get(`${PRODUCT_MANAGEMENT}/category/${categoryId}`);
+    }
+    catch (e) {
+        console.log("Find product API error: " + e);
+    }
+    return result;
+};
+
+export const findProductBySubCategoryId = async (subCategoryId) => {
+    let result = null;
+    try {
+        result = await axios.get(`${PRODUCT_MANAGEMENT}/subCategory/${subCategoryId}`);
+    }
+    catch (e) {
+        console.log("Find product API error: " + e);
+    }
+    return result;
+};
+

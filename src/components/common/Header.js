@@ -179,7 +179,7 @@ function Header() {
                               ?.filter((category) => category.gender === gender)
                               .map((category) => (
                                 <li onClick={(e) => subActive(e)}>
-                                  <Link to="/">{category.name}</Link>
+                                  <Link to={`/products/category/${category.id}`}>{category.name}</Link>
                                   <ul className="sub-submenu">
                                     {subCategories
                                       ?.filter(
@@ -188,7 +188,7 @@ function Header() {
                                       )
                                       .map((subCategory) => (
                                         <li onClick={(e) => subActive(e)}>
-                                          <Link to="/">{subCategory.name}</Link>
+                                          <Link to={`/products/subCategory/${subCategory.id}`}>{subCategory.name}</Link>
                                         </li>
                                       ))}
                                   </ul>

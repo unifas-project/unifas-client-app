@@ -494,7 +494,7 @@ function ProductDetailPage() {
         <div className="related-products-wrap">
           <h2 className="title">Related Products</h2>
           <Slider className="row related-product-active" {...settings}>
-            {products?.map((product, index) => (
+            {products?.data?.map((product, index) => (
               <div className="col-lg">
                 <div className="shop-item mb-55" key={index}>
                   <div className="shop-thumb">

@@ -22,15 +22,10 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import HomePage from "./pages/HomePage";
 
 import UserPasswordPage from "./pages/UserPasswordPage";
-import cors from "cors";
-
-
-
+import ProductListByCategory from "./pages/ProductListByCategory";
+import ProductListBySubCategory from "./pages/ProductListBySubCategory";
 
 function App() {
-
-
-
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
@@ -61,7 +56,21 @@ function App() {
             <Route path="/users" element={<List />}></Route>
             <Route path="/products" element={<AdminProduct />}></Route>
             <Route path="/user-detail" element={<UserDetailPage />}></Route>
-            <Route path="/products/:productId" element={<ProductDetailPage />}
+            <Route
+              path="/products/:productId"
+              element={<ProductDetailPage />}
+            ></Route>
+            <Route
+              path="/products/category/:categoryId"
+              element={<ProductListByCategory />}
+            ></Route>
+            <Route
+              path="/products/subCategory/:subCategoryId"
+              element={<ProductListBySubCategory />}
+            ></Route>
+            <Route
+              path="/admin/sale-voucher/create"
+              element={<CreateSaleVoucherPage />}
             ></Route>
             <Route path="/admin/sale-voucher/create" element={<CreateSaleVoucherPage/>}></Route>
             <Route path="/admin/sale-voucher/show" element={<ShowAllSaleVoucherPage/>}></Route>
