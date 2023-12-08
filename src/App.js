@@ -72,10 +72,8 @@ function App() {
               path="/admin/sale-voucher/create"
               element={<CreateSaleVoucherPage />}
             ></Route>
-            <Route
-              path="/admin/sale-voucher/show"
-              element={<ShowAllSaleVoucherPage />}
-            ></Route>
+            <Route path="/admin/sale-voucher/create" element={<CreateSaleVoucherPage/>}></Route>
+            <Route path="/admin/sale-voucher/show" element={<ShowAllSaleVoucherPage/>}></Route>
             <Route path="/user-password" element={<UserPasswordPage />}></Route>
           </Routes>
           <Footer />

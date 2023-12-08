@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/search.css";
 
+
 function ProductItem({ data }) {
 
   const uniqueColors = new Set();

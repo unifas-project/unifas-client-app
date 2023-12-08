@@ -234,15 +234,15 @@
 
 .cart-summary {
   display: grid;
-  grid-template-columns: repeat(4, 2fr);
+  grid-template-columns: repeat(3, 2fr);
   gap: 35px; 
-  height: fit-content;
+
   padding:30px
 }
 
 .summary-item {
   text-align: center; 
-  height: fit-content;
+
 }
 
 input[type=number]::-webkit-inner-spin-button, 

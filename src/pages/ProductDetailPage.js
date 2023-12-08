@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import React, { useEffect, useState, useCallback } from "react";
 import {
@@ -10,17 +10,32 @@ import {
 } from "../../src/feature/product/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Star from "../components/common/Star";
+import { addToCart } from "../feature/cart/cartSlice";
+import axios from 'axios';
+import {toast} from "react-toastify";
 
 function ProductDetailPage() {
   const dispatch = useDispatch();
   // Get List Product
   const [products, setProducts] = useState([]);
-  const ProductList = useSelector(selectProductList);
-  const successProduct = useSelector(selectProductSuccess);
   const [product, setProduct] = useState([]);
   const { productId } = useParams();
-  const productDetail = useSelector(selectProductDetail);
+
+  const usernameLocal = localStorage.getItem("username");
+
+  const [username, setUsername] = useState(usernameLocal);
+
+
+  
+   const navigate = useNavigate("");
+
+
   const location = useLocation();
+
+  const productDetail = useSelector(selectProductDetail);
+  const ProductList = useSelector(selectProductList);
+  const successProduct = useSelector(selectProductSuccess);
+
   useEffect(() => {
     if (productDetail != null) {
       dispatch(getProduct(location.pathname.slice(10)));
@@ -28,7 +43,6 @@ function ProductDetailPage() {
     }
   }, [location.pathname.slice(10)]);
 
-  console.log("a",products)
   const getProductList = useCallback(async () => {
     if (!successProduct) {
       dispatch(getAllProduct());
@@ -50,6 +64,84 @@ function ProductDetailPage() {
     getProductList();
   }, [productId, getProductDetail, getProductList]);
 
+ 
+  const [cartItem, setCartItem] = useState({
+    productId: productId,
+    size : "",
+    color : "",
+    quantity : 1
+  })
+
+
+  const handleAddToCart = async () => {
+    if (username !== null) {
+      const alert = toast.loading("Please wait for a second");
+      const userId = localStorage.getItem("id");
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/api/user/${userId}/cart`,
+          cartItem,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          dispatch(addToCart(cartItem));
+          toast.update(alert, {
+            render: "Added item successfully",
+            type: "success",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            isLoading: false,
+          });
+          console.log(response.data);
+        } else {
+          toast.update(alert, {
+            render: "Failed to add item to cart",
+            type: "error",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            isLoading: false,
+          });
+        }
+      } catch (error) {
+        console.error('Error adding item to cart:', error);
+        toast.update(alert, {
+          render: "Some error happened",
+          type: "error",
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          isLoading: false,
+        });
+      }
+    } else {
+      navigate("/register");
+    }
+  };
+  
+
+
   const imdb = product.star;
 
   const [val, setVal] = useState(1);
@@ -63,6 +155,11 @@ function ProductDetailPage() {
       setVal(val - 1);
     }
   };
+
+  useEffect(() => {
+    setCartItem({...cartItem,quantity: val})
+  },[val])
+
   const handleActive = (e) => {
     e.preventDefault();
 
@@ -70,7 +167,10 @@ function ProductDetailPage() {
       el.classList.remove("active");
     });
     e.target.parentNode.classList = "active";
+
+
   };
+
   const colorActive = (e) => {
     e.preventDefault();
 
@@ -78,6 +178,8 @@ function ProductDetailPage() {
       el.classList.remove("active");
     });
     e.target.classList += " active";
+
+
   };
 
   const settings = {
@@ -220,8 +322,12 @@ function ProductDetailPage() {
                             <li
                               key={index}
                               className={index === 0 ? "active" : ""}
+                              value={variant.sizeResponse.name}
+                              onClick={(e) => {handleActive(e, variant.sizeResponse.name)
+                                setCartItem({...cartItem,size: e.target.innerText})
+                              }}
                             >
-                              <a href="/#" onClick={(e) => handleActive(e)}>
+                              <a href="/#">
                                 {variant.sizeResponse.name}
                               </a>
                             </li>
@@ -246,10 +352,13 @@ function ProductDetailPage() {
                           .map((variant, index) => (
                             <li
                               key={index}
+                              value={variant.colorResponse.name}
                               className={`${index === 0 ? "  active" : ""} ${
                                 variant.colorResponse.name
                               }`}
-                              onClick={(e) => colorActive(e)}
+                              onClick={(e) => {colorActive(e, variant.colorResponse.name)
+                                setCartItem({...cartItem,color: e.target.classList.value})
+                              }}
                             ></li>
                           ));
                       })()}
@@ -258,17 +367,32 @@ function ProductDetailPage() {
                 <div className="shop-details-quantity">
                   <span>Quantity :</span>
                   <div className="cart-plus-minus">
-                    <input type="text" value={val} readOnly />
+                    <input value={val} readOnly
+                     type="number"
+                    />
                     <div className="dec qtybutton" onClick={() => decrease()}>
                       -
                     </div>
-                    <div className="inc qtybutton" onClick={() => increase()}>
+                    <div className="inc qtybutton" onClick={() => {
+                      increase()
+                    }}>
                       +
                     </div>
                   </div>
-                  <Link to="/#" className="cart-btn">
-                    Add to Cart +
-                  </Link>
+
+                </div>
+                <div>
+                  <button
+                      className="btn mt-3"
+                      value={JSON.stringify(product)}
+                      onClick={() => {
+                        // handleAddToCart(JSON.parse(this.value))
+                        handleAddToCart().then()
+
+                      }}
+                  >
+                    Add To Cart
+                  </button>
                 </div>
               </div>
             </div>

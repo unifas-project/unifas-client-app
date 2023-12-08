@@ -13,9 +13,15 @@ import {
   removeFromCart,
   updateCartQuantity,
 } from "../../../feature/cart/cartSlice";
+import { selectUpdateAddress } from "../../../feature/address/addressSlice";
+import axios from "axios";
+import { UNIFAS_API } from "../../../constants/api";
 
 const Cart = () => {
-  const cart = useSelector((state) => state.cart);
+  const [cart, setCart] = useState([]);
+  const [renderFirst, setRenderFirst] = useState(false);
+  const [renderSecond, setRenderSecond] = useState(false);
+  const [renderThird, setRenderThird] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,24 +29,162 @@ const Cart = () => {
   // const token = localStorage.getItem("token");
 
   useEffect(() => {
+    if (username != null) {
+      handleGetAllCartItem();
+      console.log(cart);
+    }
+  }, []);
+
+  useEffect(() => {
     dispatch(getTotals());
   }, [cart, dispatch]);
+
+  useEffect(() => {
+    console.log(cart);
+  }, [cart]);
 
   const [showModal, setShowModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
+  // const handleAddToCart = (product) => {
+  //   dispatch(addToCart(product));
+  // };
+
+  const handleGetAllCartItem = async () => {
+    if (username != null) {
+      const userId = localStorage.getItem("id");
+      const response = await axios.get(`${UNIFAS_API}/cart/${userId}`);
+      setCart(response.data.data);
+    }
   };
-  const handleDecreaseCart = (product) => {
-    dispatch(decreaseCart(product));
+
+  // const handleDecreaseCart = async (cartItemId, item) => {
+  //   if (item.quantity > 1) {
+  //     const updatedQuantity = item.quantity - 1;
+  //     handleSetCartQuantity(item, updatedQuantity);
+  //     await updateQuantityOnBackend(cartItemId, updatedQuantity);
+  //   }
+  // };
+
+  // const handleIncreaseCart = async (cartItemId, item) => {
+  //   if (item.quantity < 50) {
+  //     const updatedQuantity = item.quantity + 1;
+  //     handleSetCartQuantity(item, updatedQuantity);
+  //     await updateQuantityOnBackend(cartItemId, updatedQuantity);
+  //   }
+  // };
+
+  const handleRenderPageFist = () => {
+    setRenderFirst(!renderFirst)
+  }
+
+  const handleRenderPageSecond = () => {
+    setRenderSecond(renderFirst)
+  }
+
+  const handleRenderPageThird = () => {
+    setRenderThird(renderSecond)
+  }
+
+  useEffect (() => {
+    handleRenderPageSecond()
+  },[renderFirst])
+
+  useEffect(() => {
+    handleRenderPageThird()
+  },[renderSecond])
+
+  const handleIncreaseCart = async (cartItem) => {
+    if(cartItem.quantity < 50){
+      const cartItemUpdate = {
+        productId: cartItem.productId,
+        name: cartItem.name,
+        color : cartItem.color,
+        size: cartItem.size,
+        quantity: 1,
+        price: cartItem.price,
+        subtotal : cartItem.subTotal
+        };
+    
+        console.log(cartItem);
+        let userId = localStorage.getItem("id")
+      
+        try {
+          const response = await axios.post(
+            `http://localhost:8080/api/user/${userId}/cart`,
+            cartItemUpdate,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+      
+          if (response.data.status === 200) {
+          
+            handleRenderPageFist()
+            
+            console.log("Quantity updated successfully");
+          } else {
+            console.error("Failed to update quantity. Status:", response.status);
+            console.error("Response data:", response.data);
+          }
+        } catch (error) {
+          console.error("Error updating quantity:", error);
+        }
+    }
   };
-  const handleRemoveFromCart = (product) => {
-    dispatch(removeFromCart(product));
+
+  const handleDecreaseCart = async (cartItem) => {
+    if(cartItem.quantity < 50){
+      const cartItemUpdate = {
+        productId: cartItem.productId,
+        name: cartItem.name,
+        color : cartItem.color,
+        size: cartItem.size,
+        quantity: -1,
+        price: cartItem.price,
+        subtotal : cartItem.subTotal
+        };
+    
+        console.log(cartItem);
+        let userId = localStorage.getItem("id")
+      
+        try {
+          const response = await axios.post(
+            `http://localhost:8080/api/user/${userId}/cart`,
+            cartItemUpdate,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+      
+          if (response.data.status === 200) {
+            handleRenderPageFist()
+          } else {
+            console.error("Failed to update quantity. Status:", response.status);
+            console.error("Response data:", response.data);
+          }
+        } catch (error) {
+          console.error("Error updating quantity:", error);
+        }
+    }
   };
-  const handleClearCart = () => {
-    dispatch(clearCart());
-  };
+  
+
+  // const handleDecreaseCart = (product) => {
+  //   dispatch(decreaseCart(product));
+  // };
+
+  // const handleRemoveFromCart = (product) => {
+  //   dispatch(removeFromCart(product));
+  // };
+
+  // const handleClearCart = () => {
+  //   dispatch(clearCart());
+  // };
 
   const handleSetCartQuantity = (product, quantity) => {
     dispatch(updateCartQuantity({ productId: product.id, quantity }));
@@ -61,7 +205,7 @@ const Cart = () => {
   };
 
   const handleConfirmRemoveFromCart = () => {
-    handleRemoveFromCart(itemToRemove);
+    // handleRemoveFromCart(itemToRemove);
     handleCloseModal();
   };
 
@@ -80,7 +224,7 @@ const Cart = () => {
   };
 
   const handleConfirmClearCart = () => {
-    handleClearCart();
+    // handleClearCart();
     handleCloseClearModal();
   };
 
@@ -131,6 +275,12 @@ const Cart = () => {
     }
   };
 
+  let total = 0;
+  let array = cart?.cartItemResponseList;
+  for (let i = 0; i < array?.length; i++) {
+    total += array[i].price * array[i].quantity;
+  }
+
   return (
     <div className="site-wrap">
       <h2
@@ -139,12 +289,12 @@ const Cart = () => {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding:"10px 10px"
+          padding: "10px 10px",
         }}
       >
         SHOPPING CART
       </h2>
-      {cart.cartItems.length === 0 ? (
+      {cart?.cartItemList?.length === 0 ? (
         <div className="cart-empty">
           <p
             style={{
@@ -193,17 +343,17 @@ const Cart = () => {
                 <th>Image</th>
                 <th>Product</th>
                 <th>Price</th>
-                <th>Color</th>
                 <th>Size</th>
+                <th>Color</th>
                 <th>Quantity</th>
                 <th>SubTotal</th>
                 <th>Remove</th>
               </tr>
             </thead>
             <tbody>
-              {cart.cartItems &&
-                cart.cartItems.map((cartItem) => (
-                  <tr key={cartItem.id}>
+              {cart?.cartItemResponseList &&
+                cart?.cartItemResponseList.map((cartItem) => (
+                  <tr key={cartItem?.id}>
                     <td
                       style={{
                         display: "flex",
@@ -223,8 +373,8 @@ const Cart = () => {
                         className="cart-product"
                       >
                         <img
-                          src={cartItem.image}
-                          alt={cartItem.name}
+                          src={cartItem?.image}
+                          alt={cartItem?.name}
                           style={{
                             width: "100%",
                             maxWidth: "100px",
@@ -245,12 +395,12 @@ const Cart = () => {
                         }}
                         className="cart-product"
                       >
-                        {cartItem.name}
+                        {cartItem?.name}
                       </div>
                     </td>
-                    <td>${cartItem.price}</td>
-                    <td>${cartItem.size}</td>
-                    <td>${cartItem.color}</td>
+                    <td>{cartItem?.price}$</td>
+                    <td>{cartItem?.size}</td>
+                    <td>{cartItem?.color}</td>
                     <td>
                       <div
                         style={{
@@ -263,8 +413,11 @@ const Cart = () => {
                       >
                         <button
                           className={`btn`}
-                          onClick={() => handleDecreaseCart(cartItem)}
-                          disabled={cartItem.cartQuantity <= 1}
+                          onClick={() =>{handleDecreaseCart(cartItem)}
+                          
+
+                          }
+                          disabled={cartItem?.quantity <= 1}
                           style={{
                             width: "30px",
                             margin: "7px",
@@ -275,7 +428,7 @@ const Cart = () => {
                         <input
                           type="number"
                           className="count text-center"
-                          value={cartItem.cartQuantity}
+                          value={cartItem?.quantity}
                           min={1}
                           max={50}
                           style={{
@@ -288,13 +441,16 @@ const Cart = () => {
                             const value = parseInt(e.target.value, 10);
                             if (!isNaN(value) && value >= 1 && value <= 50) {
                               handleSetCartQuantity(cartItem, value);
+                              // updateQuantityOnBackend(cartItem.id, value);
                             }
                           }}
                         />
                         <button
                           className={`btn`}
-                          onClick={() => handleAddToCart(cartItem)}
-                          disabled={cartItem.cartQuantity >= 50}
+                          onClick={() =>
+                            handleIncreaseCart(cartItem)
+                          }
+                          disabled={cartItem?.quantity >= 50}
                           style={{
                             width: "30px",
                             margin: "7px",
@@ -307,7 +463,10 @@ const Cart = () => {
 
                     <td>
                       <h6 style={{ color: "black" }}>
-                      ${cartItem.price * cartItem.cartQuantity}
+                        {(cartItem?.price * cartItem?.quantity).toLocaleString(
+                          "vi-VN"
+                        )}{" "}
+                        VND
                       </h6>
                     </td>
                     <td>
@@ -330,7 +489,7 @@ const Cart = () => {
           </table>
 
           <div className="cart-summary">
-            <div className="summary-item">
+            {/* <div className="summary-item">
               <button
                 className="btn"
                 onClick={() => handleClearCartWithConfirmation()}
@@ -342,10 +501,10 @@ const Cart = () => {
               >
                 Clear Cart
               </button>
-            </div>
+            </div> */}
 
             <div className="summary-item">
-              <Link to="/">
+              <Link to="/show-product">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -385,12 +544,13 @@ const Cart = () => {
               <h3
                 style={{
                   marginBottom: "0",
-                  fontSize: "31px",
-                  width: "258px",
+                  fontSize: "25px",
+                  width: "300px",
+                  height: "20px",
                   color: "black",
                 }}
               >
-                Total : ${cart.cartTotalAmount}
+                Total : {total.toLocaleString("vi-VN")} VND
               </h3>
             </div>
           </div>
@@ -447,7 +607,7 @@ const Cart = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showClearModal} onHide={handleCloseClearModal}>
+      {/* <Modal show={showClearModal} onHide={handleCloseClearModal}>
         <Modal.Header>
           <Modal.Title
             style={{ fontFamily: "Poppins, sans-serif", color: "black" }}
@@ -495,7 +655,7 @@ const Cart = () => {
             Confirm
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../../feature/cart/cartSlice";
+// import { addToCart } from "../../../feature/cart/cartSlice";
 import {
   getAllProduct,
   selectProductList,
@@ -20,9 +20,9 @@ function Product() {
     dispatch(getAllProduct());
   }, [dispatch]);
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-  };
+  // const handleAddToCart = (product) => {
+  //   dispatch(addToCart(product));
+  // };
 
   const styles = {
     productsContainer: {
@@ -88,7 +88,7 @@ function Product() {
                     <span>{product.desc}</span>
                     <span className="price">${product.price}</span>
                   </div>
-                  <div>
+                  {/* <div>
                     {" "}
                     <button
                       onClick={() => handleAddToCart(product)}
@@ -96,7 +96,7 @@ function Product() {
                     >
                       Add To Cart
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               ))}
           </div>

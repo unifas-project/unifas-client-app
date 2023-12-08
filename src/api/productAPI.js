@@ -25,6 +25,23 @@ export const findProduct = async (productId) => {
     return result;
 };
 
+export const createProduct = async (newProduct) => {
+  try {
+    await axios.post(`${PRODUCT_MANAGEMENT}`, newProduct, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return true;
+  } catch (e) {
+    console.log("Create product API error: " + e);
+    return false;
+  }
+};
+
 export const findProductByCategoryId = async (categoryId) => {
     let result = null;
     try {

@@ -8,8 +8,12 @@ const GET_ADDRESS_FOR_EDIT_API = `${UNIFAS_API}/address`
 const UPDATE_ADDRESS_API = `${UNIFAS_API}/user/${userId}/address`
 
 export const getAddress = async () => {
+    let token = localStorage.getItem("token")
     try {
-        let addressList = await axios.get(GET_ADDRESSES_API)
+        let addressList = await axios.get(GET_ADDRESSES_API,{
+            headers:{
+                Authorization: `Bearer ${token}` }
+        })
         return addressList?.data;
     }catch (e){
         console.log("Get address fail. Error: " + e)
