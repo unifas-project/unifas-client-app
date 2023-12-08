@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from "react";
-import handleRequestParams from "../service/HandleRequestParams";
 import "../css/search.css";
-
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-
 import { useDispatch, useSelector } from "react-redux";
+import { getSizes, selectSizes } from "../feature/size/sizeSlice";
+import { getColors, selectColors } from "../feature/color/colorSlice";
+import {
+  getProductBySubCategoryId,
+  selectProductBySubCategoryId,
+  setProductValues,
+} from "../feature/product/productSlice";
 import {
   getCategories,
   selectCategories,
 } from "../feature/category/categorySlice";
-import { getSizes, selectSizes } from "../feature/size/sizeSlice";
-import { getColors, selectColors } from "../feature/color/colorSlice";
-import {
-  searchProductList,
-  selectSearchProductList,
-  setSearchProductValues,
-} from "../feature/search/searchSlice";
-import ProductItem from "../components/main/product/ProductItem";
-import { useLocation } from "react-router-dom";
+import ShowProduct from "../components/main/product/ShowProduct";
+import { useLocation, useParams } from "react-router-dom";
 // Đối tượng location chứa các thông tin như pathname (đường dẫn),
 // search (chuỗi truy vấn), state (trạng thái của định tuyến), và hash (phần đánh dấu).
 
-function Search() {
+function ProductListBySubCategory() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const searchProductDatas = useSelector(selectSearchProductList);
-  const categoriesStore = useSelector(selectCategories);
+  const productList = useSelector(selectProductBySubCategoryId);
   const sizesStore = useSelector(selectSizes);
   const colorsStore = useSelector(selectColors);
   const [isAnyChecked, setIsAnyChecked] = useState(false);
   const [isFilterDatas, setIsFilterDatas] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
+  const { subCategoryId } = useParams();
+  const categoriesStore = useSelector(selectCategories);
 
   //lay du lieu tren store redux tool kid khi lan dau vao component
   useEffect(() => {
@@ -43,20 +41,15 @@ function Search() {
     if (colorsStore === null) {
       dispatch(getColors());
     }
-    if (searchProductDatas === null) {
-      dispatch(searchProductList(handleRequestParams(location?.search)));
+    if (productList === null) {
+      dispatch(getProductBySubCategoryId(subCategoryId));
     }
-  }, [categoriesStore, sizesStore, colorsStore, searchProductDatas]);
+  }, [categoriesStore, sizesStore, colorsStore, productList]);
 
   //cung lay tren store sreach tu lan thu 2 cho di
   const [items, setItems] = useState(null);
   useEffect(() => {
-    if (
-      categoriesStore !== null &&
-      sizesStore !== null &&
-      colorsStore !== null &&
-      items === null
-    ) {
+    if (categoriesStore !== null && sizesStore !== null && colorsStore !== null && items === null) {
       const itemList = [
         {
           label: "Category",
@@ -74,6 +67,7 @@ function Search() {
       setItems(itemList);
     }
   }, [categoriesStore, sizesStore, colorsStore, items]);
+
   function getListProduct(arr, groupLabel) {
     let items = [];
     for (let i = 0; i < arr?.length; i++) {
@@ -90,7 +84,7 @@ function Search() {
     }
     return items;
   }
-  //tao fill danh muc (category, size, color)
+  //tao fill danh muc (size, color)
 
   const handleCheckboxChange = (labelChild, label, dataGender = null) => {
     const updatedItems = items.map((itemGroup) => {
@@ -122,12 +116,11 @@ function Search() {
   const [tempDatas, setTempDatas] = useState(null);
   //set product de hien thi
   useEffect(() => {
-
-    if (searchProductDatas != null && datas == null) {
-      let productListLength = searchProductDatas?.data?.length;
-      handleValidMore(productListLength, searchProductDatas?.data);
+    if (productList != null && datas == null) {
+      let productListLength = productList?.data?.length;
+      handleValidMore(productListLength, productList?.data);
     }
-  }, [searchProductDatas]);
+  }, [productList]);
 
   // filter search nang cao
   //check coi trong fill co checked chua
@@ -146,7 +139,7 @@ function Search() {
         (item) => item.groupLabel === "Color"
       );
 
-      let filteredProductsByCategory = searchProductDatas?.data.filter(
+      let filteredProductsByCategory = productList?.data.filter(
         (element) => {
           return filterCategoryEmtry.some(
             (filterItem) => element?.categoryResponse?.name === filterItem.label && element?.categoryResponse?.gender == filterItem?.gender
@@ -158,7 +151,7 @@ function Search() {
       if (filteredProductsByCategory?.length != 0) {
         filteredProductsBySize = filteredProductsByCategory.filter(
           (element) => {
-            return element?.variantResponseList.some((variant) => {
+            return element?.variantList.some((variant) => {
               return filterSizeEmtry.some((filterSize) => {
                 return variant?.sizeResponse?.name === filterSize?.label;
               });
@@ -166,8 +159,8 @@ function Search() {
           }
         );
       } else {
-        filteredProductsBySize = searchProductDatas?.data.filter((element) => {
-          return element?.variantResponseList.some((variant) => {
+        filteredProductsBySize = productList?.data.filter((element) => {
+          return element?.variantList.some((variant) => {
             return filterSizeEmtry.some((filterSize) => {
               return variant?.sizeResponse?.name === filterSize?.label;
             });
@@ -182,7 +175,7 @@ function Search() {
         filteredProductsBySize != 0
       ) {
         filteredProductsByColor = filteredProductsBySize.filter((element) => {
-          return element?.variantResponseList.some((variant) => {
+          return element?.variantList.some((variant) => {
             return filterColorEmtry.some((filterColor) => {
               return variant?.colorResponse?.name === filterColor?.label;
             });
@@ -191,7 +184,7 @@ function Search() {
       } else if (filteredProductsByCategory != 0) {
         filteredProductsByColor = filteredProductsByCategory.filter(
           (element) => {
-            return element?.variantResponseList.some((variant) => {
+            return element?.variantList.some((variant) => {
               return filterColorEmtry.some((filterColor) => {
                 return variant?.colorResponse?.name === filterColor?.label;
               });
@@ -199,8 +192,8 @@ function Search() {
           }
         );
       } else {
-        filteredProductsByColor = searchProductDatas?.data.filter((element) => {
-          return element?.variantResponseList.some((variant) => {
+        filteredProductsByColor = productList?.data.filter((element) => {
+          return element?.variantList.some((variant) => {
             return filterColorEmtry.some((filterColor) => {
               return variant?.colorResponse?.name === filterColor?.label;
             });
@@ -220,10 +213,11 @@ function Search() {
       }
       setIsFilterDatas(false);
     } else if (isAnyChecked == false && isFilterDatas) {
-      setTempDatas(searchProductDatas?.data);
+      setTempDatas(productList?.data);
       setIsFilterDatas(false);
     }
   }, [items]);
+
   // khi co fill thi moi set product theo fill
   useEffect(() => {
     if (tempDatas != null) {
@@ -252,13 +246,16 @@ function Search() {
   const moreFunction = () => {
     if (selectedValue !== "") {
       if (selectedValue === "priceLowToHight") {
-        setDatas(provState =>  [...provState].sort((a, b) => a.price - b.price));
+        setDatas((provState) =>
+          [...provState].sort((a, b) => a.price - b.price)
+        );
       } else if (selectedValue === "priceHightToLow") {
-        setDatas(provState =>  [...provState].sort((a, b) => b.price - a.price));
+        setDatas((provState) =>
+          [...provState].sort((a, b) => b.price - a.price)
+        );
       }
     }
-
-  }
+  };
   // show and hidden item menu
   const [itemVisibility, setItemVisibility] = useState({});
 
@@ -272,8 +269,8 @@ function Search() {
   //xem them
   const handleClickMore = () => {
     if (tempDatas == null) {
-      let productListLength = searchProductDatas?.data?.length;
-      handleValidMore(productListLength, searchProductDatas?.data);
+      let productListLength = productList?.data?.length;
+      handleValidMore(productListLength, productList?.data);
     } else if (tempDatas != null) {
       let tempDatasLength = tempDatas?.length;
       handleValidMore(tempDatasLength, tempDatas);
@@ -313,42 +310,49 @@ function Search() {
     }
   }
 
-  // an hien xem them theo do dai cua searchProductDatas và tempDatas nếu có tồn tại
-  const [showMore,setShowMore] = useState(false);
-  useEffect(()=>{
-    if(tempDatas != null){
-      if(datas?.length < tempDatas?.length ){
+  // an hien xem them theo do dai cua productList và tempDatas nếu có tồn tại
+  const [showMore, setShowMore] = useState(false);
+  useEffect(() => {
+    if (tempDatas != null) {
+      if (datas?.length < tempDatas?.length) {
         setShowMore(true);
-      }else{
+      } else {
         setShowMore(false);
       }
-    }else if(searchProductDatas != null && tempDatas== null){
-      if(datas?.length < searchProductDatas?.data?.length ){
+    } else if (productList != null && tempDatas == null) {
+      if (datas?.length < productList?.data?.length) {
         setShowMore(true);
-      }else{
+      } else {
         setShowMore(false);
       }
     }
-  })
+  });
   // khi url thay doi thi chay
   useEffect(() => {
-    if (searchProductDatas !== null) {
-      dispatch(setSearchProductValues(null));
+    if (productList !== null) {
+      dispatch(setProductValues(null));
       setDatas(null);
       setTempDatas(null);
       setSelectedValue("");
-      setItems(proveState =>  proveState?.map((itemGroup)=>{return {...itemGroup,items:itemGroup?.items?.map((element)=> {return {...element,checked:false}})}} ))
+      setItems((proveState) =>
+        proveState?.map((itemGroup) => {
+          return {
+            ...itemGroup,
+            items: itemGroup?.items?.map((element) => {
+              return { ...element, checked: false };
+            }),
+          };
+        })
+      );
     }
 
     // Update the flag after the initial load
-  }, [location?.search]);
+  }, [location.pathname.slice(19)]);
 
   return (
     <main>
       <div className="body-flex">
         <div className=" mt-5">
-          <h3 className="title-start">SEARCH RESULTS FOR</h3>
-          <h2 className="title-end">{handleRequestParams(location?.search)}</h2>
           <div className="straight-line"></div>
 
           <div className="d-flex justify-content-between mt-2 item-center mb-4">
@@ -357,7 +361,7 @@ function Search() {
               {tempDatas !== null ? (
                 <div>{tempDatas?.length} products</div>
               ) : (
-                <div>{searchProductDatas?.data?.length} products</div>
+                <div>{productList?.data?.length} products</div>
               )}
             </div>
             <div className="col-5"></div>
@@ -428,7 +432,7 @@ function Search() {
                 <div className="container">
                   <div className="row justify-content-center">
                     {datas?.map((data, key) => (
-                      <ProductItem data={data} key={key} />
+                      <ShowProduct data={data} key={key} />
                     ))}
                   </div>
                 </div>
@@ -457,4 +461,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default ProductListBySubCategory;
