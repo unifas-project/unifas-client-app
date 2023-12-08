@@ -2,8 +2,11 @@ import React, {useState} from 'react'
 import axios from "axios";
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useNavigate} from "react-router-dom";
+import {UNIFAS_API} from "../../../../constants/api";
 
 function UserPasswordForm() {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     currentPassword: "",
     newPassword: "",
@@ -26,7 +29,7 @@ function UserPasswordForm() {
 
     try {
       const response = await axios.put(
-        'http://localhost:8080/api/users/user-password',
+        `${UNIFAS_API}/users/user-password`,
         user,
         {
           headers: {
@@ -64,7 +67,9 @@ function UserPasswordForm() {
     // toast.success( "OK");
     return false;
   };
-
+  const getBackHome = () => {
+    navigate("/");
+  };
 
   return (
     <div className="container">
@@ -119,20 +124,19 @@ function UserPasswordForm() {
               special characters
             </p> <br/>
 
-            <div style={{textAlign: "center"}}>
               <div>
-                <button style={{textAlign: "center"}}
+                <div className="row justify-content-center">
+                <button
                         type="button"
-                        className="btn btn-primary"
-                        onClick={handleChangePassword}
+                        className="btn btn-primary user-detail-btn"
+                        onClick={getBackHome}
                 > Cancel
                 </button>
 
                 &nbsp; &nbsp;
                 <button
                   type="button"
-                  style={{textAlign: "center"}}
-                  className="btn btn-success"
+                  className="btn btn-success user-detail-btn"
                   onClick={handleChangePassword}
                 > Change
                 </button>
