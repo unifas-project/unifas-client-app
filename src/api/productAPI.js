@@ -25,3 +25,25 @@ export const findProduct = async (productId) => {
     return result;
 };
 
+export const findProductByCategoryId = async (categoryId) => {
+    let result = null;
+    try {
+        result = await axios.get(`${PRODUCT_MANAGEMENT}/category/${categoryId}`);
+    }
+    catch (e) {
+        console.log("Find product API error: " + e);
+    }
+    return result;
+};
+
+export const findProductBySubCategoryId = async (subCategoryId) => {
+    let result = null;
+    try {
+        result = await axios.get(`${PRODUCT_MANAGEMENT}/subCategory/${subCategoryId}`);
+    }
+    catch (e) {
+        console.log("Find product API error: " + e);
+    }
+    return result;
+};
+

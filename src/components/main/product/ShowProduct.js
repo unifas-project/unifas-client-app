@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/search.css";
 
-function ProductItem({ data }) {
+function ShowProduct({ data }) {
 
   const uniqueColors = new Set();
 
@@ -10,7 +10,7 @@ function ProductItem({ data }) {
     <div className="col-lg-4 col-md-4 ">
       <div className="adoption-shop-item item-border">
         <div className="adoption-shop-thumb">
-          <img src={`${data?.imgResponseList[0]?.url}`} alt="" />
+          <img src={`${data?.imageProductList[0]?.url}`} alt="" />
           <Link to={`/products/${data.id}`} className="btn">
             View
           </Link>
@@ -24,7 +24,7 @@ function ProductItem({ data }) {
               <li className="item-center text-small text-uppercase">
                 {[
                   ...new Set(
-                    data?.variantResponseList?.map(
+                    data?.variantList?.map(
                       (variant) => variant.sizeResponse?.name
                     )
                   ),
@@ -32,7 +32,7 @@ function ProductItem({ data }) {
                 {/* {sizes?.join(",")} */}
               </li>
               <li className="d-flex item-center">
-                {data?.variantResponseList?.map((variant, key) => {
+                {data?.variantList?.map((variant, key) => {
                   const color = variant?.colorResponse?.code;
 
                   // Chỉ render nếu màu không trùng nhau
@@ -76,4 +76,4 @@ function ProductItem({ data }) {
   );
 }
 
-export default ProductItem;
+export default ShowProduct;
