@@ -14,6 +14,7 @@ const ShowAllSaleVoucher = () => {
     const [totalPages, setTotalPages] = useState(0)
     const [currentPage, setCurrentPage] = useState(0)
     const [inputValue, setInputValue] = useState(0)
+    const [realInputValue,setRealInputValue] = useState(0)
 
     const searchPage = useSelector(selectSearchPage)
     const allSaleVoucher = useSelector(selectGetAllSaleVouchers)
@@ -41,24 +42,32 @@ const ShowAllSaleVoucher = () => {
     }
 
     const handleOnChangePagingInput =  (event) => {
-        setInputValue(event.target.value)
+        setInputValue(Number(event.target.value))
     }
+
+    useEffect(() => {
+        setRealInputValue(Number(inputValue))
+        console.log(inputValue)
+        console.log(realInputValue)
+    },[inputValue])
+
 
     const fetchSaleVoucherByInput = async () => {
         const input = document.getElementsByClassName("paging-input")
         input[0].addEventListener("keypress", async (event) => {
             if (event.keyCode == 13) {
                 event.preventDefault()
-                let a = event.target.value;
-                await dispatch(setSearchPage(Number(a)))
+                // let a = event.target.value;
+                // await dispatch(setSearchPage(Number(a)))
+
 
                 let page = 0;
-                if (searchPage < 1) {
+                if (inputValue < 1) {
                     page = 0;
-                } else if (searchPage > totalPages) {
+                } else if (inputValue > totalPages) {
                     page = totalPages - 1;
                 } else {
-                    page = searchPage - 1;
+                    page = inputValue - 1;
                 }
                 dispatch(getAllSaleVoucherForShow(page));
             }

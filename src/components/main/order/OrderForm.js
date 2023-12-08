@@ -101,6 +101,10 @@ const OrderForm = () => {
     },)
 
     useEffect(() => {
+        window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
+    })
+
+    useEffect(() => {
             fetchAddress()
             fetchLocations();
         }, [dispatch, provinces, addresses]
@@ -492,7 +496,23 @@ const OrderForm = () => {
             totalAmount : merchandiseSubtotal,
             finalPrice : totalPayment,
             payment : paymentChoice,
-            cartItemDtoList : orderLineListForCreateOrder
+            cartItemDtoList : orderLineListForCreateOrder,
+            saleVoucherId: validSaleVoucher?.id
+        })
+        console.log(validSaleVoucher)
+        console.log(validSaleVoucher?.id)
+
+        const alert = toast.loading("Please wait for a second");
+        toast.update(alert, {
+            render: "All information has been confirmed", type: "success", position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            isLoading: false
         })
     }
 
@@ -501,7 +521,6 @@ const OrderForm = () => {
 
     useEffect(() => {
         setRealNewOrder(newOrder)
-        console.log(newOrder)
     },[newOrder])
 
 
@@ -525,7 +544,7 @@ const OrderForm = () => {
             })
         } else {
             toast.update(alert, {
-                render: "Some error has been occurred", type: "error", position: "top-right",
+                render: response.payload?.message || "Some error has been occurred", type: "error", position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,

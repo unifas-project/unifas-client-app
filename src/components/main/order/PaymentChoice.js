@@ -30,7 +30,7 @@ const PaymentChoice = ({handleSelectPaymentChoice}) => {
                 <div className="col payment-method-choice card pt-30 pb-30"  style={{padding: "30px"}}>
                     <div className="row d-flex align-items-center">
                         <div className="col-2 d-flex align-items-center pl-50 icon-payment-1">
-                            <input type="radio" className="payment" name="payment" value="cod" checked />
+                            <input type="radio" className="payment" name="payment" value="cod"/>
                             <span className="pr-4 pl-4"><BsCash style={{fontSize: "40px", color: "green"}}/></span>
 
                         </div>
