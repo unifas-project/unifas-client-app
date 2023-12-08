@@ -47,8 +47,6 @@ const ShowAllSaleVoucher = () => {
 
     useEffect(() => {
         setRealInputValue(Number(inputValue))
-        console.log(inputValue)
-        console.log(realInputValue)
     },[inputValue])
 
 
@@ -57,10 +55,6 @@ const ShowAllSaleVoucher = () => {
         input[0].addEventListener("keypress", async (event) => {
             if (event.keyCode == 13) {
                 event.preventDefault()
-                // let a = event.target.value;
-                // await dispatch(setSearchPage(Number(a)))
-
-
                 let page = 0;
                 if (inputValue < 1) {
                     page = 0;

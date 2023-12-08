@@ -544,7 +544,7 @@ const OrderForm = () => {
             })
         } else {
             toast.update(alert, {
-                render: response.payload?.message || "Some error has been occurred", type: "error", position: "top-right",
+                render: response.payload?.message || "Let's confirm information first", type: "error", position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
