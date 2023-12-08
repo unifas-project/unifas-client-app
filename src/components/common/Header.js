@@ -17,6 +17,9 @@ import {
 } from "../../feature/category/categorySlice";
 import BeforeAfterLogin from "../main/account/BeforeAfterLogin";
 
+import axios from "axios";
+import { UNIFAS_API } from "../../constants/api";
+
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +27,6 @@ function Header() {
   const storedUsername = localStorage.getItem("username");
   const [username, setUsername] = useState(storedUsername);
 
-  const { cartTotalQuantity } = useSelector((state) => state.cart);
 
   // Get List Category
   const [categories, setCategories] = useState([]);
@@ -95,6 +97,34 @@ function Header() {
     navigate(`/search?name=${searchValue}`);
     $(".search-popup-wrap").slideUp(500);
   };
+
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    handleGetAllCartItem();
+    console.log(cart);
+  }, []);
+
+  const handleGetAllCartItem = async () => {
+
+    if(username != null) {
+      const userId = localStorage.getItem("id");
+    const response = await axios.get(`${UNIFAS_API}/cart/${userId}`);
+    setCart(response.data.data);
+    }
+  };
+
+
+
+  let totalQuantiy = 0;
+
+  let array = cart?.cartItemResponseList;
+  for (let i = 0; i < array?.length; i++) {
+    totalQuantiy +=  array[i].quantity;
+  }
+
+
+
   
   return (
     <header>
@@ -212,14 +242,38 @@ function Header() {
                         <BeforeAfterLogin />
                       </li>
 
+              
+
                       <li className="header-shop-cart">
+                    
+                      {username !== null ? (
+                         <Link to="/cart">
+                        
+                         <i className="flaticon-shopping-bag" />
+
+                         
+                         <span style={{ color: "red" }}>
+               
+                           {totalQuantiy}
+                         </span>
+                       </Link>
+
+                      ) : (
                         <Link to="/cart">
-                          <i className="flaticon-shopping-bag" />
-                          <span style={{ color: "red" }}>
-                            {cartTotalQuantity}
-                          </span>
-                        </Link>
+                        
+                        <i className="flaticon-shopping-bag" />
+
+                        
+                        <span style={{ color: "red" }}>
+              
+                          {0}
+                        </span>
+                      </Link>
+                      )}
+                       
                       </li>
+
+
                     </ul>
                   </div>
                 </nav>
