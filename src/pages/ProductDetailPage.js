@@ -370,14 +370,15 @@ function ProductDetailPage() {
                     <input value={val} readOnly
                      type="number"
                     />
+
                     <div className="dec qtybutton" onClick={() => decrease()}>
                       -
                     </div>
-                    <div className="inc qtybutton" onClick={() => {
-                      increase()
-                    }}>
+
+                    <div className="inc qtybutton" onClick={() => { increase() }}>
                       +
                     </div>
+
                   </div>
 
                 </div>

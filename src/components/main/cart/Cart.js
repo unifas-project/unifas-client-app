@@ -200,12 +200,26 @@ const Cart = () => {
     setShowModal(false);
   };
 
-  const handleRemoveFromCartWithConfirmation = (cartItem) => {
-    handleShowModal(cartItem);
+  const handleRemoveFromCartWithConfirmation = () => {
+    handleShowModal();
   };
 
-  const handleConfirmRemoveFromCart = () => {
-    // handleRemoveFromCart(itemToRemove);
+  const handleConfirmRemoveFromCart = async () => {
+  
+     await axios.delete( `http://localhost:8080/api/cart/item/${cartItemId}`, {
+        data: {
+   
+        },
+      })
+      .then(response => {
+
+        console.log(response);
+      })
+      .catch(error => {
+  
+        console.error(error);
+      });
+    
     handleCloseModal();
   };
 
@@ -441,7 +455,6 @@ const Cart = () => {
                             const value = parseInt(e.target.value, 10);
                             if (!isNaN(value) && value >= 1 && value <= 50) {
                               handleSetCartQuantity(cartItem, value);
-                              // updateQuantityOnBackend(cartItem.id, value);
                             }
                           }}
                         />
@@ -477,7 +490,7 @@ const Cart = () => {
                           boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
                         }}
                         onClick={() =>
-                          handleRemoveFromCartWithConfirmation(cartItem)
+                          handleRemoveFromCartWithConfirmation()
                         }
                       >
                         X
@@ -600,7 +613,7 @@ const Cart = () => {
               padding: "6px 9px",
               boxShadow: "2px 4px 10px 1px rgba(15, 15, 15, 0.47)",
             }}
-            onClick={handleConfirmRemoveFromCart}
+            onClick={handleConfirmRemoveFromCart()}
           >
             Confirm
           </Button>
